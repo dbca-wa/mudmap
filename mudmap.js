@@ -1,48 +1,43 @@
-L.mapbox.accessToken = "pk.eyJ1IjoiZHBhd2FzaSIsImEiOiJtVjY5WmlFIn0.whc76euXLk2PkyxOkZ5xlQ";
+$(document).ready(function() {
+    window.map = L.map("map", {center: [-24.966, 123.750], zoom: 5});
+    map.wmtstemplate = 
+    L.TileLayer.KMI = L.TileLayer.extend({
+        initialize: function (layer) {
+            L.TileLayer.prototype.initialize.call(this, this.url, { layer: layer });
+        },
+        url: 'https://kmi.dpaw.wa.gov.au/geoserver/gwc/service/tms/1.0.0/{layer}@mercator/{z}/{x}/{y}.png',
+        options: {
+            attribution: '<a href="https://oim.dpaw.wa.gov.au">KMI</a>',
+            tms: true,
+            tileSize: 256
+        },
 
-var map = L.mapbox.map("map", "mapbox.outdoors", {
-    center: [ -24.966, 123.75 ],
-    zoom: 5
-});
+    });
+    var lyr = new L.TileLayer.KMI('dpaw:mapbox_outdoors')
+    lyr.addTo(map);
 
-L.control.locate().addTo(map);
+    L.control.locate().addTo(map);
+    L.control.scale().addTo(map);
 
-L.control.scale().addTo(map);
+    map.featureGroup = L.featureGroup().addTo(map)
+    map.drawControl = new L.Control.Draw({ edit: { featureGroup: map.featureGroup } }).addTo(map);
 
-var featureGroup = L.featureGroup().addTo(map);
-
-map.on("draw:drawstop", function(e) {});
-
-var drawControl = new L.Control.Draw({
-    edit: {
-        featureGroup: featureGroup
-    }
-}).addTo(map);
-
-map.on("draw:created", function(e) {
-    featureGroup.addLayer(e.layer);
-    if (e.layer && e.layer.bindLabel) {
-        setTimeout(function() {
-            var text = window.prompt("Set a label?");
-            if (text) {
-                e.layer.bindLabel(text, {
-                    noHide: true
-                });
-            }
-            if (e.layer.showLabel) {
-                e.layer.showLabel();
-            } else {
-                e.layer.setStyle({
-                    color: "#000",
-                    fillColor: "#000"
-                });
-                var area = L.GeometryUtil.readableArea(L.GeometryUtil.geodesicArea(e.layer.getLatLngs()), true);
-                var distance = 0;
-                var latlngs = e.layer.getLatLngs();
-                e.layer.bindPopup("area: " + area + "<br>distance: " + distance).showPopup();
-            }
-        }, 200);
-    }
-}).on("ready", function() {
-    new L.Control.MiniMap(L.mapbox.tileLayer("mapbox.outdoors")).addTo(map);
+    map.on("draw:created", function(e) {
+        map.featureGroup.addLayer(e.layer);
+        if (e.layer && e.layerType == 'marker') {
+            setTimeout(function() {
+                var text = window.prompt("Set a label?");
+                if (text) {
+                    e.layer.bindLabel(text, {
+                        noHide: true
+                    }).showLabel();
+                }
+            }, 200);
+        } else {
+            e.layer.setStyle({
+                color: "#000",
+                fillColor: "#000"
+            });
+        }
+    });
 });
