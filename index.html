@@ -4,14 +4,17 @@
     <title>SSS Mudmap</title>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="//static.dpaw.wa.gov.au/static/libs/foundation/6.1.1/foundation-flex.css" type="text/css">
     <link rel="stylesheet" href="//static.dpaw.wa.gov.au/static/libs/ol3/3.13.0/ol.css" type="text/css">
     <script src="//static.dpaw.wa.gov.au/static/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="//static.dpaw.wa.gov.au/static/libs/foundation/6.1.1/foundation-flex.min.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/ol3/3.13.0/ol-debug.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/jspdf/1.1.135/jspdf.min.js"></script>
     <script src="mudmap.js"></script>
     <style>
-      html, body { width: 100%; height: 100%; margin: 0; padding: 0; }
-      .map { display: flex; flex-direction: column; width: 100%; }
+      html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+      .container { height: 100%; display: flex; flex-direction: column; }
+      .map { width: 100%; min-height: 0; flex: 1; }
       #progress {
         position: absolute;
         top: 0;
@@ -24,23 +27,20 @@
     </style>
   </head>
   <body>
-      <label>Page size </label>
-      <select id="format">
-        <option value="a0">A0 (slow)</option>
-        <option value="a1">A1</option>
-        <option value="a2">A2</option>
-        <option value="a3" selected>A3 (default)</option>
-        <option value="a4">A4</option>
-        <option value="a5">A5 (fast)</option>
-      </select>
-      <label>Resolution </label>
-      <select id="resolution">
-        <option value="72">72 dpi (fast)</option>
-        <option value="150" selected>150 dpi (default)</option>
-        <option value="300">300 dpi (slow)</option>
-      </select>
-      <button id="export-pdf">Export PDF</button>
-      <div id="progress"></div>
-      <div id="map" class="map"></div>
+    <div class="container">
+        <div class="top-bar">
+          <div class="top-bar-left">
+            <ul class="menu">
+              <li class="menu-text">SSS Mudmap</li>
+            </ul>
+          </div>
+          <div class="top-bar-right">
+            <ul class="menu">
+              <li><button type="button" class="button secondary" id="export-pdf">Export PDF</button></li>
+            </ul>
+          </div>
+        </div>
+        <div id="map" class="map"></div>
+    </div>
   </body>
 </html>

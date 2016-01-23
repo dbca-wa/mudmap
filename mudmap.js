@@ -37,6 +37,7 @@ $(document).ready(function() {
               matrixSet: 'gda94',
               format: options.format || 'image/jpeg',
               projection: projection,
+              wrapX: true,
               tileGrid: new ol.tilegrid.WMTS({
                 origin: ol.extent.getTopLeft(projectionExtent),
                 resolutions: resolutions,
@@ -50,11 +51,29 @@ $(document).ready(function() {
 
     var initMap = function() {
         window.map = new ol.Map({
+            logo: false,
             layers: window.layers,
             renderer: 'canvas',
             target: "map",
-            view: new ol.View({ projection: projection, center: [123.750, -24.966], zoom: 5 })
+            view: new ol.View({ projection: projection, center: [123.750, -24.966], zoom: 5 }),
+            controls: ol.control.defaults().extend([
+                (new ol.control.ScaleLine()),
+            ])
         });
+        var graticule = new ol.Graticule();
+        graticule.setMap(map);
+        var features = new ol.Collection();
+        var featureOverlay = new ol.layer.Vector({ source: new ol.source.Vector({features: features}) });
+        featureOverlay.setMap(map);
+        function addInteraction() {
+            window.draw = new ol.interaction.Draw({
+              features: features,
+              type: "Polygon"
+            });
+            map.addInteraction(draw);
+        }
+        addInteraction();
+        window.initMap = undefined;
     }
 
     if ($.urlParam("ss")) {
@@ -70,6 +89,8 @@ $(document).ready(function() {
                 layers.push($.loadKMI(lyr));
             });
             initMap();
+            map.getView().setCenter(ss.center.coordinates);
+            map.getView().setZoom(ss.zoom+3)
         });
     } else {
         window.layers = [ $.loadKMI() ]
@@ -77,31 +98,18 @@ $(document).ready(function() {
     }
 
     // Print stuff
-    var dims = {
-        a0: [ 1189, 841 ],
-        a1: [ 841, 594 ],
-        a2: [ 594, 420 ],
-        a3: [ 420, 297 ],
-        a4: [ 297, 210 ],
-        a5: [ 210, 148 ]
-    };
     var exportButton = document.getElementById("export-pdf");
     exportButton.addEventListener("click", function() {
         exportButton.disabled = true;
         document.body.style.cursor = "progress";
-        var format = document.getElementById("format").value;
-        var resolution = document.getElementById("resolution").value;
-        var dim = dims[format];
-        var width = Math.round(dim[0] * resolution / 25.4);
-        var height = Math.round(dim[1] * resolution / 25.4);
+        var dim = [ 420, 297 ];
+        var width = Math.round(dim[0] * 200 / 25.4);
+        var height = Math.round(dim[1] * 200 / 25.4);
         var size = map.getSize();
         var extent = map.getView().calculateExtent(size);
         window.setTimeout(function() {
-            var pdf = new jsPDF("landscape", undefined, format);
-            $("canvas").each(function() {
-                var data = this.toDataURL("image/jpeg", 0.9);
-                pdf.addImage(data, "JPEG", 0, 0, dim[0], dim[1]);
-            });
+            var pdf = new jsPDF("landscape", undefined, "a3");
+            pdf.addImage($("canvas")[0].toDataURL("image/jpeg", 0.92), "JPEG", 0, 0, dim[0], dim[1]);
             pdf.save("mudmap.pdf");
             map.setSize(size);
             map.getView().fit(extent, size);
