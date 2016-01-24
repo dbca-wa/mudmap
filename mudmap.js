@@ -116,30 +116,18 @@ $(document).ready(function() {
         });
         map.featureOverlay.setMap(map);
         // Create interactions, add them to map
-        map.pnt = new ol.interaction.Draw({
-            features: map.features,
-            type: "Point"
+        $.each({"pnt": "Point", "lns": "LineString", "pol": "Polygon"}, function(key, value) {
+            map[key] = new ol.interaction.Draw({
+                features: map.features,
+                type: value
+            });
+            map.addInteraction(map[key]);
         });
-        map.addInteraction(map.pnt);
-        map.lns = new ol.interaction.Draw({
-            features: map.features,
-            type: "LineString"
-        });
-        map.lns.setActive(false);
-        map.addInteraction(map.lns);
-        map.pol = new ol.interaction.Draw({
-            features: map.features,
-            type: "Polygon"
-        });
-        map.pol.setActive(false);
-        map.addInteraction(map.pol);
         map.mod = new ol.interaction.Modify({
             features: map.features
         });
-        map.mod.setActive(false);
         map.addInteraction(map.mod);
         map.del = new ol.interaction.Select();
-        map.del.setActive(false);
         map.addInteraction(map.del);
         map.del.on("select", function(e) {
             map.features.remove(e.selected[0]);
@@ -148,7 +136,6 @@ $(document).ready(function() {
         // Label and colour tools just set properties and let style function 
         // handle redraws
         map.lbl = new ol.interaction.Select();
-        map.lbl.setActive(false);
         map.addInteraction(map.lbl);
         map.lbl.on("select", function(e) {
             if (!e.selected[0]) {
@@ -160,7 +147,6 @@ $(document).ready(function() {
             map.lbl.getFeatures().remove(e.selected[0]);
         });
         map.col = new ol.interaction.Select();
-        map.col.setActive(false);
         map.addInteraction(map.col);
         map.col.on("select", function(e) {
             if (!e.selected[0]) {
@@ -176,12 +162,13 @@ $(document).ready(function() {
                 ctrl.setActive(false);
             });
         };
-        $("ul.controls button").on("click", function() {
-            $(this).parents("ul").find("button").addClass("hollow");
+        $("div.controls .toggle").on("click", function() {
+            $("div.controls .toggle").addClass("hollow");
             $(this).removeClass("hollow");
             map.deinteract();
             map[$(this).attr("id")].setActive(true);
         });
+        $("#pnt").click();
         window.initMap = undefined;
     };
     // Print stuff
@@ -199,7 +186,7 @@ $(document).ready(function() {
             // Use jpeg at 0.92 quality for a bit of compression so PDF's aren't huge
             pdf.addImage($("canvas")[0].toDataURL("image/jpeg", .92), "JPEG", 0, 0, dim[0], dim[1]);
             pdf.setFontSize(24)
-            pdf.text(2, 295, "SSS Mudmap - <id>. Printed by <user> on <date>")
+            pdf.text(2, 295, "SSS Mudmap - " + mapid + ". Printed by " + email + " on <date>")
             pdf.save("mudmap.pdf");
             map.setSize(size);
             map.getView().fit(extent, size);
@@ -211,35 +198,52 @@ $(document).ready(function() {
         map.getView().fit(extent, map.getSize());
         map.renderSync();
     });
-    // Load state from url if sent here by sss
-    if ($.urlParam("ss")) {
-        $.get("https://spatialsupport.dpaw.wa.gov.au/apps/spatial/layers.json", function(data) {
-            window.ss = JSON.parse(decodeURIComponent($.urlParam("ss")));
-            window.layers = [];
-            $.each(ss.layers, function(index, lyr) {
-                if (lyr.layer_id == "resource_tracking_week_base") {
-                    lyr.layer_id = "resource_tracking_printable";
-                }
-                if (lyr.layer_id == "resource_tracking_week_symbols_overlay") {
-                    return;
-                }
-                var layer = $.grep(data.layers, function(l) {
-                    return l.id == lyr.layer_id;
-                })[0];
-                lyr.layer = layer.layers;
-                lyr.format = "image/jpeg";
-                if (layer.transparent) {
-                    lyr.format = "image/png";
-                }
-                layers.push($.loadKMI(lyr));
+    // Initialise with user info
+    $.get("/auth", function(userdata) {
+        window.email = JSON.parse(userdata).email.toLowerCase();
+        // Detect if url to existing mudmap, if not get/create one
+        if (!$.urlParam("name")) {
+            var name = false;
+            while (!name) {
+                var name = window.prompt("Get or create mudmap - enter mudmap name:")
+            }
+            var sep = "?";
+            if (window.location.href.search("\\?") > -1) { sep = "&" }
+            window.location.href = window.location.href + sep + $.param({"name": name});
+        } else {
+            window.mapid = name; 
+            $("#mapid").text($.urlParam("name") + " (" + email + ")");
+        }
+        // Load state from url if sent here by sss
+        if ($.urlParam("ss")) {
+            $.get("https://spatialsupport.dpaw.wa.gov.au/apps/spatial/layers.json", function(data) {
+                window.ss = JSON.parse(decodeURIComponent($.urlParam("ss")));
+                window.layers = [];
+                $.each(ss.layers, function(index, lyr) {
+                    if (lyr.layer_id == "resource_tracking_week_base") {
+                        lyr.layer_id = "resource_tracking_printable";
+                    }
+                    if (lyr.layer_id == "resource_tracking_week_symbols_overlay") {
+                        return;
+                    }
+                    var layer = $.grep(data.layers, function(l) {
+                        return l.id == lyr.layer_id;
+                    })[0];
+                    lyr.layer = layer.layers;
+                    lyr.format = "image/jpeg";
+                    if (layer.transparent) {
+                        lyr.format = "image/png";
+                    }
+                    layers.push($.loadKMI(lyr));
+                });
+                initMap();
+                map.getView().setCenter(ss.center.coordinates);
+                // Deal with offset of tilesize from 256 -> 1024 by adding 3 zoomlevels
+                map.getView().setZoom(ss.zoom + 3);
             });
+        } else {
+            window.layers = [ $.loadKMI() ];
             initMap();
-            map.getView().setCenter(ss.center.coordinates);
-            // Deal with offset of tilesize from 256 -> 1024 by adding 3 zoomlevels
-            map.getView().setZoom(ss.zoom + 3);
-        });
-    } else {
-        window.layers = [ $.loadKMI() ];
-        initMap();
-    }
+        }
+    });
 });

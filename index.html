@@ -15,43 +15,36 @@
     <script src="mudmap.js"></script>
     <style>
       html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
-      .container { height: 100%; display: flex; flex-direction: column; }
+      .container { width: 100%; height: 100%; display: flex; flex-direction: column; }
+      .container .row { width: 100%; margin-bottom: -1px; }
+      .container .button, .container h4 { margin: 0px; }
       .map { width: 100%; min-height: 0; flex: 1; }
-      #progress {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 2px;
-        background: rgba(0, 60, 136, 0.4);
-        width: 0;
-        transition: width 250ms;
-      }
     </style>
   </head>
   <body>
     <div class="container">
-        <div class="top-bar">
-          <div class="top-bar-left">
-            <ul class="menu controls">
-              <li class="menu-text">SSS Mudmap</li>
-              <li><button id="pnt" type="button" class="button small secondary">Point</button></li>
-              <li><button id="lns" type="button" class="button small secondary hollow">Line</button></li>
-              <li><button id="pol" type="button" class="button small secondary hollow">Polygon</button></li>
-              <li class="menu-text"></li>
-              <li><button id="lbl" type="button" class="button small secondary hollow">Set Label</button></li>
-              <li><button id="col" type="button" class="button small secondary hollow">Set Colour</button></li>
-              <li><button id="mod" type="button" class="button small secondary hollow">Edit Nodes</button></li>
-              <li><button id="del" type="button" class="button small secondary hollow">Remove Feature</button></li>
-              <li class="menu-text"></li>
-              <li><button id="del" type="button" class="button small secondary hollow">Undo</button></li>
-              <li><button id="del" type="button" class="button small secondary hollow">Redo</button></li>
-            </ul>
+        <div class="row expanded align-justify controls show-for-medium">
+          <div class="columns shrink">
+            <button id="pnt" type="button" class="button small secondary toggle" title="Draw points with clicks">Point</button>
+            <button id="lns" type="button" class="button small secondary toggle" title="Draw a line with clicks, shift and drag for continuous">Line</button>
+            <button id="pol" type="button" class="button small secondary toggle" title="Draw a polygon with clicks, shift and drag for continuous">Polygon</button>
           </div>
-          <div class="top-bar-right">
-            <ul class="menu">
-              <li><button id="share" type="button" class="button small secondary"><i class="fi-share"></i> Share</button></li>
-              <li><button id="export-pdf" type="button" class="button small secondary"><i class="fi-print"></i> PDF</button></li>
-            </ul>
+          <div class="columns shrink">
+              <button id="lbl" type="button" class="button small secondary toggle" title="Set a text label for a feature">Set Label</button>
+              <button id="col" type="button" class="button small secondary toggle" title="Set the colour of a feature">Set Colour</button>
+              <button id="mod" type="button" class="button small secondary toggle" title="Drag to move nodes on features, click to remove">Edit Nodes</button>
+              <button id="del" type="button" class="button small secondary toggle" title="Remove an entire feature by clicking">Remove Feature</button>
+          </div>
+          <div class="columns shrink"><h4>SSS Mudmap</h4></div>
+          <div class="columns align-bottom"><span id="mapid"></span></div>
+          <div class="columns shrink">
+              <button id="history" type="button" class="button small secondary" title="Version history (saves automatically)">History</button>
+              <button id="undo" type="button" class="button small secondary">Undo</button>
+              <button id="redo" type="button" class="button small secondary">Redo</button>
+          </div>
+          <div class="columns shrink">
+              <button id="share" type="button" class="button small secondary"><i class="fi-share"></i> Share</button>
+              <button id="export-pdf" type="button" class="button small secondary"><i class="fi-print"></i> PDF</button>
           </div>
         </div>
         <div id="map" class="map"></div>
