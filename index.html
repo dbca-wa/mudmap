@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
     <link rel="stylesheet" href="//static.dpaw.wa.gov.au/static/libs/foundation/6.1.1/foundation-flex.css" type="text/css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/foundation-icons/3.0/foundation-icons.css" type="text/css">
     <link rel="stylesheet" href="//static.dpaw.wa.gov.au/static/libs/ol3/3.13.0/ol.css" type="text/css">
     <script src="//static.dpaw.wa.gov.au/static/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/foundation/6.1.1/foundation-flex.min.js"></script>
@@ -30,13 +31,25 @@
     <div class="container">
         <div class="top-bar">
           <div class="top-bar-left">
-            <ul class="menu">
+            <ul class="menu controls">
               <li class="menu-text">SSS Mudmap</li>
+              <li><button id="pnt" type="button" class="button small secondary">Point</button></li>
+              <li><button id="lns" type="button" class="button small secondary hollow">Line</button></li>
+              <li><button id="pol" type="button" class="button small secondary hollow">Polygon</button></li>
+              <li class="menu-text"></li>
+              <li><button id="lbl" type="button" class="button small secondary hollow">Set Label</button></li>
+              <li><button id="col" type="button" class="button small secondary hollow">Set Colour</button></li>
+              <li><button id="mod" type="button" class="button small secondary hollow">Edit Nodes</button></li>
+              <li><button id="del" type="button" class="button small secondary hollow">Remove Feature</button></li>
+              <li class="menu-text"></li>
+              <li><button id="del" type="button" class="button small secondary hollow">Undo</button></li>
+              <li><button id="del" type="button" class="button small secondary hollow">Redo</button></li>
             </ul>
           </div>
           <div class="top-bar-right">
             <ul class="menu">
-              <li><button type="button" class="button secondary" id="export-pdf">Export PDF</button></li>
+              <li><button id="share" type="button" class="button small secondary"><i class="fi-share"></i> Share</button></li>
+              <li><button id="export-pdf" type="button" class="button small secondary"><i class="fi-print"></i> PDF</button></li>
             </ul>
           </div>
         </div>

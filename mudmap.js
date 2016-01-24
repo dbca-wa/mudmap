@@ -60,19 +60,58 @@ $(document).ready(function() {
                 (new ol.control.ScaleLine()),
             ])
         });
-        var graticule = new ol.Graticule();
-        graticule.setMap(map);
-        var features = new ol.Collection();
-        var featureOverlay = new ol.layer.Vector({ source: new ol.source.Vector({features: features}) });
-        featureOverlay.setMap(map);
-        function addInteraction() {
-            window.draw = new ol.interaction.Draw({
-              features: features,
-              type: "Polygon"
-            });
-            map.addInteraction(draw);
-        }
-        addInteraction();
+        (new ol.Graticule()).setMap(map);
+        map.features = new ol.Collection();
+        var defaultColour = '#000';
+        map.style = new ol.style.Style({
+            fill: new ol.style.Fill({ color: 'rgba(255, 255, 255, 0.2)' }),
+            stroke: new ol.style.Stroke({ color: defaultColour, width: 2 }),
+            text: new ol.style.Text({
+                font: '14px Helvetica',
+                textAlign: 'left', 
+                offsetX: 8,
+                fill: new ol.style.Fill({ color: defaultColour }), 
+                stroke: new ol.style.Stroke({ color: '#fff', width: 3 }) 
+            })
+        });
+        map.featureOverlay = new ol.layer.Vector({ 
+            source: new ol.source.Vector({ features: map.features }),
+            style: function(feature) { 
+                if (!feature.get("colour")) { feature.set("colour", defaultColour) }
+                map.style.getText().setText(feature.get('label'));
+                map.style.stroke_.color_ = feature.get('colour');
+                map.style.image_ = new ol.style.Circle({ radius: 4, fill: new ol.style.Fill({ color: feature.get('colour') }) })
+                map.style.text_.fill_.color_ = feature.get('colour');
+                return map.style;
+            }
+        });
+        map.featureOverlay.setMap(map);
+        // Create interactions, add them to map - first modify:
+        map.pnt = new ol.interaction.Draw({ features: map.features, type: 'Point' }); map.addInteraction(map.pnt);
+        map.lns = new ol.interaction.Draw({ features: map.features, type: 'LineString' }); map.lns.setActive(false); map.addInteraction(map.lns);
+        map.pol = new ol.interaction.Draw({ features: map.features, type: 'Polygon' }); map.pol.setActive(false); map.addInteraction(map.pol);
+        map.mod = new ol.interaction.Modify({ features: map.features }); map.mod.setActive(false); map.addInteraction(map.mod);
+        map.del = new ol.interaction.Select(); map.del.setActive(false); map.addInteraction(map.del);
+        map.del.on("select", function(e) { map.features.remove(e.selected[0]); map.del.getFeatures().remove(e.selected[0]); });
+        map.lbl = new ol.interaction.Select(); map.lbl.setActive(false); map.addInteraction(map.lbl);
+        map.lbl.on("select", function(e) {
+            if (!e.selected[0]) { window.alert("Please click a feature to set it's label."); return };
+            var label = window.prompt("Label feature (\\n is newline, blank removes label)?", e.selected[0].get('label'));
+            e.selected[0].set('label', label);
+            map.lbl.getFeatures().remove(e.selected[0]);
+        });
+        map.col = new ol.interaction.Select(); map.col.setActive(false); map.addInteraction(map.col);
+        map.col.on("select", function(e) { 
+            if (!e.selected[0]) { window.alert("Please click a feature to set it's colour."); return };
+            var colour = window.prompt("Colour feature (try 'red' or '#ff0000' or 'rgba(255,0,0,0.5)')?", e.selected[0].get('colour'));
+            e.selected[0].set('colour', colour);
+            map.col.getFeatures().remove(e.selected[0]);
+        });
+        map.deinteract = function() { $.each([map.pnt, map.lns, map.pol, map.mod, map.del, map.lbl, map.col], function(index, ctrl) { ctrl.setActive(false); }) };
+        $("ul.controls button").on("click", function() {
+            $(this).parents("ul").find("button").addClass('hollow'); $(this).removeClass('hollow')
+            map.deinteract(); map[$(this).attr("id")].setActive(true);
+        }); 
         window.initMap = undefined;
     }
 
