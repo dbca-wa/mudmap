@@ -9,7 +9,7 @@ $(document).ready(function() {
         if (!results) {
             return undefined;
         }
-        return results[1] || undefined;
+        return decodeURIComponent(results[1]) || undefined;
     };
     // to preserve cookies for CORS requests keeping SSO working
     $.ajaxSetup({
@@ -324,7 +324,7 @@ $(document).ready(function() {
             while (!name) {
                 var name = window.prompt("Get or create mudmap - enter mudmap name:");
             }
-            window.foragekey = email + "_map_" + name;
+            window.foragekey = email + "_map_" + $.param({name: name}).slice(5);
             if ($.urlParam("ss")) {
                 $.get("https://spatialsupport.dpaw.wa.gov.au/apps/spatial/layers.json", function(data) {
                     window.ss = JSON.parse(decodeURIComponent($.urlParam("ss")));
