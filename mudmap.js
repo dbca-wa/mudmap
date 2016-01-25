@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    $(document).foundation();
     // to grab stuff from urls
     $.urlParam = function(name, url) {
         if (!url) {
@@ -18,13 +19,15 @@ $(document).ready(function() {
     });
     // Lonlat projection by default with slightly less warped ground pixels
     window.projection = ol.proj.get("EPSG:4326");
+    window.geojson = new ol.format.GeoJSON();
     // Convenience loader to create a WMTS layer from a kmi datasource
-    $.loadKMI = function(options) {
-        options = options || {
+    $.loadKMI = function(args) {
+        var options = {
             opacity: 1,
             layer: "dpaw:mapbox_outdoors",
             format: "image/jpeg"
-        };
+        }
+        if (args) { $.extend(options, args) };
         var tileSize = 1024;
         var projectionExtent = projection.getExtent();
         var size = ol.extent.getWidth(projectionExtent) / tileSize;
@@ -71,25 +74,30 @@ $(document).ready(function() {
         // new ol.Graticule().setMap(map);
         map.features = new ol.Collection();
         // default styling for drawn features
-        var defaultColour = "#000";
+        $("#colour button").on("click", function() {
+            window.colour = $(this).css("background-color");
+            $("#colourbutton").css({ "background-color": colour }).click();
+            $("#col").click();
+        });
+        window.colour = $("#colourbutton").css("background-color");
         map.style = new ol.style.Style({
             fill: new ol.style.Fill({
                 color: "rgba(255, 255, 255, 0.2)"
             }),
             stroke: new ol.style.Stroke({
-                color: defaultColour,
+                color: colour,
                 width: 2
             }),
             text: new ol.style.Text({
-                font: "14px Helvetica",
+                font: "14px sans-serif",
                 textAlign: "left",
                 offsetX: 8,
                 fill: new ol.style.Fill({
-                    color: defaultColour
+                    color: colour 
                 }),
                 stroke: new ol.style.Stroke({
-                    color: "#fff",
-                    width: 3
+                    color: "rgba(255, 255, 255, 0.7)",
+                    width: 4
                 })
             })
         });
@@ -99,15 +107,18 @@ $(document).ready(function() {
                 features: map.features
             }),
             style: function(feature) {
-                if (!feature.get("colour")) {
-                    feature.set("colour", defaultColour);
-                }
+                if (!feature.get("colour")) { feature.set("colour", colour) }
+                if (!feature.get("label")) { feature.set("label", "") }
                 map.style.getText().setText(feature.get("label"));
                 map.style.stroke_.color_ = feature.get("colour");
                 map.style.image_ = new ol.style.Circle({
                     radius: 4,
                     fill: new ol.style.Fill({
                         color: feature.get("colour")
+                    }),
+                    stroke: new ol.style.Stroke({
+                        color: "rgba(255, 255, 255, 0.7)",
+                        width: 2
                     })
                 });
                 map.style.text_.fill_.color_ = feature.get("colour");
@@ -143,7 +154,7 @@ $(document).ready(function() {
                 return;
             }
             var label = window.prompt("Label feature (\\n is newline, blank removes label)?", e.selected[0].get("label"));
-            e.selected[0].set("label", label);
+            if(label) { e.selected[0].set("label", label) };
             map.lbl.getFeatures().remove(e.selected[0]);
         });
         map.col = new ol.interaction.Select();
@@ -153,7 +164,6 @@ $(document).ready(function() {
                 window.alert("Please click a feature to set it's colour.");
                 return;
             }
-            var colour = window.prompt("Colour feature (try 'red' or '#ff0000' or 'rgba(255,0,0,0.5)')?", e.selected[0].get("colour"));
             e.selected[0].set("colour", colour);
             map.col.getFeatures().remove(e.selected[0]);
         });
@@ -166,9 +176,81 @@ $(document).ready(function() {
             $("div.controls .toggle").addClass("hollow");
             $(this).removeClass("hollow");
             map.deinteract();
-            map[$(this).attr("id")].setActive(true);
+            if ($(this).attr("id") != "pan") {
+                map[$(this).attr("id")].setActive(true);
+            }
         });
-        $("#pnt").click();
+        // Save history into localforage
+        map.saveversion = function() {
+            if (map.features.array_.length == 0) { return }
+            setTimeout(function() {
+                var currentfeatures = geojson.writeFeatures(map.features.array_);
+                map.savedstate.lastsave = moment().format();
+                if (!map.savedstate.features) {
+                    map.savedstate.features = currentfeatures;
+                } else if (currentfeatures != map.savedstate.features) {
+                    map.savedstate.history = map.savedstate.history || [];
+                    // max 100 history
+                    map.savedstate.history = map.savedstate.history.slice(-100);
+                    map.savedstate.history.push(map.savedstate.features);
+                    map.savedstate.features = currentfeatures;
+                }
+                localforage.setItem(foragekey, map.savedstate);
+                $("#mapid").text(mapid + " (" + email + ") saved " + map.savedstate.lastsave);
+                if (map.features.array_.length) {
+                    $("#numfeatures").text(" (" + map.features.array_.length + ")");
+                }
+                if (map.savedstate.history) {
+                    $("#undos").text(" (" + map.savedstate.history.length + ")");
+                }
+                if (map.savedstate.redo) {
+                    $("#redos").text(" (" + map.savedstate.redo.length + ")");
+                }
+            }, 100);
+        };
+        $("#upload").on("change", function() {
+            var file = $(this).prop("files")[0]
+            var reader = new FileReader();
+            reader.onload = function(f) {
+                if (file.name.endsWith(".zip")) {
+                    window.mapzip = new JSZip(f.target.result);
+                    if (mapzip.files["mudmap.json"] && confirm("Replace current mudmap with " + file.name + " ?")) {
+                        localforage.setItem(foragekey, JSON.parse(mapzip.files["mudmap.json"].asText())).then(function() {
+                            // reload to init from uploaded file
+                            window.location.reload();
+                        });
+                    } else {
+                        alert("This zipfile didn't contain mudmap.json =(");
+                    }
+                } else if (file.name.endsWith("json")) {
+                    if(confirm("Add features from " + file.name + " to mudmap?")) {
+                        window.filename = f;
+                        map.features.extend(geojson.readFeatures(f.target.result));
+                    }
+                }
+            };
+            if (file.name.endsWith(".zip")) {
+                reader.readAsArrayBuffer(file);
+            } else {
+                reader.readAsText(file);
+            }
+        });
+        $("#zoom").on("click", function() {
+            map.getView().fit(map.featureOverlay.getSource().getExtent(), map.getSize());
+        });
+        $("#undo").on("click", function() {
+            map.features.clear();
+            map.savedstate.redo = map.savedstate.redo || [];
+            map.savedstate.redo.push(map.savedstate.history.pop());
+            map.features.extend(geojson.readFeatures(map.savedstate.history.pop()));
+        });
+        $("#redo").on("click", function() {
+            if (map.savedstate.redo && map.savedstate.redo.length > 0) {
+                map.features.clear();
+                map.features.extend(geojson.readFeatures(map.savedstate.redo.pop()));
+            }
+        });
+        $("#pan").click();
         window.initMap = undefined;
     };
     // Print stuff
@@ -181,22 +263,36 @@ $(document).ready(function() {
         var height = Math.round(dim[1] * 200 / 25.4);
         var size = map.getSize();
         var extent = map.getView().calculateExtent(size);
+        map.deinteract();
+        map.setSize([ width, height ]);
+        map.getView().fit(extent, map.getSize());
+        map.renderSync();
         window.setTimeout(function() {
             var pdf = new jsPDF("landscape", undefined, "a3");
             // Use jpeg at 0.92 quality for a bit of compression so PDF's aren't huge
             pdf.addImage($("canvas")[0].toDataURL("image/jpeg", .92), "JPEG", 0, 0, dim[0], dim[1]);
             pdf.setFontSize(24)
-            pdf.text(2, 295, "SSS Mudmap - " + mapid + ". Printed by " + email + " on <date>")
-            pdf.save("mudmap.pdf");
+            pdf.text(2, 295, "SSS Mudmap - " + mapid + " (" + email + ") modified " + map.savedstate.lastsave)
+            pdf.save(foragekey + "_" + map.savedstate.lastsave + ".pdf");
             map.setSize(size);
             map.getView().fit(extent, size);
             map.renderSync();
-            $("#export-pdf").prop("disabled", false);
             document.body.style.cursor = "auto";
+            $("#export-pdf").prop("disabled", false);
         }, 5e3);
-        map.setSize([ width, height ]);
-        map.getView().fit(extent, map.getSize());
-        map.renderSync();
+    });
+    // Download map
+    $("#download").on("click", function() {
+        document.body.style.cursor = "progress";
+        var zip = new JSZip();
+        zip.file("mudmap.json", JSON.stringify(map.savedstate));
+        var content = zip.generate({type:"blob", compression: "DEFLATE"});
+        saveAs(content, "p&w_mudmap_" + mapid + "_" + map.savedstate.lastsave + ".zip");
+        document.body.style.cursor = "auto";
+    });
+    $("#export-json").on("click", function() {
+        var jsonblob = new Blob(map.savedstate.history.slice(-1), {type: "application/vnd.geo+json;charset=utf-8"});
+        saveAs(jsonblob, "p&w_mudmap_" + mapid + "_" + map.savedstate.lastsave + ".json");
     });
     // Initialise with user info
     $.get("/auth", function(userdata) {
@@ -207,43 +303,90 @@ $(document).ready(function() {
             while (!name) {
                 var name = window.prompt("Get or create mudmap - enter mudmap name:")
             }
-            var sep = "?";
-            if (window.location.href.search("\\?") > -1) { sep = "&" }
-            window.location.href = window.location.href + sep + $.param({"name": name});
-        } else {
-            window.mapid = name; 
-            $("#mapid").text($.urlParam("name") + " (" + email + ")");
-        }
-        // Load state from url if sent here by sss
-        if ($.urlParam("ss")) {
-            $.get("https://spatialsupport.dpaw.wa.gov.au/apps/spatial/layers.json", function(data) {
-                window.ss = JSON.parse(decodeURIComponent($.urlParam("ss")));
-                window.layers = [];
-                $.each(ss.layers, function(index, lyr) {
-                    if (lyr.layer_id == "resource_tracking_week_base") {
-                        lyr.layer_id = "resource_tracking_printable";
-                    }
-                    if (lyr.layer_id == "resource_tracking_week_symbols_overlay") {
-                        return;
-                    }
-                    var layer = $.grep(data.layers, function(l) {
-                        return l.id == lyr.layer_id;
-                    })[0];
-                    lyr.layer = layer.layers;
-                    lyr.format = "image/jpeg";
-                    if (layer.transparent) {
-                        lyr.format = "image/png";
-                    }
-                    layers.push($.loadKMI(lyr));
+            window.foragekey = email + "_map_" + name
+            if ($.urlParam("ss")) {
+                $.get("https://spatialsupport.dpaw.wa.gov.au/apps/spatial/layers.json", function(data) {
+                    window.ss = JSON.parse(decodeURIComponent($.urlParam("ss")));
+                    var layers = [];
+                    $.each(ss.layers, function(index, lyr) {
+                        if (lyr.layer_id == "resource_tracking_week_base") {
+                            lyr.layer_id = "resource_tracking_printable";
+                        }
+                        if (lyr.layer_id == "resource_tracking_week_symbols_overlay") {
+                            return;
+                        }
+                        var layer = $.grep(data.layers, function(l) {
+                            return l.id == lyr.layer_id;
+                        })[0];
+                        lyr.layer = layer.layers;
+                        lyr.format = "image/jpeg";
+                        if (layer.transparent) {
+                            lyr.format = "image/png";
+                        }
+                        layers.push(lyr);
+                    });
+                    localforage.getItem(foragekey, function(state) {
+                        // If this is an existing map, just swap out the baselayers
+                        if (state) {
+                            $.extend(state, { layers: layers });
+                            localforage.setItem(email + "_map_" + name, state).then(function() {
+                                // Reload page with just mapid
+                                window.location.search = "?" + $.param({"name": name});
+                            });
+                        // Otherwise do a fresh load
+                        } else {
+                            localforage.setItem(foragekey, {
+                                layers: layers,
+                                center: ss.center.coordinates,
+                                // Deal with offset of tilesize from 256 -> 1024 by adding 3 zoomlevels
+                                zoom: ss.zoom + 3
+                            }).then(function() {
+                                // Reload page with just mapid
+                                window.location.search = "?" + $.param({"name": name});
+                            });
+                        }
+                    });
                 });
-                initMap();
-                map.getView().setCenter(ss.center.coordinates);
-                // Deal with offset of tilesize from 256 -> 1024 by adding 3 zoomlevels
-                map.getView().setZoom(ss.zoom + 3);
-            });
+            } else {
+                // Default map
+                window.location.search = "?" + $.param({"name": name});
+            }
         } else {
-            window.layers = [ $.loadKMI() ];
-            initMap();
+            window.mapid =  $.urlParam("name");
+            window.foragekey = email + "_map_" + mapid
+            localforage.getItem(foragekey).then(function(state) {
+                if (state) {
+                    if (state.layers) {
+                        window.layers = $.map(state.layers, $.loadKMI);
+                    } else {
+                        window.layers = [ $.loadKMI() ];
+                    }
+                    initMap();
+                    map.getView().setCenter(state.center);
+                    map.getView().setZoom(state.zoom);
+                    if (state.features) { map.once("postrender", function() { 
+                        map.features.extend(geojson.readFeatures(state.features));
+                        map.savedstate = state;
+                        $("#zoom").click();
+                        map.on("postrender", map.saveversion);
+                        $("#mapid").text(mapid + " (" + email + ") loaded " + state.lastsave);
+                    }); } else {
+                        map.savedstate = state;
+                        map.on("postrender", map.saveversion);
+                        $("#mapid").text(mapid + " (" + email + ") loaded " + state.lastsave);
+                    }
+                } else {
+                    window.layers = [ $.loadKMI() ]
+                    initMap();
+                    map.savedstate = {
+                        center: map.getView().getCenter(),
+                        zoom: map.getView().getZoom()
+                    }
+                    localforage.setItem(foragekey, map.savedstate);
+                    map.on("postrender", map.saveversion);
+                    $("#mapid").text(mapid + " (" + email + ") new");
+                }
+            });
         }
     });
 });
