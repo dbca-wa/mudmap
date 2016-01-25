@@ -26,8 +26,10 @@ $(document).ready(function() {
             opacity: 1,
             layer: "dpaw:mapbox_outdoors",
             format: "image/jpeg"
+        };
+        if (args) {
+            $.extend(options, args);
         }
-        if (args) { $.extend(options, args) };
         var tileSize = 1024;
         var projectionExtent = projection.getExtent();
         var size = ol.extent.getWidth(projectionExtent) / tileSize;
@@ -76,7 +78,9 @@ $(document).ready(function() {
         // default styling for drawn features
         $("#colour button").on("click", function() {
             window.colour = $(this).css("background-color");
-            $("#colourbutton").css({ "background-color": colour }).click();
+            $("#colourbutton").css({
+                "background-color": colour
+            }).click();
             $("#col").click();
         });
         window.colour = $("#colourbutton").css("background-color");
@@ -93,7 +97,7 @@ $(document).ready(function() {
                 textAlign: "left",
                 offsetX: 8,
                 fill: new ol.style.Fill({
-                    color: colour 
+                    color: colour
                 }),
                 stroke: new ol.style.Stroke({
                     color: "rgba(255, 255, 255, 0.7)",
@@ -107,8 +111,12 @@ $(document).ready(function() {
                 features: map.features
             }),
             style: function(feature) {
-                if (!feature.get("colour")) { feature.set("colour", colour) }
-                if (!feature.get("label")) { feature.set("label", "") }
+                if (!feature.get("colour")) {
+                    feature.set("colour", colour);
+                }
+                if (!feature.get("label")) {
+                    feature.set("label", "");
+                }
                 map.style.getText().setText(feature.get("label"));
                 map.style.stroke_.color_ = feature.get("colour");
                 map.style.image_ = new ol.style.Circle({
@@ -127,7 +135,11 @@ $(document).ready(function() {
         });
         map.featureOverlay.setMap(map);
         // Create interactions, add them to map
-        $.each({"pnt": "Point", "lns": "LineString", "pol": "Polygon"}, function(key, value) {
+        $.each({
+            pnt: "Point",
+            lns: "LineString",
+            pol: "Polygon"
+        }, function(key, value) {
             map[key] = new ol.interaction.Draw({
                 features: map.features,
                 type: value
@@ -154,7 +166,9 @@ $(document).ready(function() {
                 return;
             }
             var label = window.prompt("Label feature (\\n is newline, blank removes label)?", e.selected[0].get("label"));
-            if(label) { e.selected[0].set("label", label) };
+            if (label) {
+                e.selected[0].set("label", label);
+            }
             map.lbl.getFeatures().remove(e.selected[0]);
         });
         map.col = new ol.interaction.Select();
@@ -182,7 +196,9 @@ $(document).ready(function() {
         });
         // Save history into localforage
         map.saveversion = function() {
-            if (map.features.array_.length == 0) { return }
+            if (map.features.array_.length == 0) {
+                return;
+            }
             setTimeout(function() {
                 var currentfeatures = geojson.writeFeatures(map.features.array_);
                 map.savedstate.lastsave = moment().format();
@@ -209,7 +225,7 @@ $(document).ready(function() {
             }, 100);
         };
         $("#upload").on("change", function() {
-            var file = $(this).prop("files")[0]
+            var file = $(this).prop("files")[0];
             var reader = new FileReader();
             reader.onload = function(f) {
                 if (file.name.endsWith(".zip")) {
@@ -223,7 +239,7 @@ $(document).ready(function() {
                         alert("This zipfile didn't contain mudmap.json =(");
                     }
                 } else if (file.name.endsWith("json")) {
-                    if(confirm("Add features from " + file.name + " to mudmap?")) {
+                    if (confirm("Add features from " + file.name + " to mudmap?")) {
                         window.filename = f;
                         map.features.extend(geojson.readFeatures(f.target.result));
                     }
@@ -271,8 +287,8 @@ $(document).ready(function() {
             var pdf = new jsPDF("landscape", undefined, "a3");
             // Use jpeg at 0.92 quality for a bit of compression so PDF's aren't huge
             pdf.addImage($("canvas")[0].toDataURL("image/jpeg", .92), "JPEG", 0, 0, dim[0], dim[1]);
-            pdf.setFontSize(24)
-            pdf.text(2, 295, "SSS Mudmap - " + mapid + " (" + email + ") modified " + map.savedstate.lastsave)
+            pdf.setFontSize(24);
+            pdf.text(2, 295, "SSS Mudmap - " + mapid + " (" + email + ") modified " + map.savedstate.lastsave);
             pdf.save(foragekey + "_" + map.savedstate.lastsave + ".pdf");
             map.setSize(size);
             map.getView().fit(extent, size);
@@ -286,12 +302,17 @@ $(document).ready(function() {
         document.body.style.cursor = "progress";
         var zip = new JSZip();
         zip.file("mudmap.json", JSON.stringify(map.savedstate));
-        var content = zip.generate({type:"blob", compression: "DEFLATE"});
+        var content = zip.generate({
+            type: "blob",
+            compression: "DEFLATE"
+        });
         saveAs(content, "p&w_mudmap_" + mapid + "_" + map.savedstate.lastsave + ".zip");
         document.body.style.cursor = "auto";
     });
     $("#export-json").on("click", function() {
-        var jsonblob = new Blob(map.savedstate.history.slice(-1), {type: "application/vnd.geo+json;charset=utf-8"});
+        var jsonblob = new Blob(map.savedstate.history.slice(-1), {
+            type: "application/vnd.geo+json;charset=utf-8"
+        });
         saveAs(jsonblob, "p&w_mudmap_" + mapid + "_" + map.savedstate.lastsave + ".json");
     });
     // Initialise with user info
@@ -301,9 +322,9 @@ $(document).ready(function() {
         if (!$.urlParam("name")) {
             var name = false;
             while (!name) {
-                var name = window.prompt("Get or create mudmap - enter mudmap name:")
+                var name = window.prompt("Get or create mudmap - enter mudmap name:");
             }
-            window.foragekey = email + "_map_" + name
+            window.foragekey = email + "_map_" + name;
             if ($.urlParam("ss")) {
                 $.get("https://spatialsupport.dpaw.wa.gov.au/apps/spatial/layers.json", function(data) {
                     window.ss = JSON.parse(decodeURIComponent($.urlParam("ss")));
@@ -328,12 +349,15 @@ $(document).ready(function() {
                     localforage.getItem(foragekey, function(state) {
                         // If this is an existing map, just swap out the baselayers
                         if (state) {
-                            $.extend(state, { layers: layers });
+                            $.extend(state, {
+                                layers: layers
+                            });
                             localforage.setItem(email + "_map_" + name, state).then(function() {
                                 // Reload page with just mapid
-                                window.location.search = "?" + $.param({"name": name});
+                                window.location.search = "?" + $.param({
+                                    name: name
+                                });
                             });
-                        // Otherwise do a fresh load
                         } else {
                             localforage.setItem(foragekey, {
                                 layers: layers,
@@ -342,18 +366,22 @@ $(document).ready(function() {
                                 zoom: ss.zoom + 3
                             }).then(function() {
                                 // Reload page with just mapid
-                                window.location.search = "?" + $.param({"name": name});
+                                window.location.search = "?" + $.param({
+                                    name: name
+                                });
                             });
                         }
                     });
                 });
             } else {
                 // Default map
-                window.location.search = "?" + $.param({"name": name});
+                window.location.search = "?" + $.param({
+                    name: name
+                });
             }
         } else {
-            window.mapid =  $.urlParam("name");
-            window.foragekey = email + "_map_" + mapid
+            window.mapid = $.urlParam("name");
+            window.foragekey = email + "_map_" + mapid;
             localforage.getItem(foragekey).then(function(state) {
                 if (state) {
                     if (state.layers) {
@@ -364,24 +392,26 @@ $(document).ready(function() {
                     initMap();
                     map.getView().setCenter(state.center);
                     map.getView().setZoom(state.zoom);
-                    if (state.features) { map.once("postrender", function() { 
-                        map.features.extend(geojson.readFeatures(state.features));
-                        map.savedstate = state;
-                        $("#zoom").click();
-                        map.on("postrender", map.saveversion);
-                        $("#mapid").text(mapid + " (" + email + ") loaded " + state.lastsave);
-                    }); } else {
+                    if (state.features) {
+                        map.once("postrender", function() {
+                            map.features.extend(geojson.readFeatures(state.features));
+                            map.savedstate = state;
+                            $("#zoom").click();
+                            map.on("postrender", map.saveversion);
+                            $("#mapid").text(mapid + " (" + email + ") loaded " + state.lastsave);
+                        });
+                    } else {
                         map.savedstate = state;
                         map.on("postrender", map.saveversion);
                         $("#mapid").text(mapid + " (" + email + ") loaded " + state.lastsave);
                     }
                 } else {
-                    window.layers = [ $.loadKMI() ]
+                    window.layers = [ $.loadKMI() ];
                     initMap();
                     map.savedstate = {
                         center: map.getView().getCenter(),
                         zoom: map.getView().getZoom()
-                    }
+                    };
                     localforage.setItem(foragekey, map.savedstate);
                     map.on("postrender", map.saveversion);
                     $("#mapid").text(mapid + " (" + email + ") new");
