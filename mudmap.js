@@ -67,7 +67,9 @@ $(document).ready(function() {
             view: new ol.View({
                 projection: projection,
                 center: [ 123.75, -24.966 ],
-                zoom: 5
+                zoom: 5,
+                maxZoom: 21,
+                minZoom: 3
             }),
             controls: ol.control.defaults().extend([ new ol.control.ScaleLine() ])
         });
@@ -165,7 +167,7 @@ $(document).ready(function() {
                 window.alert("Please click a feature to set it's label.");
                 return;
             }
-            var label = window.prompt("Label feature (\\n is newline, blank removes label)?", e.selected[0].get("label"));
+            var label = window.prompt("Label feature?", e.selected[0].get("label"));
             if (label) {
                 e.selected[0].set("label", label);
             }
@@ -266,6 +268,27 @@ $(document).ready(function() {
                 map.features.extend(geojson.readFeatures(map.savedstate.redo.pop()));
             }
         });
+        localforage.keys(function(err, keys) {
+            $.each(keys, function(index, fkey) {
+                if (fkey.startsWith(email) && fkey != foragekey) {
+                    var name = fkey.replace(email + "_map_", "");
+                    $("#maplist ul").append(
+                        '<li><div class="row"><div class="columns"><a href="./?' + 
+                        $.param({name:name}) + '">' + name + '</a></div><div class="columns shrink"><button id="' + 
+                        fkey + '" class="button hollow alert removemap">Remove<button></div></li>'
+                    );
+                }
+            })
+            $("button.removemap").on("click", function() {
+                var removeid = $(this).attr("id");
+                if (confirm("Are you sure you want to remove " + removeid + "?")) {
+                    localforage.removeItem(removeid).then(function() {
+                        // just reload to clear menu item otherwise
+                        window.location.reload();
+                    });
+                }
+            })
+        })
         $("#pan").click();
         window.initMap = undefined;
     };
@@ -320,10 +343,8 @@ $(document).ready(function() {
         window.email = JSON.parse(userdata).email.toLowerCase();
         // Detect if url to existing mudmap, if not get/create one
         if (!$.urlParam("name")) {
-            var name = false;
-            while (!name) {
-                var name = window.prompt("Get or create mudmap - enter mudmap name:");
-            }
+            var name = window.prompt("Load existing or create mudmap - enter name:");
+            if (!name) { window.location.reload() }
             window.foragekey = email + "_map_" + $.param({name: name}).slice(5);
             if ($.urlParam("ss")) {
                 $.get("https://spatialsupport.dpaw.wa.gov.au/apps/spatial/layers.json", function(data) {

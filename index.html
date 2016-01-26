@@ -22,11 +22,13 @@
       .container .row { width: 100%; }
       .controls .button, .controls h4, .controls input { margin: 0px; }
       .controls h4 { margin: 0 1rem; }
-      .controls .dropdown-pane { padding: 0px; background-color: transparent; }
-      .controls {background-color: #ccc; color: #444; }
+      #colour { padding: 0px; background-color: transparent; border: none; }
+      #colour button:hover { text-decoration: underline; }
+      .controls { background-color: #ccc; color: #444; }
       .controls .button.hollow, .controls .button-group .button { border: none; }
-      .controls .button.hollow:hover { color: #fff; }
+      .controls .button.toggle:hover { color: #fff; }
       .map { width: 100%; min-height: 0; flex: 1; }
+      #maplist { max-height: 80vh; width: 30rem; overflow: auto; }
     </style>
   </head>
   <body>
@@ -37,6 +39,7 @@
             <button id="pnt" type="button" class="button small secondary toggle" title="Draw points with clicks">Point</button>
             <button id="lns" type="button" class="button small secondary toggle" title="Draw a line with clicks, shift and drag for continuous">Line</button>
             <button id="pol" type="button" class="button small secondary toggle" title="Draw a polygon with clicks, shift and drag for continuous">Polygon</button>
+            <div class="columns"></div>
             <button id="lbl" type="button" class="button small secondary toggle" title="Set a text label for a feature">Label</button>
             <button id="col" type="button" class="button small secondary toggle" title="Set the colour of a feature">Colour</button>
             <button id="colourbutton" type="button" class="dropdown button small secondary arrow-only" data-toggle="colour" style="background-color:#000000;"></button>
@@ -53,11 +56,19 @@
             </div>
             <button id="mod" type="button" class="button small secondary toggle" title="Drag to move nodes on features, click to remove">Edit</button>
             <button id="del" type="button" class="button small secondary toggle" title="Remove an entire feature by clicking">Remove</button>
-            <div class="columns align-middle text-center"><span id="mapid"></span></div>
+            <div class="columns"></div>
+            <button id="maps" type="button" class="dropdown button small secondary" data-toggle="maplist"><span id="mapid"></span></button>
+            <div class="dropdown-pane small" id="maplist" data-dropdown>
+                <ul class="menu vertical">
+                    <li><a href="./" class="button secondary">New Map</a></li>
+                </ul>
+            </div>
+            <div class="columns"></div>
             <button id="zoom" type="button" class="button small secondary" title="Zoom to drawing (number of features)">Zoom <span id="numfeatures"></span></button>
             <button id="undo" type="button" class="button small secondary" title="Undo last action">Undo<span id="undos"></span></button>
             <button id="redo" type="button" class="button small secondary" title="Redo last undone action">Redo<span id="redos"></span></button>
-            <input title="Upload a zip file to replace map, or a json file to add to map" type="file" id="upload" style="width:5rem;height:100%" />
+            <div class="columns"></div>
+            <a class="button small secondary" title="Upload a zip file to replace map, or a json file to add to map"><input type="file" id="upload" style="width:5rem;height:100%" /></a>
             <button id="download" type="button" class="button small secondary" title="Save to a zip file with full history that can be shared"><i class="fi-share"></i> Share</button>
             <button id="export-json" type="button" class="button small secondary" title="Save to a GeoJSON file that can be opened in desktop software like QGIS"><i class="fi-download"></i> GeoJSON</button>
             <button id="export-pdf" type="button" class="button small secondary" title="Printable A3 PDF output"><i class="fi-print"></i> PDF</button>
