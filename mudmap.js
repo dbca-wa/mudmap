@@ -73,9 +73,6 @@ $(document).ready(function() {
             }),
             controls: ol.control.defaults().extend([ new ol.control.ScaleLine() ])
         });
-        // Testing graticule, needs better labeling =/
-        // A standard KMI layer may be better
-        // new ol.Graticule().setMap(map);
         map.features = new ol.Collection();
         // default styling for drawn features
         $("#colour button").on("click", function() {
@@ -107,6 +104,28 @@ $(document).ready(function() {
                 })
             })
         });
+        // graticule for printing etc
+        var lonFormatter = function(lon) {
+          var formattedLon = Math.abs(Math.round(lon * 100) / 100);
+          formattedLon += (lon < 0) ? 'W' : ((lon > 0) ? 'E' : '');
+          return formattedLon;
+        };
+
+        var latFormatter = function(lat) {
+          var formattedLat = Math.abs(Math.round(lat * 100) / 100);
+          formattedLat += (lat < 0) ? 'S' : ((lat > 0) ? 'N' : '');
+          return formattedLat;
+        };
+
+        // Create the graticule component
+        map.graticule = new ol.Graticule({
+          showLabels: true,
+          lonLabelFormatter: lonFormatter,
+          lonLabelPosition: 0.02,
+          latLabelFormatter: latFormatter,
+          latLabelPosition: 0.98
+        });
+        map.graticule.setMap(map);
         // overlay which all interactions use
         map.featureOverlay = new ol.layer.Vector({
             source: new ol.source.Vector({
@@ -333,7 +352,7 @@ $(document).ready(function() {
         document.body.style.cursor = "auto";
     });
     $("#export-json").on("click", function() {
-        var jsonblob = new Blob(map.savedstate.history.slice(-1), {
+        var jsonblob = new Blob([geojson.writeFeatures(map.features.array_)], {
             type: "application/vnd.geo+json;charset=utf-8"
         });
         saveAs(jsonblob, "p&w_mudmap_" + mapid + "_" + map.savedstate.lastsave + ".json");
