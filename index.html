@@ -31,6 +31,7 @@
       .map { width: 100%; min-height: 0; flex: 1; }
       #maplist { max-height: 80vh; width: 30rem; overflow: auto; }
       #upload { padding: 0; }
+      .ol-mouse-position { background-color: rgba(0, 60, 136, 0.3); border-radius: 4px; color: #eee; font-size: 0.8rem; padding: 0 0.5rem; }
     </style>
   </head>
   <body>
@@ -56,21 +57,27 @@
                 <button type="button" class="small button" style="background-color:#555753;">gray</button>
                 <button type="button" class="small button" style="background-color:#000000;">black</button>
             </div>
+            <button id="sizebutton" type="button" class="dropdown button small secondary" data-toggle="sizelist">Size</button>
+            <div class="dropdown-pane small" id="sizelist" data-dropdown>
+                <ul class="menu vertical">
+                </ul>
+            </div>
             <button id="mod" type="button" class="button small secondary toggle" title="Drag to move nodes on features, click to remove">Edit</button>
             <button id="del" type="button" class="button small secondary toggle" title="Remove an entire feature by clicking">Remove</button>
             <div class="columns"></div>
-            <button id="maps" type="button" class="dropdown button small secondary" data-toggle="maplist"><span id="mapid"></span></button>
+            <button id="maps" type="button" class="dropdown button small" data-toggle="maplist"><span id="mapid"></span></button>
             <div class="dropdown-pane small" id="maplist" data-dropdown>
                 <ul class="menu vertical">
-                    <li><a href="./" class="button secondary">New Map</a></li>
+                    <li><a href="./" class="button">New Map</a></li>
                 </ul>
             </div>
+            <div class="columns shrink align-middle" title="Feature measurements">&nbsp;<small id="measure"></small></div>
             <div class="columns"></div>
             <button id="zoom" type="button" class="button small secondary" title="Zoom to drawing (number of features)">Zoom <span id="numfeatures"></span></button>
             <button id="undo" type="button" class="button small secondary" title="Undo last action">Undo<span id="undos"></span></button>
             <button id="redo" type="button" class="button small secondary" title="Redo last undone action">Redo<span id="redos"></span></button>
             <div class="columns"></div>
-            <a id="upload" class="button small secondary" title="Upload a zip file to replace map, or a json file to add to map"><input type="file" id="upload" style="width:5rem;height:100%" /></a>
+            <a class="button small secondary" title="Upload a zip file to replace map, or a json file to add to map"><input type="file" id="upload" style="width:5rem;height:100%" /></a>
             <button id="download" type="button" class="button small secondary" title="Save to a zip file with full history that can be shared"><i class="fi-share"></i> Share</button>
             <button id="export-json" type="button" class="button small secondary" title="Save to a GeoJSON file that can be opened in desktop software like QGIS"><i class="fi-download"></i> GeoJSON</button>
             <button id="export-pdf" type="button" class="button small secondary" title="Printable A3 PDF output"><i class="fi-print"></i> PDF</button>

@@ -71,7 +71,15 @@ $(document).ready(function() {
                 maxZoom: 21,
                 minZoom: 3
             }),
-            controls: ol.control.defaults().extend([ new ol.control.ScaleLine() ])
+            controls: ol.control.defaults().extend([
+                new ol.control.ScaleLine(),
+                new ol.control.MousePosition({
+                    projection: 'EPSG:4326',
+                    coordinateFormat: function(coord) {
+                        return ol.coordinate.toStringHDMS(coord);
+                    }
+                }),
+            ])
         });
         map.features = new ol.Collection();
         // default styling for drawn features
@@ -92,7 +100,7 @@ $(document).ready(function() {
                 width: 2
             }),
             text: new ol.style.Text({
-                font: "14px sans-serif",
+                font: "14px Calibri,sans-serif",
                 textAlign: "left",
                 offsetX: 8,
                 fill: new ol.style.Fill({
@@ -126,6 +134,43 @@ $(document).ready(function() {
           latLabelPosition: 0.98
         });
         map.graticule.setMap(map);
+        var wgs84Sphere = new ol.Sphere(6378137);
+        /**
+         * format length output
+         * @param {ol.geom.LineString} line
+         * @return {string}
+         */
+        map.formatLength = function(line) {
+            if (line.getType() == "Polygon") {
+                var coords = line.getLinearRing(0).getCoordinates();
+            } else {
+                var coords = line.getCoordinates();
+            }
+            var length = 0;
+            for (var i = 0, ii = coords.length - 1; i < ii; ++i) {
+              length += wgs84Sphere.haversineDistance(coords[i], coords[i+1]);
+            }
+            if (length > 100) {
+                var output = (Math.round(length / 1000 * 100) / 100) + ' km';
+            } else {
+                var output = (Math.round(length * 100) / 100) + ' m';
+            }
+            return output
+        };
+        /**
+         * format area output
+         * @param {ol.geom.Polygon} polygon
+         * @return {string}
+         */
+        map.formatArea = function(polygon) {
+            var area = Math.abs(wgs84Sphere.geodesicArea(polygon.getLinearRing(0).getCoordinates()));
+            if (area > 10000) {
+                var output = (Math.round(area / 1000000 * 100) / 100) + ' km<sup>2</sup>';
+            } else {
+                var output = (Math.round(area * 100) / 100) + ' m<sup>2</sup>';
+            }
+            return output;
+        };
         // overlay which all interactions use
         map.featureOverlay = new ol.layer.Vector({
             source: new ol.source.Vector({
@@ -177,6 +222,21 @@ $(document).ready(function() {
             map.features.remove(e.selected[0]);
             map.del.getFeatures().remove(e.selected[0]);
         });
+        // In pan mode display area/length of clicked feature
+        map.pan = new ol.interaction.Select();
+        map.addInteraction(map.pan);
+        map.pan.on("select", function(e) {
+            if (e.selected[0]) {
+                geom = e.selected[0].getGeometry();
+                if (geom.getType() == "Polygon") {
+                    $("#measure").html(map.formatArea(geom) + " perim " + map.formatLength(geom));
+                } else if (geom.getType() == "LineString") {
+                    $("#measure").html(map.formatLength(geom));
+                }
+            } else {
+                $("#measure").html("");
+            }
+        });
         // Label and colour tools just set properties and let style function 
         // handle redraws
         map.lbl = new ol.interaction.Select();
@@ -203,7 +263,7 @@ $(document).ready(function() {
             map.col.getFeatures().remove(e.selected[0]);
         });
         map.deinteract = function() {
-            $.each([ map.pnt, map.lns, map.pol, map.mod, map.del, map.lbl, map.col ], function(index, ctrl) {
+            $.each([ map.pnt, map.lns, map.pol, map.mod, map.del, map.lbl, map.col, map.pan ], function(index, ctrl) {
                 ctrl.setActive(false);
             });
         };
@@ -211,9 +271,7 @@ $(document).ready(function() {
             $("div.controls .toggle").addClass("hollow");
             $(this).removeClass("hollow");
             map.deinteract();
-            if ($(this).attr("id") != "pan") {
-                map[$(this).attr("id")].setActive(true);
-            }
+            map[$(this).attr("id")].setActive(true);
         });
         // Save history into localforage
         map.saveversion = function() {
@@ -233,7 +291,6 @@ $(document).ready(function() {
                     map.savedstate.features = currentfeatures;
                 }
                 localforage.setItem(foragekey, map.savedstate);
-                $("#mapid").text(mapid + " (" + email + ") saved " + map.savedstate.lastsave);
                 if (map.features.array_.length) {
                     $("#numfeatures").text(" (" + map.features.array_.length + ")");
                 }
@@ -329,8 +386,8 @@ $(document).ready(function() {
             var pdf = new jsPDF("landscape", undefined, "a3");
             // Use jpeg at 0.92 quality for a bit of compression so PDF's aren't huge
             pdf.addImage($("canvas")[0].toDataURL("image/jpeg", .92), "JPEG", 0, 0, dim[0], dim[1]);
-            pdf.setFontSize(24);
-            pdf.text(2, 295, "SSS Mudmap - " + mapid + " (" + email + ") modified " + map.savedstate.lastsave);
+            pdf.setFontSize(16);
+            pdf.text(2, 294, "SSS Mudmap - " + mapid + " (" + email + ") modified " + map.savedstate.lastsave);
             pdf.save(foragekey + "_" + map.savedstate.lastsave + ".pdf");
             map.setSize(size);
             map.getView().fit(extent, size);
@@ -438,12 +495,12 @@ $(document).ready(function() {
                             map.savedstate = state;
                             $("#zoom").click();
                             map.on("postrender", map.saveversion);
-                            $("#mapid").text(mapid + " (" + email + ") loaded " + state.lastsave);
+                            $("#mapid").text(mapid);
                         });
                     } else {
                         map.savedstate = state;
                         map.on("postrender", map.saveversion);
-                        $("#mapid").text(mapid + " (" + email + ") loaded " + state.lastsave);
+                        $("#mapid").text(mapid);
                     }
                 } else {
                     window.layers = [ $.loadKMI() ];
@@ -454,7 +511,7 @@ $(document).ready(function() {
                     };
                     localforage.setItem(foragekey, map.savedstate);
                     map.on("postrender", map.saveversion);
-                    $("#mapid").text(mapid + " (" + email + ") new");
+                    $("#mapid").text(mapid);
                 }
             });
         }
