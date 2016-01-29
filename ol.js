@@ -108,7 +108,7 @@ function H(b, c) {
   b.O = c.prototype;
   b.prototype = new d;
   b.prototype.constructor = b;
-  b.qe = function(b, d, g) {
+  b.re = function(b, d, g) {
     for (var h = Array(arguments.length - 2), k = 2;k < arguments.length;k++) {
       h[k - 2] = arguments[k];
     }
@@ -170,27 +170,30 @@ function Ga(b, c, d, e, f, g) {
   c = e - c;
   return b * b + c * c;
 }
-;function Ja(b) {
+function Ha(b) {
+  return b * Math.PI / 180;
+}
+;function Ia(b) {
   return function(c) {
     if (c) {
       return [Ea(c[0], b[0], b[2]), Ea(c[1], b[1], b[3])];
     }
   };
 }
-function Ka(b) {
+function Ja(b) {
   return b;
 }
-;var La = Array.prototype;
-function Ma(b, c) {
-  La.forEach.call(b, c, void 0);
-}
+;var Ma = Array.prototype;
 function Na(b, c) {
-  return La.filter.call(b, c, void 0);
+  Ma.forEach.call(b, c, void 0);
 }
-function Oa(b) {
+function Oa(b, c) {
+  return Ma.filter.call(b, c, void 0);
+}
+function Pa(b) {
   var c;
   a: {
-    c = Pa;
+    c = Qa;
     for (var d = b.length, e = z(b) ? b.split("") : b, f = 0;f < d;f++) {
       if (f in e && c.call(void 0, e[f], f, b)) {
         c = f;
@@ -201,12 +204,12 @@ function Oa(b) {
   }
   return 0 > c ? null : z(b) ? b.charAt(c) : b[c];
 }
-function Qa(b, c) {
-  var d = La.indexOf.call(b, c, void 0), e;
-  (e = 0 <= d) && La.splice.call(b, d, 1);
+function Ra(b, c) {
+  var d = Ma.indexOf.call(b, c, void 0), e;
+  (e = 0 <= d) && Ma.splice.call(b, d, 1);
   return e;
 }
-function Ra(b) {
+function Sa(b) {
   var c = b.length;
   if (0 < c) {
     for (var d = Array(c), e = 0;e < c;e++) {
@@ -216,7 +219,7 @@ function Ra(b) {
   }
   return [];
 }
-function Sa(b, c) {
+function Ta(b, c) {
   for (var d = 1;d < arguments.length;d++) {
     var e = arguments[d];
     if (fa(e)) {
@@ -231,47 +234,47 @@ function Sa(b, c) {
   }
 }
 function Ua(b, c, d, e) {
-  La.splice.apply(b, Va(arguments, 1));
+  Ma.splice.apply(b, Va(arguments, 1));
 }
 function Va(b, c, d) {
-  return 2 >= arguments.length ? La.slice.call(b, c) : La.slice.call(b, c, d);
+  return 2 >= arguments.length ? Ma.slice.call(b, c) : Ma.slice.call(b, c, d);
 }
-function Wa(b, c) {
-  b.sort(c || Xa);
+function Xa(b, c) {
+  b.sort(c || Ya);
 }
-function Ya(b) {
-  for (var c = Za, d = 0;d < b.length;d++) {
+function Za(b) {
+  for (var c = $a, d = 0;d < b.length;d++) {
     b[d] = {index:d, value:b[d]};
   }
-  var e = c || Xa;
-  Wa(b, function(b, c) {
+  var e = c || Ya;
+  Xa(b, function(b, c) {
     return e(b.value, c.value) || b.index - c.index;
   });
   for (d = 0;d < b.length;d++) {
     b[d] = b[d].value;
   }
 }
-function $a(b, c) {
+function ab(b, c) {
   if (!fa(b) || !fa(c) || b.length != c.length) {
     return !1;
   }
-  for (var d = b.length, e = ab, f = 0;f < d;f++) {
+  for (var d = b.length, e = bb, f = 0;f < d;f++) {
     if (!e(b[f], c[f])) {
       return !1;
     }
   }
   return !0;
 }
-function Xa(b, c) {
+function Ya(b, c) {
   return b > c ? 1 : b < c ? -1 : 0;
 }
-function ab(b, c) {
+function bb(b, c) {
   return b === c;
 }
-;function bb(b, c) {
+;function cb(b, c) {
   return b > c ? 1 : b < c ? -1 : 0;
 }
-function cb(b, c, d) {
+function db(b, c, d) {
   var e = b.length;
   if (b[0] <= c) {
     return 0;
@@ -304,31 +307,31 @@ function cb(b, c, d) {
   }
   return e - 1;
 }
-;function db(b) {
+;function eb(b) {
   return function(c, d, e) {
     if (void 0 !== c) {
-      return c = cb(b, c, e), c = Ea(c + d, 0, b.length - 1), b[c];
+      return c = db(b, c, e), c = Ea(c + d, 0, b.length - 1), b[c];
     }
   };
 }
-function eb(b, c, d) {
+function fb(b, c, d) {
   return function(e, f, g) {
     if (void 0 !== e) {
       return e = Math.max(Math.floor(Math.log(c / e) / Math.log(b) + (0 < g ? 0 : 0 > g ? 1 : .5)) + f, 0), void 0 !== d && (e = Math.min(e, d)), c / Math.pow(b, e);
     }
   };
 }
-;function fb(b) {
+;function gb(b) {
   if (void 0 !== b) {
     return 0;
   }
 }
-function gb(b, c) {
+function hb(b, c) {
   if (void 0 !== b) {
     return b + c;
   }
 }
-function hb(b) {
+function ib(b) {
   var c = 2 * Math.PI / b;
   return function(b, e) {
     if (void 0 !== b) {
@@ -336,40 +339,40 @@ function hb(b) {
     }
   };
 }
-function ib() {
-  var b = 5 * Math.PI / 180;
+function jb() {
+  var b = Ha(5);
   return function(c, d) {
     if (void 0 !== c) {
       return Math.abs(c + d) <= b ? 0 : c + d;
     }
   };
 }
-;function jb(b, c, d) {
+;function kb(b, c, d) {
   this.center = b;
   this.resolution = c;
   this.rotation = d;
 }
-;var kb;
+;var lb;
 a: {
-  var lb = v.navigator;
-  if (lb) {
-    var mb = lb.userAgent;
-    if (mb) {
-      kb = mb;
+  var mb = v.navigator;
+  if (mb) {
+    var nb = mb.userAgent;
+    if (nb) {
+      lb = nb;
       break a;
     }
   }
-  kb = "";
+  lb = "";
 }
 function I(b) {
-  return -1 != kb.indexOf(b);
+  return -1 != lb.indexOf(b);
 }
-;function nb(b, c, d) {
+;function ob(b, c, d) {
   for (var e in b) {
     c.call(d, b[e], e, b);
   }
 }
-function ob(b, c) {
+function pb(b, c) {
   for (var d in b) {
     if (c.call(void 0, b[d], d, b)) {
       return !0;
@@ -377,39 +380,39 @@ function ob(b, c) {
   }
   return !1;
 }
-function pb(b) {
+function qb(b) {
   var c = 0, d;
   for (d in b) {
     c++;
   }
   return c;
 }
-function qb(b) {
+function rb(b) {
   var c = [], d = 0, e;
   for (e in b) {
     c[d++] = b[e];
   }
   return c;
 }
-function rb(b) {
+function sb(b) {
   for (var c in b) {
     return !1;
   }
   return !0;
 }
-function sb(b) {
+function tb(b) {
   for (var c in b) {
     delete b[c];
   }
 }
-function tb(b) {
+function ub(b) {
   var c = {}, d;
   for (d in b) {
     c[d] = b[d];
   }
   return c;
 }
-function ub(b) {
+function vb(b) {
   var c = da(b);
   if ("object" == c || "array" == c) {
     if (ha(b.clone)) {
@@ -417,46 +420,46 @@ function ub(b) {
     }
     var c = "array" == c ? [] : {}, d;
     for (d in b) {
-      c[d] = ub(b[d]);
+      c[d] = vb(b[d]);
     }
     return c;
   }
   return b;
 }
-var vb = "constructor hasOwnProperty isPrototypeOf propertyIsEnumerable toLocaleString toString valueOf".split(" ");
-function wb(b, c) {
+var wb = "constructor hasOwnProperty isPrototypeOf propertyIsEnumerable toLocaleString toString valueOf".split(" ");
+function xb(b, c) {
   for (var d, e, f = 1;f < arguments.length;f++) {
     e = arguments[f];
     for (d in e) {
       b[d] = e[d];
     }
-    for (var g = 0;g < vb.length;g++) {
-      d = vb[g], Object.prototype.hasOwnProperty.call(e, d) && (b[d] = e[d]);
+    for (var g = 0;g < wb.length;g++) {
+      d = wb[g], Object.prototype.hasOwnProperty.call(e, d) && (b[d] = e[d]);
     }
   }
 }
-;var xb = I("Opera") || I("OPR"), O = I("Trident") || I("MSIE"), yb = I("Edge"), zb = I("Gecko") && !(-1 != kb.toLowerCase().indexOf("webkit") && !I("Edge")) && !(I("Trident") || I("MSIE")) && !I("Edge"), Ab = -1 != kb.toLowerCase().indexOf("webkit") && !I("Edge"), Bb = I("Macintosh"), Cb = I("Windows"), Db = I("Linux") || I("CrOS");
-function Eb() {
-  var b = kb;
-  if (zb) {
+;var yb = I("Opera") || I("OPR"), O = I("Trident") || I("MSIE"), zb = I("Edge"), Ab = I("Gecko") && !(-1 != lb.toLowerCase().indexOf("webkit") && !I("Edge")) && !(I("Trident") || I("MSIE")) && !I("Edge"), Bb = -1 != lb.toLowerCase().indexOf("webkit") && !I("Edge"), Cb = I("Macintosh"), Db = I("Windows"), Eb = I("Linux") || I("CrOS");
+function Fb() {
+  var b = lb;
+  if (Ab) {
     return /rv\:([^\);]+)(\)|;)/.exec(b);
   }
-  if (yb) {
+  if (zb) {
     return /Edge\/([\d\.]+)/.exec(b);
   }
   if (O) {
     return /\b(?:MSIE|rv)[: ]([^\);]+)(\)|;)/.exec(b);
   }
-  if (Ab) {
+  if (Bb) {
     return /WebKit\/(\S+)/.exec(b);
   }
 }
-function Fb() {
+function Gb() {
   var b = v.document;
   return b ? b.documentMode : void 0;
 }
-var Gb = function() {
-  if (xb && v.opera) {
+var Hb = function() {
+  if (yb && v.opera) {
     var b;
     var c = v.opera.version;
     try {
@@ -467,14 +470,14 @@ var Gb = function() {
     return b;
   }
   b = "";
-  (c = Eb()) && (b = c ? c[1] : "");
-  return O && (c = Fb(), c > parseFloat(b)) ? String(c) : b;
-}(), Hb = {};
-function Ib(b) {
+  (c = Fb()) && (b = c ? c[1] : "");
+  return O && (c = Gb(), c > parseFloat(b)) ? String(c) : b;
+}(), Ib = {};
+function Jb(b) {
   var c;
-  if (!(c = Hb[b])) {
+  if (!(c = Ib[b])) {
     c = 0;
-    for (var d = sa(String(Gb)).split("."), e = sa(String(b)).split("."), f = Math.max(d.length, e.length), g = 0;0 == c && g < f;g++) {
+    for (var d = sa(String(Hb)).split("."), e = sa(String(b)).split("."), f = Math.max(d.length, e.length), g = 0;0 == c && g < f;g++) {
       var h = d[g] || "", k = e[g] || "", l = RegExp("(\\d*)(\\D*)", "g"), m = RegExp("(\\d*)(\\D*)", "g");
       do {
         var n = l.exec(h) || ["", "", ""], q = m.exec(k) || ["", "", ""];
@@ -484,55 +487,55 @@ function Ib(b) {
         c = Da(0 == n[1].length ? 0 : parseInt(n[1], 10), 0 == q[1].length ? 0 : parseInt(q[1], 10)) || Da(0 == n[2].length, 0 == q[2].length) || Da(n[2], q[2]);
       } while (0 == c);
     }
-    c = Hb[b] = 0 <= c;
+    c = Ib[b] = 0 <= c;
   }
   return c;
 }
-var Jb = v.document, Kb = Jb && O ? Fb() || ("CSS1Compat" == Jb.compatMode ? parseInt(Gb, 10) : 5) : void 0;
-var Lb = !O || 9 <= Kb, Mb = !O || 9 <= Kb, Nb = O && !Ib("9");
-!Ab || Ib("528");
-zb && Ib("1.9b") || O && Ib("8") || xb && Ib("9.5") || Ab && Ib("528");
-zb && !Ib("8") || O && Ib("9");
-function Ob() {
-  0 != Pb && (Qb[C(this)] = this);
+var Kb = v.document, Lb = Kb && O ? Gb() || ("CSS1Compat" == Kb.compatMode ? parseInt(Hb, 10) : 5) : void 0;
+var Mb = !O || 9 <= Lb, Nb = !O || 9 <= Lb, Ob = O && !Jb("9");
+!Bb || Jb("528");
+Ab && Jb("1.9b") || O && Jb("8") || yb && Jb("9.5") || Bb && Jb("528");
+Ab && !Jb("8") || O && Jb("9");
+function Pb() {
+  0 != Qb && (Rb[C(this)] = this);
   this.X = this.X;
   this.P = this.P;
 }
-var Pb = 0, Qb = {};
-Ob.prototype.X = !1;
-Ob.prototype.rb = function() {
-  if (!this.X && (this.X = !0, this.I(), 0 != Pb)) {
+var Qb = 0, Rb = {};
+Pb.prototype.X = !1;
+Pb.prototype.rb = function() {
+  if (!this.X && (this.X = !0, this.J(), 0 != Qb)) {
     var b = C(this);
-    delete Qb[b];
+    delete Rb[b];
   }
 };
-function Rb(b, c) {
-  var d = oa(Sb, c);
+function Sb(b, c) {
+  var d = oa(Tb, c);
   b.X ? d.call(void 0) : (b.P || (b.P = []), b.P.push(ba(void 0) ? na(d, void 0) : d));
 }
-Ob.prototype.I = function() {
+Pb.prototype.J = function() {
   if (this.P) {
     for (;this.P.length;) {
       this.P.shift()();
     }
   }
 };
-function Sb(b) {
+function Tb(b) {
   b && "function" == typeof b.rb && b.rb();
 }
 ;function P(b, c) {
   this.type = b;
   this.b = this.target = c;
   this.g = !1;
-  this.mc = !0;
+  this.nc = !0;
 }
 P.prototype.f = function() {
   this.g = !0;
 };
 P.prototype.preventDefault = function() {
-  this.mc = !1;
+  this.nc = !1;
 };
-function Tb(b) {
+function Ub(b) {
   b.f();
 }
 ;function Vb(b) {
@@ -554,7 +557,7 @@ function Wb(b, c) {
     this.b = c;
     var f = b.relatedTarget;
     if (f) {
-      if (zb) {
+      if (Ab) {
         var g;
         a: {
           try {
@@ -571,7 +574,7 @@ function Wb(b, c) {
       "mouseover" == d ? f = b.fromElement : "mouseout" == d && (f = b.toElement);
     }
     this.relatedTarget = f;
-    null === e ? (this.offsetX = Ab || void 0 !== b.offsetX ? b.offsetX : b.layerX, this.offsetY = Ab || void 0 !== b.offsetY ? b.offsetY : b.layerY, this.clientX = void 0 !== b.clientX ? b.clientX : b.pageX, this.clientY = void 0 !== b.clientY ? b.clientY : b.pageY, this.screenX = b.screenX || 0, this.screenY = b.screenY || 0) : (this.clientX = void 0 !== e.clientX ? e.clientX : e.pageX, this.clientY = void 0 !== e.clientY ? e.clientY : e.pageY, this.screenX = e.screenX || 0, this.screenY = e.screenY || 
+    null === e ? (this.offsetX = Bb || void 0 !== b.offsetX ? b.offsetX : b.layerX, this.offsetY = Bb || void 0 !== b.offsetY ? b.offsetY : b.layerY, this.clientX = void 0 !== b.clientX ? b.clientX : b.pageX, this.clientY = void 0 !== b.clientY ? b.clientY : b.pageY, this.screenX = b.screenX || 0, this.screenY = b.screenY || 0) : (this.clientX = void 0 !== e.clientX ? e.clientX : e.pageX, this.clientY = void 0 !== e.clientY ? e.clientY : e.pageY, this.screenX = e.screenX || 0, this.screenY = e.screenY || 
     0);
     this.button = b.button;
     this.h = b.keyCode || 0;
@@ -580,16 +583,16 @@ function Wb(b, c) {
     this.c = b.altKey;
     this.j = b.shiftKey;
     this.s = b.metaKey;
-    this.v = Bb ? b.metaKey : b.ctrlKey;
+    this.v = Cb ? b.metaKey : b.ctrlKey;
     this.state = b.state;
     this.a = b;
     b.defaultPrevented && this.preventDefault();
   }
 }
 H(Wb, P);
-var Xb = [1, 4, 2];
-function Yb(b) {
-  return (Lb ? 0 == b.a.button : "click" == b.type ? !0 : !!(b.a.button & Xb[0])) && !(Ab && Bb && b.i);
+var Yb = [1, 4, 2];
+function Zb(b) {
+  return (Mb ? 0 == b.a.button : "click" == b.type ? !0 : !!(b.a.button & Yb[0])) && !(Bb && Cb && b.i);
 }
 Wb.prototype.f = function() {
   Wb.O.f.call(this);
@@ -601,7 +604,7 @@ Wb.prototype.preventDefault = function() {
   if (b.preventDefault) {
     b.preventDefault();
   } else {
-    if (b.returnValue = !1, Nb) {
+    if (b.returnValue = !1, Ob) {
       try {
         if (b.ctrlKey || 112 <= b.keyCode && 123 >= b.keyCode) {
           b.keyCode = -1;
@@ -611,62 +614,62 @@ Wb.prototype.preventDefault = function() {
     }
   }
 };
-var Zb = "closure_listenable_" + (1E6 * Math.random() | 0);
-function $b(b) {
-  return !(!b || !b[Zb]);
+var $b = "closure_listenable_" + (1E6 * Math.random() | 0);
+function ac(b) {
+  return !(!b || !b[$b]);
 }
-var ac = 0;
-function bc(b, c, d, e, f) {
+var bc = 0;
+function cc(b, c, d, e, f) {
   this.listener = b;
   this.a = null;
   this.src = c;
   this.type = d;
   this.Ga = !!e;
   this.Za = f;
-  this.key = ++ac;
+  this.key = ++bc;
   this.Fa = this.Ua = !1;
 }
-function cc(b) {
+function dc(b) {
   b.Fa = !0;
   b.listener = null;
   b.a = null;
   b.src = null;
   b.Za = null;
 }
-;function dc(b) {
+;function ec(b) {
   this.src = b;
   this.a = {};
   this.c = 0;
 }
-dc.prototype.add = function(b, c, d, e, f) {
+ec.prototype.add = function(b, c, d, e, f) {
   var g = b.toString();
   b = this.a[g];
   b || (b = this.a[g] = [], this.c++);
-  var h = ec(b, c, e, f);
-  -1 < h ? (c = b[h], d || (c.Ua = !1)) : (c = new bc(c, this.src, g, !!e, f), c.Ua = d, b.push(c));
+  var h = fc(b, c, e, f);
+  -1 < h ? (c = b[h], d || (c.Ua = !1)) : (c = new cc(c, this.src, g, !!e, f), c.Ua = d, b.push(c));
   return c;
 };
-dc.prototype.remove = function(b, c, d, e) {
+ec.prototype.remove = function(b, c, d, e) {
   b = b.toString();
   if (!(b in this.a)) {
     return !1;
   }
   var f = this.a[b];
-  c = ec(f, c, d, e);
-  return -1 < c ? (cc(f[c]), La.splice.call(f, c, 1), 0 == f.length && (delete this.a[b], this.c--), !0) : !1;
+  c = fc(f, c, d, e);
+  return -1 < c ? (dc(f[c]), Ma.splice.call(f, c, 1), 0 == f.length && (delete this.a[b], this.c--), !0) : !1;
 };
-function fc(b, c) {
+function gc(b, c) {
   var d = c.type;
   if (!(d in b.a)) {
     return !1;
   }
-  var e = Qa(b.a[d], c);
-  e && (cc(c), 0 == b.a[d].length && (delete b.a[d], b.c--));
+  var e = Ra(b.a[d], c);
+  e && (dc(c), 0 == b.a[d].length && (delete b.a[d], b.c--));
   return e;
 }
-function gc(b, c, d) {
+function hc(b, c, d) {
   var e = ba(c), f = e ? c.toString() : "", g = ba(d);
-  return ob(b.a, function(b) {
+  return pb(b.a, function(b) {
     for (var c = 0;c < b.length;++c) {
       if (!(e && b[c].type != f || g && b[c].Ga != d)) {
         return !0;
@@ -675,7 +678,7 @@ function gc(b, c, d) {
     return !1;
   });
 }
-function ec(b, c, d, e) {
+function fc(b, c, d, e) {
   for (var f = 0;f < b.length;++f) {
     var g = b[f];
     if (!g.Fa && g.listener == c && g.Ga == !!d && g.Za == e) {
@@ -684,7 +687,7 @@ function ec(b, c, d, e) {
   }
   return -1;
 }
-;var hc = "closure_lm_" + (1E6 * Math.random() | 0), ic = {}, jc = 0;
+;var ic = "closure_lm_" + (1E6 * Math.random() | 0), jc = {}, kc = 0;
 function Q(b, c, d, e, f) {
   if (ea(c)) {
     for (var g = 0;g < c.length;g++) {
@@ -692,20 +695,20 @@ function Q(b, c, d, e, f) {
     }
     return null;
   }
-  d = kc(d);
-  return $b(b) ? lc(b, c, d, e, f) : mc(b, c, d, !1, e, f);
+  d = lc(d);
+  return ac(b) ? mc(b, c, d, e, f) : nc(b, c, d, !1, e, f);
 }
-function mc(b, c, d, e, f, g) {
+function nc(b, c, d, e, f, g) {
   if (!c) {
     throw Error("Invalid event type");
   }
-  var h = !!f, k = nc(b);
-  k || (b[hc] = k = new dc(b));
+  var h = !!f, k = oc(b);
+  k || (b[ic] = k = new ec(b));
   d = k.add(c, d, e, f, g);
   if (d.a) {
     return d;
   }
-  e = oc();
+  e = pc();
   d.a = e;
   e.src = b;
   e.listener = d;
@@ -713,16 +716,16 @@ function mc(b, c, d, e, f, g) {
     b.addEventListener(c.toString(), e, h);
   } else {
     if (b.attachEvent) {
-      b.attachEvent(pc(c.toString()), e);
+      b.attachEvent(qc(c.toString()), e);
     } else {
       throw Error("addEventListener and attachEvent are unavailable.");
     }
   }
-  jc++;
+  kc++;
   return d;
 }
-function oc() {
-  var b = qc, c = Mb ? function(d) {
+function pc() {
+  var b = rc, c = Nb ? function(d) {
     return b.call(c.src, c.listener, d);
   } : function(d) {
     d = b.call(c.src, c.listener, d);
@@ -732,23 +735,23 @@ function oc() {
   };
   return c;
 }
-function rc(b, c, d, e, f) {
-  if (ea(c)) {
-    for (var g = 0;g < c.length;g++) {
-      rc(b, c[g], d, e, f);
-    }
-    return null;
-  }
-  d = kc(d);
-  return $b(b) ? b.qa.add(String(c), d, !0, e, f) : mc(b, c, d, !0, e, f);
-}
 function sc(b, c, d, e, f) {
   if (ea(c)) {
     for (var g = 0;g < c.length;g++) {
       sc(b, c[g], d, e, f);
     }
+    return null;
+  }
+  d = lc(d);
+  return ac(b) ? b.qa.add(String(c), d, !0, e, f) : nc(b, c, d, !0, e, f);
+}
+function tc(b, c, d, e, f) {
+  if (ea(c)) {
+    for (var g = 0;g < c.length;g++) {
+      tc(b, c[g], d, e, f);
+    }
   } else {
-    (d = kc(d), $b(b)) ? b.qa.remove(String(c), d, e, f) : b && (b = nc(b)) && (c = b.a[c.toString()], b = -1, c && (b = ec(c, d, !!e, f)), (d = -1 < b ? c[b] : null) && T(d));
+    (d = lc(d), ac(b)) ? b.qa.remove(String(c), d, e, f) : b && (b = oc(b)) && (c = b.a[c.toString()], b = -1, c && (b = fc(c, d, !!e, f)), (d = -1 < b ? c[b] : null) && T(d));
   }
 }
 function T(b) {
@@ -756,40 +759,40 @@ function T(b) {
     return !1;
   }
   var c = b.src;
-  if ($b(c)) {
-    return fc(c.qa, b);
+  if (ac(c)) {
+    return gc(c.qa, b);
   }
   var d = b.type, e = b.a;
-  c.removeEventListener ? c.removeEventListener(d, e, b.Ga) : c.detachEvent && c.detachEvent(pc(d), e);
-  jc--;
-  (d = nc(c)) ? (fc(d, b), 0 == d.c && (d.src = null, c[hc] = null)) : cc(b);
+  c.removeEventListener ? c.removeEventListener(d, e, b.Ga) : c.detachEvent && c.detachEvent(qc(d), e);
+  kc--;
+  (d = oc(c)) ? (gc(d, b), 0 == d.c && (d.src = null, c[ic] = null)) : dc(b);
   return !0;
 }
-function pc(b) {
-  return b in ic ? ic[b] : ic[b] = "on" + b;
+function qc(b) {
+  return b in jc ? jc[b] : jc[b] = "on" + b;
 }
-function tc(b, c, d, e) {
+function uc(b, c, d, e) {
   var f = !0;
-  if (b = nc(b)) {
+  if (b = oc(b)) {
     if (c = b.a[c.toString()]) {
       for (c = c.concat(), b = 0;b < c.length;b++) {
         var g = c[b];
-        g && g.Ga == d && !g.Fa && (g = uc(g, e), f = f && !1 !== g);
+        g && g.Ga == d && !g.Fa && (g = vc(g, e), f = f && !1 !== g);
       }
     }
   }
   return f;
 }
-function uc(b, c) {
+function vc(b, c) {
   var d = b.listener, e = b.Za || b.src;
   b.Ua && T(b);
   return d.call(e, c);
 }
-function qc(b, c) {
+function rc(b, c) {
   if (b.Fa) {
     return !0;
   }
-  if (!Mb) {
+  if (!Nb) {
     var d;
     if (!(d = c)) {
       a: {
@@ -829,43 +832,43 @@ function qc(b, c) {
       }
       for (var g = b.type, h = f.length - 1;!d.g && 0 <= h;h--) {
         d.b = f[h];
-        var k = tc(f[h], g, !0, d), e = e && k;
+        var k = uc(f[h], g, !0, d), e = e && k;
       }
       for (h = 0;!d.g && h < f.length;h++) {
-        d.b = f[h], k = tc(f[h], g, !1, d), e = e && k;
+        d.b = f[h], k = uc(f[h], g, !1, d), e = e && k;
       }
     }
     return e;
   }
-  return uc(b, new Wb(c, this));
+  return vc(b, new Wb(c, this));
 }
-function nc(b) {
-  b = b[hc];
-  return b instanceof dc ? b : null;
+function oc(b) {
+  b = b[ic];
+  return b instanceof ec ? b : null;
 }
-var vc = "__closure_events_fn_" + (1E9 * Math.random() >>> 0);
-function kc(b) {
+var wc = "__closure_events_fn_" + (1E9 * Math.random() >>> 0);
+function lc(b) {
   if (ha(b)) {
     return b;
   }
-  b[vc] || (b[vc] = function(c) {
+  b[wc] || (b[wc] = function(c) {
     return b.handleEvent(c);
   });
-  return b[vc];
+  return b[wc];
 }
 ;function V() {
-  Ob.call(this);
-  this.qa = new dc(this);
+  Pb.call(this);
+  this.qa = new ec(this);
   this.fb = this;
   this.ka = null;
 }
-H(V, Ob);
-V.prototype[Zb] = !0;
+H(V, Pb);
+V.prototype[$b] = !0;
 V.prototype.addEventListener = function(b, c, d, e) {
   Q(this, b, c, d, e);
 };
 V.prototype.removeEventListener = function(b, c, d, e) {
-  sc(this, b, c, d, e);
+  tc(this, b, c, d, e);
 };
 function W(b, c) {
   var d, e = b.ka;
@@ -882,30 +885,30 @@ function W(b, c) {
       f.target = f.target || e;
     } else {
       var h = f, f = new P(g, e);
-      wb(f, h);
+      xb(f, h);
     }
   }
   var h = !0, k;
   if (d) {
     for (var l = d.length - 1;!f.g && 0 <= l;l--) {
-      k = f.b = d[l], h = wc(k, g, !0, f) && h;
+      k = f.b = d[l], h = xc(k, g, !0, f) && h;
     }
   }
-  f.g || (k = f.b = e, h = wc(k, g, !0, f) && h, f.g || (h = wc(k, g, !1, f) && h));
+  f.g || (k = f.b = e, h = xc(k, g, !0, f) && h, f.g || (h = xc(k, g, !1, f) && h));
   if (d) {
     for (l = 0;!f.g && l < d.length;l++) {
-      k = f.b = d[l], h = wc(k, g, !1, f) && h;
+      k = f.b = d[l], h = xc(k, g, !1, f) && h;
     }
   }
   return h;
 }
-V.prototype.I = function() {
-  V.O.I.call(this);
+V.prototype.J = function() {
+  V.O.J.call(this);
   if (this.qa) {
     var b = this.qa, c = 0, d;
     for (d in b.a) {
       for (var e = b.a[d], f = 0;f < e.length;f++) {
-        ++c, cc(e[f]);
+        ++c, dc(e[f]);
       }
       delete b.a[d];
       b.c--;
@@ -913,10 +916,10 @@ V.prototype.I = function() {
   }
   this.ka = null;
 };
-function lc(b, c, d, e, f) {
+function mc(b, c, d, e, f) {
   return b.qa.add(String(c), d, !1, e, f);
 }
-function wc(b, c, d, e) {
+function xc(b, c, d, e) {
   c = b.qa.a[String(c)];
   if (!c) {
     return !0;
@@ -926,49 +929,49 @@ function wc(b, c, d, e) {
     var h = c[g];
     if (h && !h.Fa && h.Ga == d) {
       var k = h.listener, l = h.Za || h.src;
-      h.Ua && fc(b.qa, h);
+      h.Ua && gc(b.qa, h);
       f = !1 !== k.call(l, e) && f;
     }
   }
-  return f && 0 != e.mc;
+  return f && 0 != e.nc;
 }
-function xc(b, c, d) {
-  return gc(b.qa, ba(c) ? String(c) : void 0, d);
+function yc(b, c, d) {
+  return hc(b.qa, ba(c) ? String(c) : void 0, d);
 }
-;function yc() {
+;function zc() {
   V.call(this);
   this.h = 0;
 }
-H(yc, V);
-function zc(b) {
+H(zc, V);
+function Ac(b) {
   T(b);
 }
-yc.prototype.c = function() {
+zc.prototype.c = function() {
   ++this.h;
   W(this, "change");
 };
-yc.prototype.v = function(b, c, d) {
+zc.prototype.v = function(b, c, d) {
   return Q(this, b, c, !1, d);
 };
-yc.prototype.tc = function(b, c, d) {
-  return rc(this, b, c, !1, d);
+zc.prototype.uc = function(b, c, d) {
+  return sc(this, b, c, !1, d);
 };
-function Ac(b, c, d) {
+function Bc(b, c, d) {
   P.call(this, b);
   this.key = c;
   this.oldValue = d;
 }
-H(Ac, P);
+H(Bc, P);
 function X(b) {
-  yc.call(this);
+  zc.call(this);
   C(this);
   this.H = {};
-  void 0 !== b && Bc(this, b);
+  void 0 !== b && Cc(this, b);
 }
-H(X, yc);
-var Cc = {};
-function Dc(b) {
-  return Cc.hasOwnProperty(b) ? Cc[b] : Cc[b] = "change:" + b;
+H(X, zc);
+var Dc = {};
+function Ec(b) {
+  return Dc.hasOwnProperty(b) ? Dc[b] : Dc[b] = "change:" + b;
 }
 X.prototype.get = function(b) {
   var c;
@@ -978,7 +981,7 @@ X.prototype.get = function(b) {
 X.prototype.Ra = function() {
   return Object.keys(this.H);
 };
-function Ec(b) {
+function Fc(b) {
   var c = {}, d;
   for (d in b.H) {
     c[d] = b.H[d];
@@ -986,38 +989,38 @@ function Ec(b) {
   return c;
 }
 X.prototype.j = function(b, c, d) {
-  d ? this.H[b] = c : (d = this.H[b], this.H[b] = c, d !== c && (c = Dc(b), W(this, new Ac(c, b, d)), W(this, new Ac("propertychange", b, d))));
+  d ? this.H[b] = c : (d = this.H[b], this.H[b] = c, d !== c && (c = Ec(b), W(this, new Bc(c, b, d)), W(this, new Bc("propertychange", b, d))));
 };
-function Bc(b, c) {
+function Cc(b, c) {
   for (var d in c) {
     b.j(d, c[d], void 0);
   }
 }
-;function Fc(b, c) {
+;function Gc(b, c) {
   if (ea(b)) {
     return b;
   }
   void 0 === c ? c = [b, b] : (c[0] = b, c[1] = b);
   return c;
 }
-;function Gc(b, c) {
+;function Hc(b, c) {
   var d = b % c;
   return 0 > d * c ? d + c : d;
 }
-;function Hc(b, c) {
+;function Ic(b, c) {
   b[0] += c[0];
   b[1] += c[1];
 }
-function Ic(b, c) {
+function Jc(b, c) {
   var d = b[0], e = b[1], f = c[0], g = c[1], h = f[0], f = f[1], k = g[0], g = g[1], l = k - h, m = g - f, d = 0 === l && 0 === m ? 0 : (l * (d - h) + m * (e - f)) / (l * l + m * m || 0);
   0 >= d || (1 <= d ? (h = k, f = g) : (h += d * l, f += d * m));
   return [h, f];
 }
-function Jc(b, c) {
-  var d = Gc(b + 180, 360) - 180, e = Math.abs(Math.round(3600 * d));
+function Kc(b, c) {
+  var d = Hc(b + 180, 360) - 180, e = Math.abs(Math.round(3600 * d));
   return Math.floor(e / 3600) + "\u00b0 " + Ca(Math.floor(e / 60 % 60)) + "\u2032 " + Ca(Math.floor(e % 60)) + "\u2033 " + c.charAt(0 > d ? 1 : 0);
 }
-function Kc(b, c) {
+function Lc(b, c) {
   for (var d = !0, e = b.length - 1;0 <= e;--e) {
     if (b[e] != c[e]) {
       d = !1;
@@ -1026,40 +1029,25 @@ function Kc(b, c) {
   }
   return d;
 }
-function Lc(b, c) {
+function Mc(b, c) {
   var d = Math.cos(c), e = Math.sin(c), f = b[1] * d + b[0] * e;
   b[0] = b[0] * d - b[1] * e;
   b[1] = f;
 }
-function Mc(b, c) {
+function Nc(b, c) {
   var d = b[0] - c[0], e = b[1] - c[1];
   return d * d + e * e;
 }
-function Nc(b, c) {
-  return Mc(b, Ic(b, c));
+function Oc(b, c) {
+  return Nc(b, Jc(b, c));
 }
-;function Oc(b) {
+;function Pc(b) {
   this.length = b.length || b;
   for (var c = 0;c < this.length;c++) {
     this[c] = b[c] || 0;
   }
 }
-Oc.prototype.a = 4;
-Oc.prototype.c = function(b, c) {
-  c = c || 0;
-  for (var d = 0;d < b.length && c + d < this.length;d++) {
-    this[c + d] = b[d];
-  }
-};
-Oc.prototype.toString = Array.prototype.join;
-"undefined" == typeof Float32Array && (Oc.BYTES_PER_ELEMENT = 4, Oc.prototype.BYTES_PER_ELEMENT = Oc.prototype.a, Oc.prototype.set = Oc.prototype.c, Oc.prototype.toString = Oc.prototype.toString, D("Float32Array", Oc));
-function Pc(b) {
-  this.length = b.length || b;
-  for (var c = 0;c < this.length;c++) {
-    this[c] = b[c] || 0;
-  }
-}
-Pc.prototype.a = 8;
+Pc.prototype.a = 4;
 Pc.prototype.c = function(b, c) {
   c = c || 0;
   for (var d = 0;d < b.length && c + d < this.length;d++) {
@@ -1067,17 +1055,32 @@ Pc.prototype.c = function(b, c) {
   }
 };
 Pc.prototype.toString = Array.prototype.join;
+"undefined" == typeof Float32Array && (Pc.BYTES_PER_ELEMENT = 4, Pc.prototype.BYTES_PER_ELEMENT = Pc.prototype.a, Pc.prototype.set = Pc.prototype.c, Pc.prototype.toString = Pc.prototype.toString, D("Float32Array", Pc));
+function Qc(b) {
+  this.length = b.length || b;
+  for (var c = 0;c < this.length;c++) {
+    this[c] = b[c] || 0;
+  }
+}
+Qc.prototype.a = 8;
+Qc.prototype.c = function(b, c) {
+  c = c || 0;
+  for (var d = 0;d < b.length && c + d < this.length;d++) {
+    this[c + d] = b[d];
+  }
+};
+Qc.prototype.toString = Array.prototype.join;
 if ("undefined" == typeof Float64Array) {
   try {
-    Pc.BYTES_PER_ELEMENT = 8;
+    Qc.BYTES_PER_ELEMENT = 8;
   } catch (b) {
   }
-  Pc.prototype.BYTES_PER_ELEMENT = Pc.prototype.a;
-  Pc.prototype.set = Pc.prototype.c;
-  Pc.prototype.toString = Pc.prototype.toString;
-  D("Float64Array", Pc);
+  Qc.prototype.BYTES_PER_ELEMENT = Qc.prototype.a;
+  Qc.prototype.set = Qc.prototype.c;
+  Qc.prototype.toString = Qc.prototype.toString;
+  D("Float64Array", Qc);
 }
-;function Qc() {
+;function Rc() {
   var b = Array(16);
   b[0] = 0;
   b[1] = 0;
@@ -1097,12 +1100,12 @@ if ("undefined" == typeof Float64Array) {
   b[15] = 0;
   return b;
 }
-function Rc(b, c) {
+function Sc(b, c) {
   var d = b[0], e = b[1], f = b[2], g = b[3], h = b[4], k = b[5], l = b[6], m = b[7], n = b[8], q = b[9], r = b[10], t = b[11], w = b[12], A = b[13], u = b[14], y = b[15], B = d * k - e * h, x = d * l - f * h, J = d * m - g * h, G = e * l - f * k, K = e * m - g * k, E = f * m - g * l, S = n * A - q * w, U = n * u - r * w, N = n * y - t * w, L = q * u - r * A, F = q * y - t * A, R = r * y - t * u, M = B * R - x * F + J * L + G * N - K * U + E * S;
   0 != M && (M = 1 / M, c[0] = (k * R - l * F + m * L) * M, c[1] = (-e * R + f * F - g * L) * M, c[2] = (A * E - u * K + y * G) * M, c[3] = (-q * E + r * K - t * G) * M, c[4] = (-h * R + l * N - m * U) * M, c[5] = (d * R - f * N + g * U) * M, c[6] = (-w * E + u * J - y * x) * M, c[7] = (n * E - r * J + t * x) * M, c[8] = (h * F - k * N + m * S) * M, c[9] = (-d * F + e * N - g * S) * M, c[10] = (w * K - A * J + y * B) * M, c[11] = (-n * K + q * J - t * B) * M, c[12] = (-h * L + k * U - l * S) * M, 
   c[13] = (d * L - e * U + f * S) * M, c[14] = (-w * G + A * x - u * B) * M, c[15] = (n * G - q * x + r * B) * M);
 }
-function Sc(b, c, d) {
+function Tc(b, c, d) {
   var e = b[1] * c + b[5] * d + 0 * b[9] + b[13], f = b[2] * c + b[6] * d + 0 * b[10] + b[14], g = b[3] * c + b[7] * d + 0 * b[11] + b[15];
   b[12] = b[0] * c + b[4] * d + 0 * b[8] + b[12];
   b[13] = e;
@@ -1115,47 +1118,47 @@ new Float64Array(4);
 new Float64Array(4);
 new Float64Array(4);
 new Float64Array(16);
-function Tc(b) {
-  for (var c = Uc(), d = 0, e = b.length;d < e;++d) {
-    Vc(c, b[d]);
+function Uc(b) {
+  for (var c = Vc(), d = 0, e = b.length;d < e;++d) {
+    Wc(c, b[d]);
   }
   return c;
 }
-function Wc(b, c) {
+function Xc(b, c) {
   var d = Math.min.apply(null, b), e = Math.min.apply(null, c), f = Math.max.apply(null, b), g = Math.max.apply(null, c);
-  return Xc(d, e, f, g, void 0);
+  return Yc(d, e, f, g, void 0);
 }
-function Yc(b, c, d) {
+function Zc(b, c, d) {
   return d ? (d[0] = b[0] - c, d[1] = b[1] - c, d[2] = b[2] + c, d[3] = b[3] + c, d) : [b[0] - c, b[1] - c, b[2] + c, b[3] + c];
 }
-function Zc(b, c) {
+function $c(b, c) {
   return c ? (c[0] = b[0], c[1] = b[1], c[2] = b[2], c[3] = b[3], c) : b.slice();
 }
-function $c(b, c) {
+function ad(b, c) {
   return b[0] <= c[0] && c[2] <= b[2] && b[1] <= c[1] && c[3] <= b[3];
 }
-function Uc() {
+function Vc() {
   return [Infinity, Infinity, -Infinity, -Infinity];
 }
-function Xc(b, c, d, e, f) {
+function Yc(b, c, d, e, f) {
   return f ? (f[0] = b, f[1] = c, f[2] = d, f[3] = e, f) : [b, c, d, e];
 }
-function ad(b, c) {
+function bd(b, c) {
   return b[0] == c[0] && b[2] == c[2] && b[1] == c[1] && b[3] == c[3];
 }
-function bd(b, c) {
+function cd(b, c) {
   c[0] < b[0] && (b[0] = c[0]);
   c[2] > b[2] && (b[2] = c[2]);
   c[1] < b[1] && (b[1] = c[1]);
   c[3] > b[3] && (b[3] = c[3]);
 }
-function Vc(b, c) {
+function Wc(b, c) {
   c[0] < b[0] && (b[0] = c[0]);
   c[0] > b[2] && (b[2] = c[0]);
   c[1] < b[1] && (b[1] = c[1]);
   c[1] > b[3] && (b[3] = c[1]);
 }
-function cd(b, c, d, e, f) {
+function dd(b, c, d, e, f) {
   for (;d < e;d += f) {
     var g = b, h = c[d], k = c[d + 1];
     g[0] = Math.min(g[0], h);
@@ -1165,15 +1168,15 @@ function cd(b, c, d, e, f) {
   }
   return b;
 }
-function dd(b) {
+function ed(b) {
   var c = 0;
-  b[2] < b[0] || b[3] < b[1] || (c = Y(b) * ed(b));
+  b[2] < b[0] || b[3] < b[1] || (c = Y(b) * fd(b));
   return c;
 }
-function fd(b) {
+function gd(b) {
   return [(b[0] + b[2]) / 2, (b[1] + b[3]) / 2];
 }
-function gd(b, c, d, e) {
+function hd(b, c, d, e) {
   var f = c * e[0] / 2;
   e = c * e[1] / 2;
   c = Math.cos(d);
@@ -1184,39 +1187,39 @@ function gd(b, c, d, e) {
   for (g = 0;4 > g;++g) {
     h = f[g], k = e[g], f[g] = b[0] + h * c - k * d, e[g] = b[1] + h * d + k * c;
   }
-  return Wc(f, e);
+  return Xc(f, e);
 }
-function ed(b) {
+function fd(b) {
   return b[3] - b[1];
 }
-function hd(b, c) {
-  var d = Uc();
-  id(b, c) && (d[0] = b[0] > c[0] ? b[0] : c[0], d[1] = b[1] > c[1] ? b[1] : c[1], d[2] = b[2] < c[2] ? b[2] : c[2], d[3] = b[3] < c[3] ? b[3] : c[3]);
+function id(b, c) {
+  var d = Vc();
+  jd(b, c) && (d[0] = b[0] > c[0] ? b[0] : c[0], d[1] = b[1] > c[1] ? b[1] : c[1], d[2] = b[2] < c[2] ? b[2] : c[2], d[3] = b[3] < c[3] ? b[3] : c[3]);
   return d;
 }
-function jd(b) {
+function kd(b) {
   return [b[0], b[3]];
 }
 function Y(b) {
   return b[2] - b[0];
 }
-function id(b, c) {
+function jd(b, c) {
   return b[0] <= c[2] && b[2] >= c[0] && b[1] <= c[3] && b[3] >= c[1];
 }
-;function kd(b) {
+;function ld(b) {
   return function() {
     return b;
   };
 }
-var ld = kd(!1), md = kd(!0);
-function nd(b) {
+var md = ld(!1), nd = ld(!0);
+function od(b) {
   var c;
   c = c || 0;
   return function() {
     return b.apply(this, Array.prototype.slice.call(arguments, 0, c));
   };
 }
-function od(b) {
+function pd(b) {
   var c = arguments, d = c.length;
   return function() {
     for (var b = 0;b < d;b++) {
@@ -1233,20 +1236,26 @@ function od(b) {
  http://www.movable-type.co.uk/scripts/latlong.html
  Licensed under CC-BY-3.0.
 */
-function pd(b) {
+function qd(b) {
   this.radius = b;
 }
-function qd(b, c) {
-  var d = b[1] * Math.PI / 180, e = c[1] * Math.PI / 180, f = (e - d) / 2, g = (c[0] - b[0]) * Math.PI / 180 / 2, d = Math.sin(f) * Math.sin(f) + Math.sin(g) * Math.sin(g) * Math.cos(d) * Math.cos(e);
-  return 2 * rd.radius * Math.atan2(Math.sqrt(d), Math.sqrt(1 - d));
-}
-pd.prototype.offset = function(b, c, d) {
-  var e = b[1] * Math.PI / 180;
+qd.prototype.c = function(b) {
+  for (var c = 0, d = b.length, e = b[d - 1][0], f = b[d - 1][1], g = 0;g < d;g++) {
+    var h = b[g][0], k = b[g][1], c = c + Ha(h - e) * (2 + Math.sin(Ha(f)) + Math.sin(Ha(k))), e = h, f = k
+  }
+  return c * this.radius * this.radius / 2;
+};
+qd.prototype.a = function(b, c) {
+  var d = Ha(b[1]), e = Ha(c[1]), f = (e - d) / 2, g = Ha(c[0] - b[0]) / 2, d = Math.sin(f) * Math.sin(f) + Math.sin(g) * Math.sin(g) * Math.cos(d) * Math.cos(e);
+  return 2 * this.radius * Math.atan2(Math.sqrt(d), Math.sqrt(1 - d));
+};
+qd.prototype.offset = function(b, c, d) {
+  var e = Ha(b[1]);
   c /= this.radius;
   var f = Math.asin(Math.sin(e) * Math.cos(c) + Math.cos(e) * Math.sin(c) * Math.cos(d));
-  return [180 * (b[0] * Math.PI / 180 + Math.atan2(Math.sin(d) * Math.sin(c) * Math.cos(e), Math.cos(c) - Math.sin(e) * Math.sin(f))) / Math.PI, 180 * f / Math.PI];
+  return [180 * (Ha(b[0]) + Math.atan2(Math.sin(d) * Math.sin(c) * Math.cos(e), Math.cos(c) - Math.sin(e) * Math.sin(f))) / Math.PI, 180 * f / Math.PI];
 };
-var rd = new pd(6370997);
+var rd = new qd(6370997);
 var sd = {};
 sd.degrees = 2 * Math.PI * rd.radius / 360;
 sd.ft = .3048;
@@ -1266,18 +1275,18 @@ function td(b) {
   if ("function" == typeof e && void 0 === c[d]) {
     var f = e.Tb(d);
     if (void 0 !== f) {
-      void 0 === b.metersPerUnit && (this.g = f.se);
+      void 0 === b.metersPerUnit && (this.g = f.te);
       void 0 === b.units && (this.b = f.units);
       var g, h;
       for (g in c) {
         if (b = e.Tb(g), void 0 !== b) {
-          if (c = xd(g), b === f) {
-            yd([c, this]);
+          if (c = wd(g), b === f) {
+            xd([c, this]);
           } else {
             h = e(g, d);
             b = h.forward;
             h = h.inverse;
-            var c = xd(c), k = xd(this);
+            var c = wd(c), k = wd(this);
             zd(c, k, Ad(b));
             zd(k, c, Ad(h));
           }
@@ -1296,7 +1305,7 @@ td.prototype.v = function(b, c) {
   if ("degrees" == this.b) {
     return b;
   }
-  var d = Cd(this, xd("EPSG:4326")), e = [c[0] - b / 2, c[1], c[0] + b / 2, c[1], c[0], c[1] - b / 2, c[0], c[1] + b / 2], e = d(e, e, 2), d = (qd(e.slice(0, 2), e.slice(2, 4)) + qd(e.slice(4, 6), e.slice(6, 8))) / 2, e = Bd(this);
+  var d = Cd(this, wd("EPSG:4326")), e = [c[0] - b / 2, c[1], c[0] + b / 2, c[1], c[0], c[1] - b / 2, c[0], c[1] + b / 2], e = d(e, e, 2), d = (rd.a(e.slice(0, 2), e.slice(2, 4)) + rd.a(e.slice(4, 6), e.slice(6, 8))) / 2, e = Bd(this);
   void 0 !== e && (d /= e);
   return d;
 };
@@ -1304,7 +1313,7 @@ td.prototype.getPointResolution = function(b, c) {
   return this.i(b, c);
 };
 var ud = {}, Dd = {}, vd = null;
-function yd(b) {
+function xd(b) {
   Ed(b);
   b.forEach(function(c) {
     b.forEach(function(b) {
@@ -1323,7 +1332,7 @@ function Ed(b) {
   });
 }
 function Hd(b) {
-  return b ? z(b) ? xd(b) : b : xd("EPSG:3857");
+  return b ? z(b) ? wd(b) : b : wd("EPSG:3857");
 }
 function zd(b, c, d) {
   b = b.c;
@@ -1345,7 +1354,7 @@ function Ad(b) {
     return d;
   };
 }
-function xd(b) {
+function wd(b) {
   var c;
   if (b instanceof td) {
     c = b;
@@ -1368,7 +1377,7 @@ function Id(b, c) {
   return b.c === c.c ? d : Cd(b, c) === Fd && d;
 }
 function Jd(b, c) {
-  var d = xd(b), e = xd(c);
+  var d = wd(b), e = wd(c);
   return Cd(d, e);
 }
 function Cd(b, c) {
@@ -1403,11 +1412,11 @@ function Ld(b, c, d) {
   c = Jd(c, d);
   b = [b[0], b[1], b[0], b[3], b[2], b[1], b[2], b[3]];
   c(b, b, 2);
-  return Wc([b[0], b[2], b[4], b[6]], [b[1], b[3], b[5], b[7]]);
+  return Xc([b[0], b[2], b[4], b[6]], [b[1], b[3], b[5], b[7]]);
 }
 ;function Md() {
   X.call(this);
-  this.o = Uc();
+  this.o = Vc();
   this.u = -1;
   this.f = {};
   this.s = this.i = 0;
@@ -1450,11 +1459,11 @@ function Od(b) {
 }
 Z.prototype.Va = function(b) {
   var c = this.a, d = this.a.length, e = this.B;
-  b = Xc(Infinity, Infinity, -Infinity, -Infinity, b);
-  return cd(b, c, 0, d, e);
+  b = Yc(Infinity, Infinity, -Infinity, -Infinity, b);
+  return dd(b, c, 0, d, e);
 };
 Z.prototype.Ab = function(b) {
-  this.s != this.h && (sb(this.f), this.i = 0, this.s = this.h);
+  this.s != this.h && (tb(this.f), this.i = 0, this.s = this.h);
   if (0 > b || 0 !== this.i && b <= this.i) {
     return this;
   }
@@ -1625,7 +1634,7 @@ p.clone = function() {
   b.c();
   return b;
 };
-p.J = function() {
+p.I = function() {
   return Ud(this.a, 0, this.a.length, this.B);
 };
 p.Ea = function(b) {
@@ -1636,7 +1645,7 @@ p.Ea = function(b) {
   b.c();
   return b;
 };
-p.M = function() {
+p.K = function() {
   return "LinearRing";
 };
 p.S = function(b, c) {
@@ -1655,14 +1664,14 @@ p.clone = function() {
   b.c();
   return b;
 };
-p.J = function() {
+p.I = function() {
   return this.a ? this.a.slice() : [];
 };
 p.Va = function(b) {
   var c = this.a, d = c[0], c = c[1];
-  return Xc(d, c, d, c, b);
+  return Yc(d, c, d, c, b);
 };
-p.M = function() {
+p.K = function() {
   return "Point";
 };
 p.S = function(b, c) {
@@ -1693,7 +1702,7 @@ function $d(b, c, d, e, f, g) {
   }
   w = NaN;
   q = -Infinity;
-  t.sort(bb);
+  t.sort(cb);
   m = t[0];
   k = 1;
   for (l = t.length;k < l;++k) {
@@ -1796,7 +1805,7 @@ p.clone = function() {
   ge(b, this.g, this.a.slice(), this.b.slice());
   return b;
 };
-p.J = function(b) {
+p.I = function(b) {
   var c;
   void 0 !== b ? (c = he(this).slice(), de(c, 0, this.b, this.B, b)) : c = this.a;
   return Vd(c, 0, this.b, this.B);
@@ -1806,12 +1815,21 @@ p.Qa = function() {
 };
 function ie(b) {
   if (b.w != b.h) {
-    var c = fd(b.D());
+    var c = gd(b.D());
     b.A = ae(he(b), 0, b.b, b.B, c, 0);
     b.w = b.h;
   }
   return b.A;
 }
+p.Yb = function(b) {
+  if (0 > b || this.b.length <= b) {
+    return null;
+  }
+  var c = new Yd(null);
+  Pd(c, this.g, this.a.slice(0 === b ? 0 : this.b[b - 1], this.b[b]));
+  c.c();
+  return c;
+};
 function he(b) {
   if (b.C != b.h) {
     var c = b.a;
@@ -1827,7 +1845,7 @@ p.Ea = function(b) {
   ge(b, "XY", c, d);
   return b;
 };
-p.M = function() {
+p.K = function() {
   return "Polygon";
 };
 p.S = function(b, c) {
@@ -1857,28 +1875,28 @@ function ge(b, c, d, e) {
   d = void 0 !== b.maxZoom ? b.maxZoom : 28;
   var h = void 0 !== b.zoomFactor ? b.zoomFactor : 2;
   if (void 0 !== b.resolutions) {
-    d = b.resolutions, e = d[0], f = d[d.length - 1], d = db(d);
+    d = b.resolutions, e = d[0], f = d[d.length - 1], d = eb(d);
   } else {
     e = Hd(b.projection);
     f = e.D();
-    var k = (f ? Math.max(Y(f), ed(f)) : 360 * sd.degrees / Bd(e)) / 256 / Math.pow(2, 0), l = k / Math.pow(2, 28);
+    var k = (f ? Math.max(Y(f), fd(f)) : 360 * sd.degrees / Bd(e)) / 256 / Math.pow(2, 0), l = k / Math.pow(2, 28);
     e = b.maxResolution;
     void 0 !== e ? g = 0 : e = k / Math.pow(h, g);
     f = b.minResolution;
     void 0 === f && (f = void 0 !== b.maxZoom ? void 0 !== b.maxResolution ? e / Math.pow(h, d) : k / Math.pow(h, d) : l);
     d = g + Math.floor(Math.log(e / f) / Math.log(h));
     f = e / Math.pow(h, d - g);
-    d = eb(h, e, d - g);
+    d = fb(h, e, d - g);
   }
   this.g = e;
   this.i = f;
   this.f = g;
-  g = void 0 !== b.extent ? Ja(b.extent) : Ka;
-  (void 0 !== b.enableRotation ? b.enableRotation : 1) ? (e = b.constrainRotation, e = void 0 === e || !0 === e ? ib() : !1 === e ? gb : ga(e) ? hb(e) : gb) : e = fb;
-  this.a = new jb(g, d, e);
+  g = void 0 !== b.extent ? Ia(b.extent) : Ja;
+  (void 0 !== b.enableRotation ? b.enableRotation : 1) ? (e = b.constrainRotation, e = void 0 === e || !0 === e ? jb() : !1 === e ? hb : ga(e) ? ib(e) : hb) : e = gb;
+  this.a = new kb(g, d, e);
   void 0 !== b.resolution ? c.resolution = b.resolution : void 0 !== b.zoom && (c.resolution = this.constrainResolution(this.g, b.zoom - this.f));
   c.rotation = void 0 !== b.rotation ? b.rotation : 0;
-  Bc(this, c);
+  Cc(this, c);
 }
 H(je, X);
 p = je.prototype;
@@ -1891,9 +1909,9 @@ p.constrainRotation = function(b, c) {
 p.ja = function() {
   return this.get("center");
 };
-p.Fc = function(b) {
+p.Gc = function(b) {
   var c = this.ja(), d = this.R(), e = ke(this);
-  return gd(c, d, e, b);
+  return hd(c, d, e, b);
 };
 p.R = function() {
   return this.get("resolution");
@@ -1905,7 +1923,7 @@ p.Y = function() {
   var b = this.ja(), c = this.l, d = this.R(), e = ke(this);
   return {center:[Math.round(b[0] / d) * d, Math.round(b[1] / d) * d], projection:void 0 !== c ? c : null, resolution:d, rotation:e};
 };
-p.Lc = function() {
+p.Mc = function() {
   var b, c = this.R();
   if (void 0 !== c) {
     var d, e = 0;
@@ -1920,7 +1938,7 @@ p.Lc = function() {
   }
   return void 0 !== b ? this.f + b : b;
 };
-p.Hc = function(b, c, d) {
+p.Ic = function(b, c, d) {
   if (!(b instanceof Z)) {
     var e = b[0], f = b[1], g = b[2], h = b[3], e = [e, f, e, h, g, h, g, f, e, f], f = new fe(null);
     ge(f, "XY", e, [e.length]);
@@ -1937,7 +1955,7 @@ p.Hc = function(b, c, d) {
   }
   b = [m, n, q, r];
   c = [c[0] - d[1] - d[3], c[1] - d[0] - d[2]];
-  c = Math.max(Y(b) / c[0], ed(b) / c[1]);
+  c = Math.max(Y(b) / c[0], fd(b) / c[1]);
   c = isNaN(c) ? k : Math.max(c, k);
   h && (k = this.constrainResolution(c, 0, 0), !f && k < c && (k = this.constrainResolution(k, -1, 0)), c = k);
   le(this, c);
@@ -1949,7 +1967,7 @@ p.Hc = function(b, c, d) {
 p.rotate = function(b, c) {
   if (void 0 !== c) {
     var d, e = this.ja();
-    void 0 !== e && (d = [e[0] - c[0], e[1] - c[1]], Lc(d, b - ke(this)), Hc(d, c));
+    void 0 !== e && (d = [e[0] - c[0], e[1] - c[1]], Mc(d, b - ke(this)), Ic(d, c));
     this.sa(d);
   }
   this.j("rotation", b);
@@ -1963,7 +1981,7 @@ function me(b, c) {
 function le(b, c) {
   b.j("resolution", c);
 }
-p.Xd = function(b) {
+p.Yd = function(b) {
   b = this.constrainResolution(this.g, b - this.f, 0);
   le(this, b);
 };
@@ -2007,8 +2025,8 @@ function re(b) {
         var m = k.viewState.center;
         m[0] -= g[0];
         m[1] -= g[1];
-        Lc(m, l);
-        Hc(m, g);
+        Mc(m, l);
+        Ic(m, g);
       }
       k.viewHints[0] += 1;
       return !0;
@@ -2078,7 +2096,7 @@ p.Fb = function(b) {
 p.forEach = function(b, c) {
   this.a.forEach(b, c);
 };
-p.sd = function() {
+p.td = function() {
   return this.a;
 };
 p.item = function(b) {
@@ -2108,7 +2126,7 @@ p.remove = function(b) {
 };
 function Be(b, c) {
   var d = b.a[c];
-  La.splice.call(b.a, c, 1);
+  Ma.splice.call(b.a, c, 1);
   ze(b);
   W(b, new xe("remove", d, b));
   return d;
@@ -2128,9 +2146,9 @@ function ze(b) {
   }
   return b;
 }
-;var Ee = !O || 9 <= Kb;
-!zb && !O || O && 9 <= Kb || zb && Ib("1.9.1");
-O && Ib("9");
+;var De = !O || 9 <= Lb;
+!Ab && !O || O && 9 <= Lb || Ab && Jb("1.9.1");
+O && Jb("9");
 function Fe(b, c) {
   this.x = ba(b) ? b : 0;
   this.y = ba(c) ? c : 0;
@@ -2168,11 +2186,11 @@ p = Ge.prototype;
 p.clone = function() {
   return new Ge(this.width, this.height);
 };
-p.Dc = function() {
+p.Ec = function() {
   return this.width * this.height;
 };
 p.ra = function() {
-  return !this.Dc();
+  return !this.Ec();
 };
 p.ceil = function() {
   this.width = Math.ceil(this.width);
@@ -2200,7 +2218,7 @@ function He(b) {
   return z(b) ? c.getElementById(b) : b;
 }
 function Ie(b, c) {
-  nb(c, function(c, e) {
+  ob(c, function(c, e) {
     "style" == e ? b.style.cssText = c : "class" == e ? b.className = c : "for" == e ? b.htmlFor = c : Je.hasOwnProperty(e) ? b.setAttribute(Je[e], c) : 0 == e.lastIndexOf("aria-", 0) || 0 == e.lastIndexOf("data-", 0) ? b.setAttribute(e, c) : b[e] = c;
   });
 }
@@ -2211,13 +2229,13 @@ function Ke(b) {
 }
 function Le(b, c, d) {
   var e = arguments, f = document, g = e[0], h = e[1];
-  if (!Ee && h && (h.name || h.type)) {
+  if (!De && h && (h.name || h.type)) {
     g = ["<", g];
     h.name && g.push(' name="', ta(h.name), '"');
     if (h.type) {
       g.push(' type="', ta(h.type), '"');
       var k = {};
-      wb(k, h);
+      xb(k, h);
       delete k.type;
       h = k;
     }
@@ -2235,7 +2253,7 @@ function Me(b, c, d) {
   }
   for (var f = 2;f < d.length;f++) {
     var g = d[f];
-    !fa(g) || ia(g) && 0 < g.nodeType ? e(g) : Ma(Ne(g) ? Ra(g) : g, e);
+    !fa(g) || ia(g) && 0 < g.nodeType ? e(g) : Na(Ne(g) ? Sa(g) : g, e);
   }
 }
 function Oe(b) {
@@ -2279,14 +2297,14 @@ function Re(b) {
 }
 function Se(b, c) {
   var d;
-  b.classList ? d = b.classList.contains(c) : (d = Re(b), d = 0 <= La.indexOf.call(d, c, void 0));
+  b.classList ? d = b.classList.contains(c) : (d = Re(b), d = 0 <= Ma.indexOf.call(d, c, void 0));
   return d;
 }
 function Te(b, c) {
   b.classList ? b.classList.add(c) : Se(b, c) || (b.className += 0 < b.className.length ? " " + c : c);
 }
 function Ue(b, c) {
-  b.classList ? b.classList.remove(c) : Se(b, c) && (b.className = Na(Re(b), function(b) {
+  b.classList ? b.classList.remove(c) : Se(b, c) && (b.className = Oa(Re(b), function(b) {
     return b != c;
   }).join(" "));
 }
@@ -2395,9 +2413,9 @@ function df(b) {
   b.target && (this.C = He(b.target));
 }
 H(df, X);
-df.prototype.I = function() {
+df.prototype.J = function() {
   Oe(this.element);
-  df.O.I.call(this);
+  df.O.J.call(this);
 };
 df.prototype.setMap = function(b) {
   this.g && Oe(this.element);
@@ -2443,7 +2461,7 @@ p.Ra = function() {
   }
   return b;
 };
-p.Yb = function() {
+p.Zb = function() {
   var b = Array(this.h), c = 0, d;
   for (d = this.a;d;d = d.ua) {
     b[c++] = d.Ca;
@@ -2502,7 +2520,7 @@ kf.prototype.Y = function() {
 };
 function mf(b) {
   X.call(this);
-  this.i = xd(b.projection);
+  this.i = wd(b.projection);
   this.A = void 0 !== b.attributions ? b.attributions : null;
   this.C = b.logo;
   this.N = void 0 !== b.state ? b.state : "ready";
@@ -2523,7 +2541,7 @@ function nf(b) {
   this.j = null;
   void 0 !== b.origins && (this.j = b.origins);
   var c = b.extent;
-  void 0 === c || this.c || this.j || (this.c = jd(c));
+  void 0 === c || this.c || this.j || (this.c = kd(c));
   this.g = null;
   void 0 !== b.tileSizes && (this.g = b.tileSizes);
   this.f = void 0 !== b.tileSize ? b.tileSize : this.g ? null : 256;
@@ -2571,19 +2589,19 @@ function tf(b, c, d, e) {
   return vf(b, c, d, e);
 }
 function xf(b, c) {
-  var d = b.Da(c[0]), e = b.R(c[0]), f = Fc(yf(b, c[0]), b.h);
+  var d = b.Da(c[0]), e = b.R(c[0]), f = Gc(yf(b, c[0]), b.h);
   return [d[0] + (c[1] + .5) * f[0] * e, d[1] + (c[2] + .5) * f[1] * e];
 }
 function sf(b, c, d) {
   var e = b.Da(c[0]), f = b.R(c[0]);
-  b = Fc(yf(b, c[0]), b.h);
+  b = Gc(yf(b, c[0]), b.h);
   var g = e[0] + c[1] * b[0] * f;
   c = e[1] + c[2] * b[1] * f;
-  return Xc(g, c, g + b[0] * f, c + b[1] * f, d);
+  return Yc(g, c, g + b[0] * f, c + b[1] * f, d);
 }
 function wf(b, c, d, e, f, g) {
   var h = zf(b, e), k = e / b.R(h), l = b.Da(h);
-  b = Fc(yf(b, h), b.h);
+  b = Gc(yf(b, h), b.h);
   c = k * Math.floor((c - l[0]) / e + (f ? .5 : 0)) / b[0];
   d = k * Math.floor((d - l[1]) / e + (f ? 0 : .5)) / b[1];
   f ? (c = Math.ceil(c) - 1, d = Math.ceil(d) - 1) : (c = Math.floor(c), d = Math.floor(d));
@@ -2595,7 +2613,7 @@ function yf(b, c) {
   return b.f ? b.f : b.g[c];
 }
 function zf(b, c) {
-  var d = cb(b.b, c, 0);
+  var d = db(b.b, c, 0);
   return Ea(d, b.minZoom, b.maxZoom);
 }
 function pf(b, c) {
@@ -2607,18 +2625,18 @@ function pf(b, c) {
 function Af(b) {
   var c = b.j;
   if (!c) {
-    for (var c = Bf(b), d = ed(c), e = Y(c), f = Fc(256), d = Math.max(e / f[0], d / f[1]), e = Array(43), f = 0;43 > f;++f) {
+    for (var c = Bf(b), d = fd(c), e = Y(c), f = Gc(256), d = Math.max(e / f[0], d / f[1]), e = Array(43), f = 0;43 > f;++f) {
       e[f] = d / Math.pow(2, f);
     }
-    c = new of({extent:c, origin:jd(c), resolutions:e, tileSize:void 0});
+    c = new of({extent:c, origin:kd(c), resolutions:e, tileSize:void 0});
     b.j = c;
   }
   return c;
 }
 function Bf(b) {
-  b = xd(b);
+  b = wd(b);
   var c = b.D();
-  c || (b = 180 * sd.degrees / Bd(b), c = Xc(-b, -b, b, b));
+  c || (b = 180 * sd.degrees / Bd(b), c = Yc(-b, -b, b, b));
   return c;
 }
 ;function Cf(b) {
@@ -2631,10 +2649,10 @@ function Bf(b) {
 }
 H(Cf, mf);
 p = Cf.prototype;
-p.gc = function() {
+p.hc = function() {
   return hf(this.a);
 };
-p.hc = function(b, c) {
+p.ic = function(b, c) {
   var d = this.Sa(b);
   d && jf(d, c);
 };
@@ -2669,7 +2687,7 @@ p.Sa = function(b) {
 function Ef(b, c, d) {
   var e = b.ya(d);
   d = b.u;
-  c = Fc(yf(e, c), b.w);
+  c = Gc(yf(e, c), b.w);
   1 == d ? b = c : (b = b.w, void 0 === b && (b = [0, 0]), b[0] = c[0] * d + .5 | 0, b[1] = c[1] * d + .5 | 0);
   return b;
 }
@@ -2689,7 +2707,7 @@ function Ff(b, c, d) {
   d = d.minZoom > e || e > d.maxZoom ? !1 : (d = (g = d.D()) ? tf(d, g, e) : d.a ? d.a[e] : null) ? ue(d, b, f) : !0;
   return d ? c : null;
 }
-p.sc = qa;
+p.tc = qa;
 function Gf(b, c) {
   P.call(this, b);
   this.tile = c;
@@ -2720,7 +2738,7 @@ function Hf(b) {
 H(Hf, df);
 function If(b) {
   if (b = b.frameState) {
-    var c, d, e, f, g, h, k, l, m, n, q = b.layerStatesArray, r = tb(b.attributions), t = {}, w = b.viewState.projection;
+    var c, d, e, f, g, h, k, l, m, n, q = b.layerStatesArray, r = ub(b.attributions), t = {}, w = b.viewState.projection;
     d = 0;
     for (c = q.length;d < c;d++) {
       if (h = q[d].layer.Z()) {
@@ -2751,9 +2769,9 @@ function If(b) {
     for (u in c) {
       e = document.createElement("LI"), e.innerHTML = c[u].a(), Ye(e, !1), this.u.appendChild(e), this.b[u] = e;
     }
-    u = !rb(this.a) || !rb(b.logos);
+    u = !sb(this.a) || !sb(b.logos);
     this.o != u && (Ye(this.element, u), this.o = u);
-    u && rb(this.a) ? Te(this.element, "ol-logo-only") : Ue(this.element, "ol-logo-only");
+    u && sb(this.a) ? Te(this.element, "ol-logo-only") : Ue(this.element, "ol-logo-only");
     var y;
     b = b.logos;
     u = this.F;
@@ -2763,7 +2781,7 @@ function If(b) {
     for (var B in b) {
       B in u || (y = new Image, y.src = B, d = b[B], "" === d ? d = y : (d = Le("A", {href:d}), d.appendChild(y)), this.s.appendChild(d), u[B] = d);
     }
-    Ye(this.s, !rb(b));
+    Ye(this.s, !sb(b));
   } else {
     this.o && (Ye(this.element, !1), this.o = !1);
   }
@@ -2858,10 +2876,10 @@ function Mf(b) {
   b = b ? b : {};
   var c = Le("DIV", b.className ? b.className : "ol-mouse-position");
   df.call(this, {element:c, render:b.render ? b.render : Of, target:b.target});
-  Q(this, Dc("projection"), this.u, !1, this);
+  Q(this, Ec("projection"), this.u, !1, this);
   b.coordinateFormat && this.j("coordinateFormat", b.coordinateFormat);
   if (b.projection) {
-    var d = xd(b.projection);
+    var d = wd(b.projection);
     this.j("projection", d);
   }
   this.w = b.undefinedHTML ? b.undefinedHTML : "";
@@ -2903,7 +2921,7 @@ function Pf(b, c) {
   b.l && d == b.l || (b.element.innerHTML = d, b.l = d);
 }
 ;function Rf(b, c, d) {
-  Ob.call(this);
+  Pb.call(this);
   this.a = null;
   this.h = !1;
   this.f = b;
@@ -2911,12 +2929,12 @@ function Pf(b, c) {
   this.c = c || window;
   this.b = na(this.j, this);
 }
-H(Rf, Ob);
+H(Rf, Pb);
 Rf.prototype.start = function() {
   Sf(this);
   this.h = !1;
   var b = Tf(this), c = Uf(this);
-  b && !c && this.c.mozRequestAnimationFrame ? (this.a = Q(this.c, "MozBeforePaint", this.b), this.c.mozRequestAnimationFrame(null), this.h = !0) : this.a = b && c ? b.call(this.c, this.b) : this.c.setTimeout(nd(this.b), 20);
+  b && !c && this.c.mozRequestAnimationFrame ? (this.a = Q(this.c, "MozBeforePaint", this.b), this.c.mozRequestAnimationFrame(null), this.h = !0) : this.a = b && c ? b.call(this.c, this.b) : this.c.setTimeout(od(this.b), 20);
 };
 function Sf(b) {
   if (null != b.a) {
@@ -2930,9 +2948,9 @@ Rf.prototype.j = function() {
   this.a = null;
   this.f.call(this.g, pa());
 };
-Rf.prototype.I = function() {
+Rf.prototype.J = function() {
   Sf(this);
-  Rf.O.I.call(this);
+  Rf.O.J.call(this);
 };
 function Tf(b) {
   b = b.c;
@@ -3010,14 +3028,14 @@ function Wf() {
   } else {
     if (b) {
       if (b instanceof Xf) {
-        e = b.Ra(), d = b.Yb();
+        e = b.Ra(), d = b.Zb();
       } else {
         var d = [], f = 0;
         for (e in b) {
           d[f++] = e;
         }
         e = d;
-        d = qb(b);
+        d = rb(b);
       }
       for (f = 0;f < e.length;f++) {
         Yf(this, e[f], d[f]);
@@ -3029,7 +3047,7 @@ p = Xf.prototype;
 p.Wa = function() {
   return this.b;
 };
-p.Yb = function() {
+p.Zb = function() {
   Zf(this);
   for (var b = [], c = 0;c < this.a.length;c++) {
     b.push(this.c[this.a[c]]);
@@ -3099,8 +3117,8 @@ function ag(b) {
   this.c = Ke(this.a || window);
 }
 H(ag, V);
-ag.prototype.I = function() {
-  ag.O.I.call(this);
+ag.prototype.J = function() {
+  ag.O.J.call(this);
   this.b && (T(this.b), this.b = null);
   this.c = this.a = null;
 };
@@ -3109,20 +3127,20 @@ ag.prototype.h = function() {
   b == c || b && c && b.width == c.width && b.height == c.height || (this.c = b, W(this, "resize"));
 };
 function bg(b, c, d, e, f) {
-  if (!(O || yb || Ab && Ib("525"))) {
+  if (!(O || zb || Bb && Jb("525"))) {
     return !0;
   }
-  if (Bb && f) {
+  if (Cb && f) {
     return cg(b);
   }
   if (f && !e) {
     return !1;
   }
   ga(c) && (c = dg(c));
-  if (!d && (17 == c || 18 == c || Bb && 91 == c)) {
+  if (!d && (17 == c || 18 == c || Cb && 91 == c)) {
     return !1;
   }
-  if ((Ab || yb) && e && d) {
+  if ((Bb || zb) && e && d) {
     switch(b) {
       case 220:
       ;
@@ -3157,12 +3175,12 @@ function bg(b, c, d, e, f) {
     case 13:
       return !0;
     case 27:
-      return !(Ab || yb);
+      return !(Bb || zb);
   }
   return cg(b);
 }
 function cg(b) {
-  if (48 <= b && 57 >= b || 96 <= b && 106 >= b || 65 <= b && 90 >= b || (Ab || yb) && 0 == b) {
+  if (48 <= b && 57 >= b || 96 <= b && 106 >= b || 65 <= b && 90 >= b || (Bb || zb) && 0 == b) {
     return !0;
   }
   switch(b) {
@@ -3213,10 +3231,10 @@ function cg(b) {
   }
 }
 function dg(b) {
-  if (zb) {
+  if (Ab) {
     b = eg(b);
   } else {
-    if (Bb && Ab) {
+    if (Cb && Bb) {
       a: {
         switch(b) {
           case 93:
@@ -3258,10 +3276,10 @@ p.ha = -1;
 p.ta = -1;
 p.mb = !1;
 var hg = {3:13, 12:144, 63232:38, 63233:40, 63234:37, 63235:39, 63236:112, 63237:113, 63238:114, 63239:115, 63240:116, 63241:117, 63242:118, 63243:119, 63244:120, 63245:121, 63246:122, 63247:123, 63248:44, 63272:46, 63273:36, 63275:35, 63276:33, 63277:34, 63289:144, 63302:45}, ig = {Up:38, Down:40, Left:37, Right:39, Enter:13, F1:112, F2:113, F3:114, F4:115, F5:116, F6:117, F7:118, F8:119, F9:120, F10:121, F11:122, F12:123, "U+007F":46, Home:36, End:35, PageUp:33, PageDown:34, Insert:45}, jg = O || 
-yb || Ab && Ib("525"), kg = Bb && zb;
+zb || Bb && Jb("525"), kg = Cb && Ab;
 fg.prototype.a = function(b) {
-  if (Ab || yb) {
-    if (17 == this.ha && !b.i || 18 == this.ha && !b.c || Bb && 91 == this.ha && !b.s) {
+  if (Bb || zb) {
+    if (17 == this.ha && !b.i || 18 == this.ha && !b.c || Cb && 91 == this.ha && !b.s) {
       this.ta = this.ha = -1;
     }
   }
@@ -3274,7 +3292,7 @@ fg.prototype.c = function(b) {
 };
 fg.prototype.handleEvent = function(b) {
   var c = b.a, d, e, f = c.altKey;
-  O && "keypress" == b.type ? (d = this.ta, e = 13 != d && 27 != d ? c.keyCode : 0) : (Ab || yb) && "keypress" == b.type ? (d = this.ta, e = 0 <= c.charCode && 63232 > c.charCode && cg(d) ? c.charCode : 0) : xb && !Ab ? (d = this.ta, e = cg(d) ? c.keyCode : 0) : (d = c.keyCode || this.ta, e = c.charCode || 0, kg && (f = this.mb), Bb && 63 == e && 224 == d && (d = 191));
+  O && "keypress" == b.type ? (d = this.ta, e = 13 != d && 27 != d ? c.keyCode : 0) : (Bb || zb) && "keypress" == b.type ? (d = this.ta, e = 0 <= c.charCode && 63232 > c.charCode && cg(d) ? c.charCode : 0) : yb && !Bb ? (d = this.ta, e = cg(d) ? c.keyCode : 0) : (d = c.keyCode || this.ta, e = c.charCode || 0, kg && (f = this.mb), Cb && 63 == e && 224 == d && (d = 191));
   var g = d = dg(d), h = c.keyIdentifier;
   d ? 63232 <= d && d in hg ? g = hg[d] : 25 == d && b.j && (g = 9) : h && h in ig && (g = ig[h]);
   this.ha = g;
@@ -3295,8 +3313,8 @@ function mg(b) {
   b.ha = -1;
   b.ta = -1;
 }
-fg.prototype.I = function() {
-  fg.O.I.call(this);
+fg.prototype.J = function() {
+  fg.O.J.call(this);
   mg(this);
 };
 function lg(b, c, d, e) {
@@ -3310,7 +3328,7 @@ function ng(b, c) {
   V.call(this);
   var d = this.a = b;
   (d = ia(d) && 1 == d.nodeType ? this.a : this.a ? this.a.body : null) && We(d, "direction");
-  this.c = Q(this.a, zb ? "DOMMouseScroll" : "mousewheel", this, c);
+  this.c = Q(this.a, Ab ? "DOMMouseScroll" : "mousewheel", this, c);
 }
 H(ng, V);
 ng.prototype.handleEvent = function(b) {
@@ -3318,7 +3336,7 @@ ng.prototype.handleEvent = function(b) {
   b = b.a;
   if ("mousewheel" == b.type) {
     c = 1;
-    if (O || Ab && (Cb || Ib("532.0"))) {
+    if (O || Bb && (Db || Jb("532.0"))) {
       c = 40;
     }
     d = og(-b.wheelDelta, c);
@@ -3331,10 +3349,10 @@ ng.prototype.handleEvent = function(b) {
   W(this, d);
 };
 function og(b, c) {
-  return Ab && (Bb || Db) && 0 != b % c ? b : b / c;
+  return Bb && (Cb || Eb) && 0 != b % c ? b : b / c;
 }
-ng.prototype.I = function() {
-  ng.O.I.call(this);
+ng.prototype.J = function() {
+  ng.O.J.call(this);
   T(this.c);
   this.c = null;
 };
@@ -3423,12 +3441,12 @@ function Bg(b, c) {
   this.j = c;
 }
 ;function Cg(b) {
-  Bg.call(this, b, {mousedown:this.dd, mousemove:this.ed, mouseup:this.hd, mouseover:this.gd, mouseout:this.fd});
+  Bg.call(this, b, {mousedown:this.ed, mousemove:this.fd, mouseup:this.jd, mouseover:this.hd, mouseout:this.gd});
   this.c = b.c;
   this.b = [];
 }
 H(Cg, Bg);
-function Eg(b, c) {
+function Dg(b, c) {
   for (var d = b.b, e = c.clientX, f = c.clientY, g = 0, h = d.length, k;g < h && (k = d[g]);g++) {
     var l = Math.abs(f - k[1]);
     if (25 >= Math.abs(e - k[0]) && 25 >= l) {
@@ -3437,7 +3455,7 @@ function Eg(b, c) {
   }
   return !1;
 }
-function Fg(b) {
+function Eg(b) {
   var c = Gg(b, b.a), d = c.preventDefault;
   c.preventDefault = function() {
     b.preventDefault();
@@ -3449,44 +3467,44 @@ function Fg(b) {
   return c;
 }
 p = Cg.prototype;
-p.dd = function(b) {
-  if (!Eg(this, b)) {
+p.ed = function(b) {
+  if (!Dg(this, b)) {
     if ((1).toString() in this.c) {
-      var c = Fg(b);
+      var c = Eg(b);
       Hg(this.a, Ig, c, b);
       delete this.c[(1).toString()];
     }
-    c = Fg(b);
+    c = Eg(b);
     this.c[(1).toString()] = b;
     Hg(this.a, Jg, c, b);
   }
 };
-p.ed = function(b) {
-  if (!Eg(this, b)) {
-    var c = Fg(b);
+p.fd = function(b) {
+  if (!Dg(this, b)) {
+    var c = Eg(b);
     Hg(this.a, Kg, c, b);
   }
 };
-p.hd = function(b) {
-  if (!Eg(this, b)) {
+p.jd = function(b) {
+  if (!Dg(this, b)) {
     var c = this.c[(1).toString()];
-    c && c.button === b.button && (c = Fg(b), Hg(this.a, Lg, c, b), delete this.c[(1).toString()]);
+    c && c.button === b.button && (c = Eg(b), Hg(this.a, Lg, c, b), delete this.c[(1).toString()]);
   }
 };
-p.gd = function(b) {
-  if (!Eg(this, b)) {
-    var c = Fg(b);
+p.hd = function(b) {
+  if (!Dg(this, b)) {
+    var c = Eg(b);
     Mg(this.a, c, b);
   }
 };
-p.fd = function(b) {
-  if (!Eg(this, b)) {
-    var c = Fg(b);
+p.gd = function(b) {
+  if (!Dg(this, b)) {
+    var c = Eg(b);
     Ng(this.a, c, b);
   }
 };
 function Og(b) {
-  Bg.call(this, b, {MSPointerDown:this.nd, MSPointerMove:this.od, MSPointerUp:this.rd, MSPointerOut:this.pd, MSPointerOver:this.qd, MSPointerCancel:this.md, MSGotPointerCapture:this.kd, MSLostPointerCapture:this.ld});
+  Bg.call(this, b, {MSPointerDown:this.od, MSPointerMove:this.pd, MSPointerUp:this.sd, MSPointerOut:this.qd, MSPointerOver:this.rd, MSPointerCancel:this.nd, MSGotPointerCapture:this.ld, MSLostPointerCapture:this.md});
   this.c = b.c;
   this.b = ["", "unavailable", "touch", "pen", "mouse"];
 }
@@ -3497,70 +3515,70 @@ function Pg(b, c) {
   return d;
 }
 p = Og.prototype;
-p.nd = function(b) {
+p.od = function(b) {
   this.c[b.a.pointerId.toString()] = b;
   var c = Pg(this, b);
   Hg(this.a, Jg, c, b);
 };
-p.od = function(b) {
+p.pd = function(b) {
   var c = Pg(this, b);
   Hg(this.a, Kg, c, b);
 };
-p.rd = function(b) {
+p.sd = function(b) {
   var c = Pg(this, b);
   Hg(this.a, Lg, c, b);
   delete this.c[b.a.pointerId.toString()];
 };
-p.pd = function(b) {
+p.qd = function(b) {
   var c = Pg(this, b);
   Ng(this.a, c, b);
 };
-p.qd = function(b) {
+p.rd = function(b) {
   var c = Pg(this, b);
   Mg(this.a, c, b);
 };
-p.md = function(b) {
+p.nd = function(b) {
   var c = Pg(this, b);
   Hg(this.a, Ig, c, b);
   delete this.c[b.a.pointerId.toString()];
 };
-p.ld = function(b) {
+p.md = function(b) {
   W(this.a, new qg("lostpointercapture", b, b.a));
 };
-p.kd = function(b) {
+p.ld = function(b) {
   W(this.a, new qg("gotpointercapture", b, b.a));
 };
 function Qg(b) {
-  Bg.call(this, b, {pointerdown:this.Od, pointermove:this.Pd, pointerup:this.Sd, pointerout:this.Qd, pointerover:this.Rd, pointercancel:this.Nd, gotpointercapture:this.Mc, lostpointercapture:this.cd});
+  Bg.call(this, b, {pointerdown:this.Pd, pointermove:this.Qd, pointerup:this.Td, pointerout:this.Rd, pointerover:this.Sd, pointercancel:this.Od, gotpointercapture:this.Nc, lostpointercapture:this.dd});
 }
 H(Qg, Bg);
 p = Qg.prototype;
-p.Od = function(b) {
-  Rg(this.a, b);
-};
 p.Pd = function(b) {
-  Rg(this.a, b);
-};
-p.Sd = function(b) {
   Rg(this.a, b);
 };
 p.Qd = function(b) {
   Rg(this.a, b);
 };
+p.Td = function(b) {
+  Rg(this.a, b);
+};
 p.Rd = function(b) {
   Rg(this.a, b);
 };
-p.Nd = function(b) {
+p.Sd = function(b) {
   Rg(this.a, b);
 };
-p.cd = function(b) {
+p.Od = function(b) {
   Rg(this.a, b);
 };
-p.Mc = function(b) {
+p.dd = function(b) {
+  Rg(this.a, b);
+};
+p.Nc = function(b) {
   Rg(this.a, b);
 };
 function Sg(b, c) {
-  Bg.call(this, b, {touchstart:this.be, touchmove:this.ae, touchend:this.$d, touchcancel:this.Zd});
+  Bg.call(this, b, {touchstart:this.ce, touchmove:this.be, touchend:this.ae, touchcancel:this.$d});
   this.c = b.c;
   this.f = c;
   this.b = void 0;
@@ -3569,7 +3587,7 @@ function Sg(b, c) {
 }
 H(Sg, Bg);
 p = Sg.prototype;
-p.lc = function() {
+p.mc = function() {
   this.g = 0;
   this.h = void 0;
 };
@@ -3601,7 +3619,7 @@ function Ug(b, c, d) {
     k = Tg(b, c, f[h]), k.preventDefault = e, d.call(b, c, k);
   }
 }
-p.be = function(b) {
+p.ce = function(b) {
   var c = b.a.touches, d = Object.keys(this.c), e = d.length;
   if (e >= c.length) {
     var f = [], g, h, k;
@@ -3627,16 +3645,16 @@ p.be = function(b) {
       this.ob(b, f[g]);
     }
   }
-  c = pb(this.c);
+  c = qb(this.c);
   if (0 === c || 1 === c && (1).toString() in this.c) {
     this.b = b.a.changedTouches[0].identifier, void 0 !== this.h && v.clearTimeout(this.h);
   }
   Vg(this, b);
   this.g++;
-  Ug(this, b, this.Md);
+  Ug(this, b, this.Nd);
 };
-p.Md = function(b, c) {
-  this.c[c.pointerId] = {target:c.target, Aa:c, jc:c.target};
+p.Nd = function(b, c) {
+  this.c[c.pointerId] = {target:c.target, Aa:c, kc:c.target};
   var d = this.a;
   c.bubbles = !0;
   Hg(d, Wg, c, b);
@@ -3645,34 +3663,34 @@ p.Md = function(b, c) {
   Hg(d, Xg, c, b);
   Hg(this.a, Jg, c, b);
 };
-p.ae = function(b) {
+p.be = function(b) {
   b.preventDefault();
-  Ug(this, b, this.jd);
+  Ug(this, b, this.kd);
 };
-p.jd = function(b, c) {
+p.kd = function(b, c) {
   var d = this.c[c.pointerId];
   if (d) {
-    var e = d.Aa, f = d.jc;
+    var e = d.Aa, f = d.kc;
     Hg(this.a, Kg, c, b);
     e && f !== c.target && (e.relatedTarget = c.target, c.relatedTarget = f, e.target = f, c.target ? (Ng(this.a, e, b), Mg(this.a, c, b)) : (c.target = f, c.relatedTarget = null, this.ob(b, c)));
     d.Aa = c;
-    d.jc = c.target;
+    d.kc = c.target;
   }
 };
-p.$d = function(b) {
+p.ae = function(b) {
   Vg(this, b);
-  Ug(this, b, this.de);
+  Ug(this, b, this.ee);
 };
-p.de = function(b, c) {
+p.ee = function(b, c) {
   Hg(this.a, Lg, c, b);
   this.a.Aa(c, b);
   var d = this.a;
   c.bubbles = !1;
   Hg(d, Yg, c, b);
   delete this.c[c.pointerId];
-  c.isPrimary && (this.b = void 0, this.h = v.setTimeout(this.lc.bind(this), 200));
+  c.isPrimary && (this.b = void 0, this.h = v.setTimeout(this.mc.bind(this), 200));
 };
-p.Zd = function(b) {
+p.$d = function(b) {
   Ug(this, b, this.ob);
 };
 p.ob = function(b, c) {
@@ -3682,7 +3700,7 @@ p.ob = function(b, c) {
   c.bubbles = !1;
   Hg(d, Yg, c, b);
   delete this.c[c.pointerId];
-  c.isPrimary && (this.b = void 0, this.h = v.setTimeout(this.lc.bind(this), 200));
+  c.isPrimary && (this.b = void 0, this.h = v.setTimeout(this.mc.bind(this), 200));
 };
 function Vg(b, c) {
   var d = b.f.b, e = c.a.changedTouches[0];
@@ -3690,7 +3708,7 @@ function Vg(b, c) {
     var f = [e.clientX, e.clientY];
     d.push(f);
     v.setTimeout(function() {
-      Qa(d, f);
+      Ra(d, f);
     }, 2500);
   }
 }
@@ -3725,7 +3743,7 @@ function ah(b, c) {
 }
 function bh(b, c) {
   c.forEach(function(b) {
-    sc(this.j, b, this.b, !1, this);
+    tc(this.j, b, this.b, !1, this);
   }, b);
 }
 function Gg(b, c) {
@@ -3755,11 +3773,11 @@ function Hg(b, c, d, e) {
 function Rg(b, c) {
   W(b, new qg(c.type, c, c.a));
 }
-Zg.prototype.I = function() {
+Zg.prototype.J = function() {
   for (var b = this.a.length, c, d = 0;d < b;d++) {
     c = this.a[d], bh(this, Object.keys(c.j));
   }
-  Zg.O.I.call(this);
+  Zg.O.J.call(this);
 };
 var Kg = "pointermove", Jg = "pointerdown", Lg = "pointerup", Wg = "pointerover", dh = "pointerout", Xg = "pointerenter", Yg = "pointerleave", Ig = "pointercancel", ch = [["bubbles", !1], ["cancelable", !1], ["view", null], ["detail", null], ["screenX", 0], ["screenY", 0], ["clientX", 0], ["clientY", 0], ["ctrlKey", !1], ["altKey", !1], ["shiftKey", !1], ["metaKey", !1], ["button", 0], ["relatedTarget", null], ["buttons", 0], ["pointerId", 0], ["width", 0], ["height", 0], ["pressure", 0], ["tiltX", 
 0], ["tiltY", 0], ["pointerType", ""], ["hwTimestamp", 0], ["isPrimary", !1], ["type", ""], ["target", null], ["currentTarget", null], ["which", 0]];
@@ -3796,8 +3814,8 @@ function gh(b) {
   this.l = {};
   this.j = new Zg(b);
   this.a = null;
-  this.i = Q(this.j, Jg, this.Uc, !1, this);
-  this.v = Q(this.j, Kg, this.Td, !1, this);
+  this.i = Q(this.j, Jg, this.Vc, !1, this);
+  this.v = Q(this.j, Kg, this.Ud, !1, this);
 }
 H(gh, V);
 function hh(b, c) {
@@ -3812,24 +3830,24 @@ function hh(b, c) {
 }
 function lh(b, c) {
   c.type == mh || c.type == nh ? delete b.l[c.pointerId] : c.type == oh && (b.l[c.pointerId] = !0);
-  b.s = pb(b.l);
+  b.s = qb(b.l);
 }
 p = gh.prototype;
-p.ac = function(b) {
+p.bc = function(b) {
   lh(this, b);
   var c = new fh(mh, this.b, b);
   W(this, c);
   !this.f && 0 === b.button && hh(this, this.c);
-  0 === this.s && (this.h.forEach(T), this.h = null, this.f = !1, this.c = null, Sb(this.a), this.a = null);
+  0 === this.s && (this.h.forEach(T), this.h = null, this.f = !1, this.c = null, Tb(this.a), this.a = null);
 };
-p.Uc = function(b) {
+p.Vc = function(b) {
   lh(this, b);
   var c = new fh(oh, this.b, b);
   W(this, c);
   this.c = b;
-  this.h || (this.a = new Zg(document), this.h = [Q(this.a, ph, this.vd, !1, this), Q(this.a, mh, this.ac, !1, this), Q(this.j, nh, this.ac, !1, this)]);
+  this.h || (this.a = new Zg(document), this.h = [Q(this.a, ph, this.wd, !1, this), Q(this.a, mh, this.bc, !1, this), Q(this.j, nh, this.bc, !1, this)]);
 };
-p.vd = function(b) {
+p.wd = function(b) {
   if (b.clientX != this.c.clientX || b.clientY != this.c.clientY) {
     this.f = !0;
     var c = new fh(qh, this.b, b, this.f);
@@ -3837,32 +3855,32 @@ p.vd = function(b) {
   }
   b.preventDefault();
 };
-p.Td = function(b) {
+p.Ud = function(b) {
   W(this, new fh(b.type, this.b, b, !(!this.c || b.clientX == this.c.clientX && b.clientY == this.c.clientY)));
 };
-p.I = function() {
+p.J = function() {
   this.v && (T(this.v), this.v = null);
   this.i && (T(this.i), this.i = null);
   this.h && (this.h.forEach(T), this.h = null);
-  this.a && (Sb(this.a), this.a = null);
-  this.j && (Sb(this.j), this.j = null);
-  gh.O.I.call(this);
+  this.a && (Tb(this.a), this.a = null);
+  this.j && (Tb(this.j), this.j = null);
+  gh.O.J.call(this);
 };
-var kh = "singleclick", ih = "click", jh = "dblclick", qh = "pointerdrag", ph = "pointermove", oh = "pointerdown", mh = "pointerup", nh = "pointercancel", rh = {pe:kh, ee:ih, fe:jh, ie:qh, le:ph, he:oh, oe:mh, ne:"pointerover", me:"pointerout", je:"pointerenter", ke:"pointerleave", ge:nh};
+var kh = "singleclick", ih = "click", jh = "dblclick", qh = "pointerdrag", ph = "pointermove", oh = "pointerdown", mh = "pointerup", nh = "pointercancel", rh = {qe:kh, fe:ih, ge:jh, je:qh, me:ph, ie:oh, pe:mh, oe:"pointerover", ne:"pointerout", ke:"pointerenter", le:"pointerleave", he:nh};
 function sh(b) {
   X.call(this);
-  var c = tb(b);
+  var c = ub(b);
   c.opacity = void 0 !== b.opacity ? b.opacity : 1;
   c.visible = void 0 !== b.visible ? b.visible : !0;
   c.zIndex = void 0 !== b.zIndex ? b.zIndex : 0;
   c.maxResolution = void 0 !== b.maxResolution ? b.maxResolution : Infinity;
   c.minResolution = void 0 !== b.minResolution ? b.minResolution : 0;
-  Bc(this, c);
+  Cc(this, c);
 }
 H(sh, X);
 function th(b) {
   var c = b.get("opacity"), d = b.Bb(), e = b.get("visible"), f = b.D(), g = b.get("zIndex"), h = b.get("maxResolution"), k = b.get("minResolution");
-  return {layer:b, opacity:Ea(c, 0, 1), Yd:d, visible:e, bb:!0, extent:f, zIndex:g, maxResolution:h, minResolution:Math.max(k, 0)};
+  return {layer:b, opacity:Ea(c, 0, 1), Zd:d, visible:e, bb:!0, extent:f, zIndex:g, maxResolution:h, minResolution:Math.max(k, 0)};
 }
 sh.prototype.D = function() {
   return this.get("extent");
@@ -3878,12 +3896,12 @@ function uh() {
 }
 H(vh, P);
 function wh(b) {
-  var c = tb(b);
+  var c = ub(b);
   delete c.source;
   sh.call(this, c);
   this.a = this.g = this.b = null;
   b.map && this.setMap(b.map);
-  Q(this, Dc("source"), this.Xc, !1, this);
+  Q(this, Ec("source"), this.Yc, !1, this);
   this.j("source", b.source ? b.source : null);
 }
 H(wh, sh);
@@ -3900,13 +3918,13 @@ p.Bb = function() {
   var b = this.Z();
   return b ? b.Y() : "undefined";
 };
-p.Ld = function() {
+p.Md = function() {
   this.c();
 };
-p.Xc = function() {
+p.Yc = function() {
   this.a && (T(this.a), this.a = null);
   var b = this.Z();
-  b && (this.a = Q(b, "change", this.Ld, !1, this));
+  b && (this.a = Q(b, "change", this.Md, !1, this));
   this.c();
 };
 p.setMap = function(b) {
@@ -3940,7 +3958,7 @@ function xh(b, c, d, e, f, g, h, k) {
   b[13] = 0;
   b[14] = 0;
   b[15] = 1;
-  0 === c && 0 === d || Sc(b, c, d);
+  0 === c && 0 === d || Tc(b, c, d);
   if (1 != e || 1 != f) {
     c = b[1] * e;
     d = b[2] * e;
@@ -3965,7 +3983,7 @@ function xh(b, c, d, e, f, g, h, k) {
     b[15] = x;
   }
   0 !== g && (e = b[0], c = b[1], d = b[2], l = b[3], m = b[4], n = b[5], q = b[6], f = b[7], r = Math.cos(g), g = Math.sin(g), b[0] = e * r + m * g, b[1] = c * r + n * g, b[2] = d * r + q * g, b[3] = l * r + f * g, b[4] = e * -g + m * r, b[5] = c * -g + n * r, b[6] = d * -g + q * r, b[7] = l * -g + f * r);
-  0 === h && 0 === k || Sc(b, h, k);
+  0 === h && 0 === k || Tc(b, h, k);
   return b;
 }
 function yh(b, c, d) {
@@ -3976,10 +3994,10 @@ function yh(b, c, d) {
   return d;
 }
 ;function zh(b) {
-  yc.call(this);
+  zc.call(this);
   this.b = b;
 }
-H(zh, yc);
+H(zh, zc);
 zh.prototype.l = qa;
 function Ah(b, c, d) {
   return function(e, f) {
@@ -3990,9 +4008,9 @@ function Ah(b, c, d) {
   };
 }
 function Bh(b, c) {
-  c.gc() && b.postRenderFunctions.push(oa(function(b, c, f) {
+  c.hc() && b.postRenderFunctions.push(oa(function(b, c, f) {
     c = C(b).toString();
-    b.hc(f.viewState.projection, f.usedTiles[c]);
+    b.ic(f.viewState.projection, f.usedTiles[c]);
   }, c));
 }
 function Ch(b, c) {
@@ -4025,7 +4043,7 @@ function Gh(b, c, d, e, f, g, h, k) {
   for (u = h;u >= n;--u) {
     for (r = tf(d, g, u, r), t = d.R(u), w = r.a;w <= r.c;++w) {
       for (A = r.h;A <= r.b;++A) {
-        h - u <= k ? (q = Hh(c, u, w, A, e, f), 0 == q.Y() && (m[q.ba.toString()] = !0, q.getKey() in b.b || b.g([q, l, xf(d, q.ba), t]))) : c.sc(u, w, A, f);
+        h - u <= k ? (q = Hh(c, u, w, A, e, f), 0 == q.Y() && (m[q.ba.toString()] = !0, q.getKey() in b.b || b.g([q, l, xf(d, q.ba), t]))) : c.tc(u, w, A, f);
       }
     }
   }
@@ -4053,15 +4071,15 @@ Jh.prototype.get = function(b, c, d) {
   return b in this.a ? this.a[b] : null;
 };
 function Kh(b, c) {
-  Ob.call(this);
+  Pb.call(this);
   this.g = c;
   this.c = {};
   this.h = {};
 }
-H(Kh, Ob);
-Kh.prototype.I = function() {
-  nb(this.c, Sb);
-  Kh.O.I.call(this);
+H(Kh, Pb);
+Kh.prototype.J = function() {
+  ob(this.c, Tb);
+  Kh.O.J.call(this);
 };
 function Lh() {
   var b = Jh.c();
@@ -4071,7 +4089,7 @@ function Lh() {
       e = b.a[d];
       var f;
       if (f = 0 === (c++ & 3)) {
-        $b(e) ? e = xc(e, void 0, void 0) : (e = nc(e), e = !!e && gc(e, void 0, void 0)), f = !e;
+        ac(e) ? e = yc(e, void 0, void 0) : (e = oc(e), e = !!e && hc(e, void 0, void 0)), f = !e;
       }
       f && (delete b.a[d], --b.c);
     }
@@ -4125,11 +4143,11 @@ Kh.prototype.l = function(b, c) {
       delete this.c[e];
       T(this.h[e]);
       delete this.h[e];
-      Sb(f);
+      Tb(f);
     }
   }
 };
-function Za(b, c) {
+function $a(b, c) {
   return b.zIndex - c.zIndex;
 }
 ;function Sh(b, c) {
@@ -4142,7 +4160,7 @@ function Za(b, c) {
 Sh.prototype.clear = function() {
   this.a.length = 0;
   this.c.length = 0;
-  sb(this.b);
+  tb(this.b);
 };
 Sh.prototype.g = function(b) {
   var c = this.v(b);
@@ -4199,7 +4217,7 @@ Vh.prototype.i = function(b) {
   b = b.target;
   var c = b.Y();
   if (2 === c || 3 === c || 4 === c) {
-    sc(b, "change", this.i, !1, this), b = b.getKey(), b in this.f && (delete this.f[b], --this.h), this.l();
+    tc(b, "change", this.i, !1, this), b = b.getKey(), b in this.f && (delete this.f[b], --this.h), this.l();
   }
 };
 function Wh() {
@@ -4293,10 +4311,10 @@ function ii(b) {
 ;function ji(b) {
   b = b ? b : {};
   Yh.call(this, {handleEvent:b.handleEvent ? b.handleEvent : ki});
-  this.gb = b.handleDownEvent ? b.handleDownEvent : ld;
+  this.gb = b.handleDownEvent ? b.handleDownEvent : md;
   this.hb = b.handleDragEvent ? b.handleDragEvent : qa;
   this.ib = b.handleMoveEvent ? b.handleMoveEvent : qa;
-  this.jb = b.handleUpEvent ? b.handleUpEvent : ld;
+  this.jb = b.handleUpEvent ? b.handleUpEvent : md;
   this.l = !1;
   this.N = {};
   this.g = [];
@@ -4314,7 +4332,7 @@ function ki(b) {
   }
   var c = !1, d = b.type;
   if (d === oh || d === qh || d === mh) {
-    d = b.c, b.type == mh ? delete this.N[d.pointerId] : b.type == oh ? this.N[d.pointerId] = d : d.pointerId in this.N && (this.N[d.pointerId] = d), this.g = qb(this.N);
+    d = b.c, b.type == mh ? delete this.N[d.pointerId] : b.type == oh ? this.N[d.pointerId] = d : d.pointerId in this.N && (this.N[d.pointerId] = d), this.g = rb(this.N);
   }
   this.l && (b.type == qh ? this.hb(b) : b.type == mh && (this.l = this.jb(b)));
   b.type == oh ? (this.l = b = this.gb(b), c = this.Ba(b)) : b.type == ph && this.ib(b);
@@ -4341,8 +4359,8 @@ function oi(b) {
     var f = b.U(), g = f.Y(), e = d = [d, e], h = g.resolution;
     e[0] *= h;
     e[1] *= h;
-    Lc(d, g.rotation);
-    Hc(d, g.center);
+    Mc(d, g.rotation);
+    Ic(d, g.center);
     d = f.a.center(d);
     b.render();
     f.sa(d);
@@ -4386,14 +4404,14 @@ function ni(b) {
     this.b = null;
     this.l || me(d, 1);
     c.render();
-    this.f && Qa(c.w, this.f) && (d.sa(b.frameState.viewState.center), this.f = null);
+    this.f && Ra(c.w, this.f) && (d.sa(b.frameState.viewState.center), this.f = null);
     this.a && (b = this.a, b.a.length = 0, b.b = 0, b.c = 0);
     this.i = 1 < this.g.length;
     return !0;
   }
   return !1;
 }
-mi.prototype.Ba = ld;
+mi.prototype.Ba = md;
 function ri(b) {
   b = b ? b : {};
   ji.call(this, {handleDownEvent:si, handleDragEvent:ti, handleUpEvent:ui});
@@ -4428,9 +4446,9 @@ function ui(b) {
   return !1;
 }
 function si(b) {
-  return ii(b) && Yb(b.a) && this.b(b) ? (b = b.map, me(b.U(), 1), b.render(), this.a = void 0, !0) : !1;
+  return ii(b) && Zb(b.a) && this.b(b) ? (b = b.map, me(b.U(), 1), b.render(), this.a = void 0, !0) : !1;
 }
-ri.prototype.Ba = ld;
+ri.prototype.Ba = md;
 function vi(b) {
   this.h = null;
   this.c = document.createElement("div");
@@ -4438,10 +4456,10 @@ function vi(b) {
   this.c.className = "ol-box " + b;
   this.b = this.j = this.a = null;
 }
-H(vi, Ob);
-vi.prototype.I = function() {
+H(vi, Pb);
+vi.prototype.J = function() {
   this.setMap(null);
-  vi.O.I.call(this);
+  vi.O.J.call(this);
 };
 function wi(b) {
   var c = b.j, d = b.b;
@@ -4464,7 +4482,7 @@ function xi(b) {
   c[4] = c[0].slice();
   b.h ? b.h.S([c]) : b.h = new fe([c]);
 }
-vi.prototype.L = function() {
+vi.prototype.M = function() {
   return this.h;
 };
 function yi(b, c, d) {
@@ -4478,7 +4496,7 @@ function zi(b) {
   b = b ? b : {};
   this.a = new vi(b.className || "ol-dragbox");
   this.b = null;
-  this.u = b.condition ? b.condition : md;
+  this.u = b.condition ? b.condition : nd;
   this.o = b.boxEndCondition ? b.boxEndCondition : Di;
 }
 H(zi, ji);
@@ -4497,8 +4515,8 @@ function Bi(b) {
     W(this, new yi("boxdrag", b.coordinate, b));
   }
 }
-zi.prototype.L = function() {
-  return this.a.L();
+zi.prototype.M = function() {
+  return this.a.M();
 };
 zi.prototype.i = qa;
 function Ci(b) {
@@ -4510,7 +4528,7 @@ function Ci(b) {
   return !1;
 }
 function Ai(b) {
-  if (ii(b) && Yb(b.a) && this.u(b)) {
+  if (ii(b) && Zb(b.a) && this.u(b)) {
     this.b = b.pixel;
     this.a.setMap(b.map);
     var c = this.a, d = this.b;
@@ -4531,16 +4549,16 @@ function Ai(b) {
 }
 H(Ei, zi);
 Ei.prototype.i = function() {
-  var b = this.s, c = b.U(), d = b.cb(), e = this.L().D(), d = c.constrainResolution(Math.max(Y(e) / d[0], ed(e) / d[1])), f = c.R(), g = c.ja();
+  var b = this.s, c = b.U(), d = b.cb(), e = this.M().D(), d = c.constrainResolution(Math.max(Y(e) / d[0], fd(e) / d[1])), f = c.R(), g = c.ja();
   b.oa(se({resolution:f, duration:this.f, easing:ne}));
   b.oa(qe({source:g, duration:this.f, easing:ne}));
-  c.sa(fd(e));
+  c.sa(gd(e));
   le(c, d);
 };
 function Fi(b) {
   Yh.call(this, {handleEvent:Gi});
   b = b || {};
-  this.a = void 0 !== b.condition ? b.condition : od(fi, hi);
+  this.a = void 0 !== b.condition ? b.condition : pd(fi, hi);
   this.b = void 0 !== b.duration ? b.duration : 100;
   this.g = void 0 !== b.pixelDelta ? b.pixelDelta : 128;
 }
@@ -4553,7 +4571,7 @@ function Gi(b) {
       var e = b.map, c = e.U(), f = c.R() * this.g, g = 0, h = 0;
       40 == d ? h = -f : 37 == d ? g = -f : 39 == d ? g = f : h = f;
       d = [g, h];
-      Lc(d, ke(c));
+      Mc(d, ke(c));
       f = this.b;
       if (g = c.ja()) {
         f && 0 < f && e.oa(qe({source:g, duration:f, easing:pe})), e = c.a.center([g[0] + d[0], g[1] + d[1]]), c.sa(e);
@@ -4660,7 +4678,7 @@ function Oi(b) {
 function Mi(b) {
   return 2 <= this.g.length ? (b = b.map, this.b = null, this.f = void 0, this.a = !1, this.i = 0, this.l || me(b.U(), 1), b.render(), !0) : !1;
 }
-Li.prototype.Ba = ld;
+Li.prototype.Ba = md;
 function Pi(b) {
   ji.call(this, {handleDownEvent:Qi, handleDragEvent:Ri, handleUpEvent:Si});
   b = b ? b : {};
@@ -4697,16 +4715,16 @@ function Si(b) {
 function Qi(b) {
   return 2 <= this.g.length ? (b = b.map, this.b = null, this.a = void 0, this.f = 1, this.l || me(b.U(), 1), b.render(), !0) : !1;
 }
-Pi.prototype.Ba = ld;
+Pi.prototype.Ba = md;
 function Ti(b) {
   var c = b || {};
-  b = tb(c);
+  b = ub(c);
   delete b.layers;
   c = c.layers;
   sh.call(this, b);
   this.b = [];
   this.a = {};
-  Q(this, Dc("layers"), this.Sc, !1, this);
+  Q(this, Ec("layers"), this.Tc, !1, this);
   c ? ea(c) && (c = new ye(c.slice())) : c = new ye;
   this.j("layers", c);
 }
@@ -4715,15 +4733,15 @@ p = Ti.prototype;
 p.Ya = function() {
   this.get("visible") && this.c();
 };
-p.Sc = function() {
+p.Tc = function() {
   this.b.forEach(T);
   this.b.length = 0;
   var b = this.get("layers");
-  this.b.push(Q(b, "add", this.Rc, !1, this), Q(b, "remove", this.Tc, !1, this));
-  nb(this.a, function(b) {
+  this.b.push(Q(b, "add", this.Sc, !1, this), Q(b, "remove", this.Uc, !1, this));
+  ob(this.a, function(b) {
     b.forEach(T);
   });
-  sb(this.a);
+  tb(this.a);
   var b = b.a, c, d, e;
   c = 0;
   for (d = b.length;c < d;c++) {
@@ -4731,13 +4749,13 @@ p.Sc = function() {
   }
   this.c();
 };
-p.Rc = function(b) {
+p.Sc = function(b) {
   b = b.element;
   var c = C(b).toString();
   this.a[c] = [Q(b, "propertychange", this.Ya, !1, this), Q(b, "change", this.Ya, !1, this)];
   this.c();
 };
-p.Tc = function(b) {
+p.Uc = function(b) {
   b = C(b.element).toString();
   this.a[b].forEach(T);
   delete this.a[b];
@@ -4751,7 +4769,7 @@ p.yb = function(b) {
   b = th(this);
   var e, f;
   for (e = c.length;d < e;d++) {
-    f = c[d], f.opacity *= b.opacity, f.visible = f.visible && b.visible, f.maxResolution = Math.min(f.maxResolution, b.maxResolution), f.minResolution = Math.max(f.minResolution, b.minResolution), void 0 !== b.extent && (f.extent = void 0 !== f.extent ? hd(f.extent, b.extent) : b.extent);
+    f = c[d], f.opacity *= b.opacity, f.visible = f.visible && b.visible, f.maxResolution = Math.min(f.maxResolution, b.maxResolution), f.minResolution = Math.max(f.minResolution, b.minResolution), void 0 !== b.extent && (f.extent = void 0 !== f.extent ? id(f.extent, b.extent) : b.extent);
   }
   return c;
 };
@@ -4786,7 +4804,7 @@ function $i(b, c, d) {
   }
   return c;
 }
-;var aj = new pd(6378137);
+;var aj = new qd(6378137);
 function bj(b, c) {
   td.call(this, {code:b, units:"degrees", extent:cj, axisOrientation:c, global:!0, metersPerUnit:dj, worldExtent:cj});
 }
@@ -4797,7 +4815,7 @@ bj.prototype.getPointResolution = function(b) {
 var cj = [-180, -90, 180, 90], dj = Math.PI * aj.radius / 180, ej = [new bj("CRS:84"), new bj("EPSG:4326", "neu"), new bj("urn:ogc:def:crs:EPSG::4326", "neu"), new bj("urn:ogc:def:crs:EPSG:6.6:4326", "neu"), new bj("urn:ogc:def:crs:OGC:1.3:CRS84"), new bj("urn:ogc:def:crs:OGC:2:84"), new bj("http://www.opengis.net/gml/srs/epsg.xml#4326", "neu"), new bj("urn:x-ogc:def:crs:EPSG:4326", "neu")];
 function Oh(b) {
   b = b ? b : {};
-  var c = tb(b);
+  var c = ub(b);
   delete c.preload;
   delete c.useInterimTilesOnError;
   wh.call(this, c);
@@ -5027,7 +5045,7 @@ function mj(b, c) {
   var c = b.atlasManager, d = null, e, f = 0;
   this.c && (e = Ce(this.c.c), f = this.c.b, void 0 === f && (f = 1), d = this.c.a, wg || (d = null));
   var g = 2 * (this.b + f) + 1;
-  e = {strokeStyle:e, oc:f, size:g, lineDash:d};
+  e = {strokeStyle:e, pc:f, size:g, lineDash:d};
   if (void 0 === c) {
     this.a = document.createElement("CANVAS");
     this.a.height = g;
@@ -5076,7 +5094,7 @@ function mj(b, c) {
     h = c.add(this.h[0], g, g, this.Vb.bind(this, e), h);
     this.a = h.image;
     this.v = [h.offsetX, h.offsetY];
-    d ? this.j = h.re : this.j = this.a;
+    d ? this.j = h.se : this.j = this.a;
   }
   this.f = [g / 2, g / 2];
   this.i = [g, g];
@@ -5091,14 +5109,14 @@ p.Da = function() {
   return this.v;
 };
 p.load = qa;
-p.ce = qa;
+p.de = qa;
 p.Vb = function(b, c, d, e) {
   c.setTransform(1, 0, 0, 1, 0, 0);
   c.translate(d, e);
   c.beginPath();
   c.arc(b.size / 2, b.size / 2, this.b, 0, 2 * Math.PI, !0);
   this.g && (c.fillStyle = Ce(this.g.a), c.fill());
-  this.c && (c.strokeStyle = b.strokeStyle, c.lineWidth = b.oc, b.lineDash && c.setLineDash(b.lineDash), c.stroke());
+  this.c && (c.strokeStyle = b.strokeStyle, c.lineWidth = b.pc, b.lineDash && c.setLineDash(b.lineDash), c.stroke());
   c.closePath();
 };
 p.Ub = function(b, c, d, e) {
@@ -5108,7 +5126,7 @@ p.Ub = function(b, c, d, e) {
   c.arc(b.size / 2, b.size / 2, this.b, 0, 2 * Math.PI, !0);
   c.fillStyle = Ce(fj);
   c.fill();
-  this.c && (c.strokeStyle = b.strokeStyle, c.lineWidth = b.oc, b.lineDash && c.setLineDash(b.lineDash), c.stroke());
+  this.c && (c.strokeStyle = b.strokeStyle, c.lineWidth = b.pc, b.lineDash && c.setLineDash(b.lineDash), c.stroke());
   c.closePath();
 };
 function pj(b) {
@@ -5122,7 +5140,7 @@ function pj(b) {
   this.c = void 0 !== b.text ? b.text : null;
   this.a = b.zIndex;
 }
-pj.prototype.L = function() {
+pj.prototype.M = function() {
   return this.g;
 };
 pj.prototype.da = function() {
@@ -5170,11 +5188,11 @@ function vj() {
   return b;
 }
 function qj(b) {
-  return b.L();
+  return b.M();
 }
 ;function Qh(b) {
   b = b ? b : {};
-  var c = tb(b);
+  var c = ub(b);
   delete c.style;
   delete c.renderBuffer;
   delete c.updateWhileAnimating;
@@ -5208,7 +5226,7 @@ function wj(b, c, d, e, f) {
   this.v = this.H = this.wa = this.na = 0;
   this.F = this.l = this.i = null;
   this.o = [];
-  this.xa = Qc();
+  this.xa = Rc();
 }
 function xj(b, c, d) {
   if (b.j) {
@@ -5275,7 +5293,7 @@ function Cj(b, c, d, e, f) {
 }
 p = wj.prototype;
 p.sb = function(b) {
-  if (id(this.f, b.D())) {
+  if (jd(this.f, b.D())) {
     if (this.c || this.a) {
       this.c && zj(this, this.c);
       this.a && Aj(this, this.a);
@@ -5295,12 +5313,12 @@ p.sb = function(b) {
     "" !== this.h && yj(this, b.a.slice(0, b.B), 2, 2);
   }
 };
-p.Gc = function(b, c) {
+p.Hc = function(b, c) {
   var d = b.a, e, f;
   e = 0;
   for (f = d.length;e < f;++e) {
     var g = d[e];
-    Dj[g.M()].call(this, g, c);
+    Dj[g.K()].call(this, g, c);
   }
 };
 p.Oa = function(b) {
@@ -5316,7 +5334,7 @@ p.ub = function(b) {
   "" !== this.h && yj(this, c, c.length, b);
 };
 p.Na = function(b) {
-  if (id(this.f, b.D())) {
+  if (jd(this.f, b.D())) {
     if (this.a) {
       Aj(this, this.a);
       var c = this.b, d = b.a;
@@ -5329,7 +5347,7 @@ p.Na = function(b) {
 };
 p.tb = function(b) {
   var c = b.D();
-  if (id(this.f, c)) {
+  if (jd(this.f, c)) {
     if (this.a) {
       Aj(this, this.a);
       var c = this.b, d = b.a, e = 0, f = b.Qa(), g = b.B;
@@ -5345,7 +5363,7 @@ p.tb = function(b) {
   }
 };
 p.wb = function(b) {
-  if (id(this.f, b.D())) {
+  if (jd(this.f, b.D())) {
     if (this.a || this.c) {
       this.c && zj(this, this.c);
       this.a && Aj(this, this.a);
@@ -5359,7 +5377,7 @@ p.wb = function(b) {
   }
 };
 p.vb = function(b) {
-  if (id(this.f, b.D())) {
+  if (jd(this.f, b.D())) {
     if (this.a || this.c) {
       this.c && zj(this, this.c);
       this.a && Aj(this, this.a);
@@ -5378,7 +5396,7 @@ p.vb = function(b) {
 };
 function Ij(b) {
   var c = Object.keys(b.ma).map(Number);
-  c.sort(bb);
+  c.sort(cb);
   var d, e, f, g, h;
   d = 0;
   for (e = c.length;d < e;++d) {
@@ -5393,7 +5411,7 @@ function zj(b, c) {
 }
 function Aj(b, c) {
   var d = b.b, e = b.T;
-  e ? (e.lineCap != c.lineCap && (e.lineCap = d.lineCap = c.lineCap), wg && !$a(e.lineDash, c.lineDash) && d.setLineDash(e.lineDash = c.lineDash), e.lineJoin != c.lineJoin && (e.lineJoin = d.lineJoin = c.lineJoin), e.lineWidth != c.lineWidth && (e.lineWidth = d.lineWidth = c.lineWidth), e.miterLimit != c.miterLimit && (e.miterLimit = d.miterLimit = c.miterLimit), e.strokeStyle != c.strokeStyle && (e.strokeStyle = d.strokeStyle = c.strokeStyle)) : (d.lineCap = c.lineCap, wg && d.setLineDash(c.lineDash), 
+  e ? (e.lineCap != c.lineCap && (e.lineCap = d.lineCap = c.lineCap), wg && !ab(e.lineDash, c.lineDash) && d.setLineDash(e.lineDash = c.lineDash), e.lineJoin != c.lineJoin && (e.lineJoin = d.lineJoin = c.lineJoin), e.lineWidth != c.lineWidth && (e.lineWidth = d.lineWidth = c.lineWidth), e.miterLimit != c.miterLimit && (e.miterLimit = d.miterLimit = c.miterLimit), e.strokeStyle != c.strokeStyle && (e.strokeStyle = d.strokeStyle = c.strokeStyle)) : (d.lineCap = c.lineCap, wg && d.setLineDash(c.lineDash), 
   d.lineJoin = c.lineJoin, d.lineWidth = c.lineWidth, d.miterLimit = c.miterLimit, d.strokeStyle = c.strokeStyle, b.T = {lineCap:c.lineCap, lineDash:c.lineDash, lineJoin:c.lineJoin, lineWidth:c.lineWidth, miterLimit:c.miterLimit, strokeStyle:c.strokeStyle});
 }
 p.va = function(b, c) {
@@ -5452,10 +5470,10 @@ p.pa = function(b) {
     this.h = "";
   }
 };
-var Dj = {Point:wj.prototype.Oa, LineString:wj.prototype.Na, Polygon:wj.prototype.wb, MultiPoint:wj.prototype.ub, MultiLineString:wj.prototype.tb, MultiPolygon:wj.prototype.vb, GeometryCollection:wj.prototype.Gc, Circle:wj.prototype.sb};
+var Dj = {Point:wj.prototype.Oa, LineString:wj.prototype.Na, Polygon:wj.prototype.wb, MultiPoint:wj.prototype.ub, MultiLineString:wj.prototype.tb, MultiPolygon:wj.prototype.vb, GeometryCollection:wj.prototype.Hc, Circle:wj.prototype.sb};
 function Jj(b) {
   zh.call(this, b);
-  this.F = Qc();
+  this.F = Rc();
 }
 H(Jj, zh);
 Jj.prototype.s = function(b, c, d) {
@@ -5464,7 +5482,7 @@ Jj.prototype.s = function(b, c, d) {
   if (e) {
     var f = c.extent, g = void 0 !== f;
     if (g) {
-      var h = b.pixelRatio, k = jd(f), l = [f[2], f[3]], m = [f[2], f[1]], f = [f[0], f[1]];
+      var h = b.pixelRatio, k = kd(f), l = [f[2], f[3]], m = [f[2], f[1]], f = [f[0], f[1]];
       yh(b.coordinateToPixelMatrix, k, k);
       yh(b.coordinateToPixelMatrix, l, l);
       yh(b.coordinateToPixelMatrix, m, m);
@@ -5488,7 +5506,7 @@ Jj.prototype.s = function(b, c, d) {
 };
 function Kj(b, c, d, e, f) {
   var g = b.b;
-  xc(g, c) && (b = void 0 !== f ? f : Lj(b, e, 0), b = new wj(d, e.pixelRatio, e.extent, b, e.viewState.rotation), W(g, new vh(c, g, b, e, d, null)), Ij(b));
+  yc(g, c) && (b = void 0 !== f ? f : Lj(b, e, 0), b = new wj(d, e.pixelRatio, e.extent, b, e.viewState.rotation), W(g, new vh(c, g, b, e, d, null)), Ij(b));
 }
 function Lj(b, c, d) {
   var e = c.viewState, f = c.pixelRatio;
@@ -5507,7 +5525,7 @@ var Mj = function() {
       e[3] = 255;
     }
     var e = b.canvas, f = d[0] <= e.width && d[1] <= e.height;
-    f || (e.width = d[0], e.height = d[1], e = d[0] - 1, d = d[1] - 1, b.putImageData(c, e, d), d = b.getImageData(e, d, 1, 1), f = $a(c.data, d.data));
+    f || (e.width = d[0], e.height = d[1], e = d[0] - 1, d = d[1] - 1, b.putImageData(c, e, d), d = b.getImageData(e, d, 1, 1), f = ab(c.data, d.data));
     return f;
   };
 }();
@@ -5521,11 +5539,11 @@ function Oj(b, c, d) {
   this.A = this.w = null;
   this.c = [];
   this.coordinates = [];
-  this.T = Qc();
+  this.T = Rc();
   this.a = [];
   this.N = [];
-  this.W = Qc();
-  this.ka = Qc();
+  this.W = Rc();
+  this.ka = Rc();
 }
 H(Oj, uh);
 function Pj(b, c, d, e, f, g) {
@@ -5579,7 +5597,7 @@ function Rj(b, c, d, e, f, g, h, k, l) {
     n[14] = e[14];
     n[15] = e[15];
   }
-  e = !rb(g);
+  e = !sb(g);
   var n = 0, q = h.length, r = 0, t, w = b.W;
   b = b.ka;
   for (var A, u, y, B;n < q;) {
@@ -5587,7 +5605,7 @@ function Rj(b, c, d, e, f, g, h, k, l) {
     switch(x[0]) {
       case 0:
         r = x[1];
-        e && g[C(r).toString()] || !r.L() ? n = x[2] : void 0 === l || id(l, r.L().D()) ? ++n : n = x[2];
+        e && g[C(r).toString()] || !r.M() ? n = x[2] : void 0 === l || jd(l, r.M().D()) ? ++n : n = x[2];
         break;
       case 1:
         c.beginPath();
@@ -5622,17 +5640,17 @@ function Rj(b, c, d, e, f, g, h, k, l) {
           E = m[r + 1] - S;
           F && (x = Math.round(x), E = Math.round(E));
           if (1 != B || 0 !== y) {
-            var M = x + K, Ta = E + S;
-            xh(w, M, Ta, B, B, y, -M, -Ta);
+            var M = x + K, Wa = E + S;
+            xh(w, M, Wa, B, B, y, -M, -Wa);
             c.transform(w[0], w[1], w[4], w[5], w[12], w[13]);
           }
           M = c.globalAlpha;
           1 != G && (c.globalAlpha = M * G);
-          var Ta = R + N > J.width ? J.width - N : R, Ha = U + L > J.height ? J.height - L : U;
-          c.drawImage(J, N, L, Ta, Ha, x, E, Ta * d, Ha * d);
+          var Wa = R + N > J.width ? J.width - N : R, Ka = U + L > J.height ? J.height - L : U;
+          c.drawImage(J, N, L, Wa, Ka, x, E, Wa * d, Ka * d);
           1 != G && (c.globalAlpha = M);
           if (1 != B || 0 !== y) {
-            Rc(w, b), c.transform(b[0], b[1], b[4], b[5], b[12], b[13]);
+            Sc(w, b), c.transform(b[0], b[1], b[4], b[5], b[12], b[13]);
           }
         }
         ++n;
@@ -5659,7 +5677,7 @@ function Rj(b, c, d, e, f, g, h, k, l) {
             M = N[R], G && c.strokeText(M, x, E), J && c.fillText(M, x, E), E += F;
           }
           if (1 != B || 0 !== y) {
-            Rc(w, b), c.transform(b[0], b[1], b[4], b[5], b[12], b[13]);
+            Sc(w, b), c.transform(b[0], b[1], b[4], b[5], b[12], b[13]);
           }
         }
         ++n;
@@ -5819,12 +5837,12 @@ function Wj(b, c, d, e, f) {
 }
 p = Vj.prototype;
 p.xb = function() {
-  this.h || (this.h = Zc(this.F), 0 < this.j && Yc(this.h, this.resolution * (this.j + 1) / 2, this.h));
+  this.h || (this.h = $c(this.F), 0 < this.j && Zc(this.h, this.resolution * (this.j + 1) / 2, this.h));
   return this.h;
 };
 function Xj(b) {
   var c = b.b, d = c.strokeStyle, e = c.lineCap, f = c.lineDash, g = c.lineJoin, h = c.lineWidth, k = c.miterLimit;
-  c.Ma == d && c.Ha == e && $a(c.Ia, f) && c.Ja == g && c.Ka == h && c.La == k || (c.Eb != b.coordinates.length && (b.c.push([12]), c.Eb = b.coordinates.length), b.c.push([10, d, h, e, g, k, f], [1]), c.Ma = d, c.Ha = e, c.Ia = f, c.Ja = g, c.Ka = h, c.La = k);
+  c.Ma == d && c.Ha == e && ab(c.Ia, f) && c.Ja == g && c.Ka == h && c.La == k || (c.Eb != b.coordinates.length && (b.c.push([12]), c.Eb = b.coordinates.length), b.c.push([10, d, h, e, g, k, f], [1]), c.Ma = d, c.Ha = e, c.Ia = f, c.Ja = g, c.Ka = h, c.La = k);
 }
 p.Na = function(b, c) {
   var d = this.b, e = d.lineWidth;
@@ -5945,7 +5963,7 @@ p.eb = function() {
   }
 };
 p.xb = function() {
-  this.h || (this.h = Zc(this.F), 0 < this.j && Yc(this.h, this.resolution * (this.j + 1) / 2, this.h));
+  this.h || (this.h = $c(this.F), 0 < this.j && Zc(this.h, this.resolution * (this.j + 1) / 2, this.h));
   return this.h;
 };
 p.va = function(b, c) {
@@ -6038,7 +6056,7 @@ function dk(b, c, d, e) {
   this.b = e;
   this.a = {};
   this.h = ug(1, 1);
-  this.j = Qc();
+  this.j = Rc();
 }
 function ek(b) {
   for (var c in b.a) {
@@ -6054,7 +6072,7 @@ function fk(b, c, d, e, f, g) {
   var k = b.h;
   k.clearRect(0, 0, 1, 1);
   var l;
-  void 0 !== b.b && (l = Uc(), Vc(l, c), Yc(l, d * b.b, l));
+  void 0 !== b.b && (l = Vc(), Wc(l, c), Zc(l, d * b.b, l));
   return gk(b, k, h, e, f, function(b) {
     if (0 < k.getImageData(0, 0, 1, 1).data[3]) {
       if (b = g(b)) {
@@ -6073,11 +6091,11 @@ function hk(b, c, d) {
   return e;
 }
 dk.prototype.ra = function() {
-  return rb(this.a);
+  return sb(this.a);
 };
 function jk(b, c, d, e, f, g) {
   var h = Object.keys(b.a).map(Number);
-  h.sort(bb);
+  h.sort(cb);
   var k = b.c, l = k[0], m = k[1], n = k[2], k = k[3], l = [l, m, l, k, n, k, n, m];
   Nd(l, 0, 8, 2, e, l);
   c.save();
@@ -6120,9 +6138,9 @@ function lk(b, c) {
 }
 function mk(b, c, d, e, f, g) {
   var h;
-  (h = d.da()) && h.ce(f, g);
+  (h = d.da()) && h.de(f, g);
   if (f = (0,d.b)(c)) {
-    e = f.Ab(e), (0,nk[e.M()])(b, e, d, c);
+    e = f.Ab(e), (0,nk[e.K()])(b, e, d, c);
   }
   return !1;
 }
@@ -6191,7 +6209,7 @@ var nk = {Point:function(b, c, d, e) {
   var f, g;
   f = 0;
   for (g = c.length;f < g;++f) {
-    (0,nk[c[f].M()])(b, c[f], d, e);
+    (0,nk[c[f].K()])(b, c[f], d, e);
   }
 }, Circle:function(b, c, d, e) {
   var f = d.j, g = d.h;
@@ -6217,17 +6235,17 @@ function qk(b, c, d, e, f, g, h, k, l, m) {
     return n.canvas;
   }
   n.scale(d, d);
-  var q = Uc();
+  var q = Vc();
   l.forEach(function(b) {
-    bd(q, b.extent);
+    cd(q, b.extent);
   });
-  var r = ug(Math.round(d * Y(q) / e), Math.round(d * ed(q) / e));
+  var r = ug(Math.round(d * Y(q) / e), Math.round(d * fd(q) / e));
   r.scale(d / e, d / e);
   r.translate(-q[0], q[3]);
   l.forEach(function(b) {
-    r.drawImage(b.image, b.extent[0], -b.extent[3], Y(b.extent), ed(b.extent));
+    r.drawImage(b.image, b.extent[0], -b.extent[3], Y(b.extent), fd(b.extent));
   });
-  var t = jd(h);
+  var t = kd(h);
   k.h.forEach(function(b) {
     var c = b.source, f = b.target, h = c[1][0], k = c[1][1], l = c[2][0], m = c[2][1];
     b = (f[0][0] - t[0]) / g;
@@ -6292,7 +6310,7 @@ function qk(b, c, d, e, f, g, h, k, l, m) {
   this.v = this.b.a && !!e && !!this.b.D() && Y(e) == Y(this.b.D());
   this.a = this.b.D() ? Y(this.b.D()) : null;
   this.f = this.j.D() ? Y(this.j.D()) : null;
-  b = jd(d);
+  b = kd(d);
   c = [d[2], d[3]];
   e = [d[2], d[1]];
   d = [d[0], d[1]];
@@ -6317,14 +6335,14 @@ function qk(b, c, d, e, f, g, h, k, l, m) {
   g = {};
 }
 function sk(b, c, d, e, f, g, h, k, l, m) {
-  var n = Tc([g, h, k, l]), q = b.a ? Y(n) / b.a : null, r = b.b.a && .5 < q && 1 > q, t = !1;
+  var n = Uc([g, h, k, l]), q = b.a ? Y(n) / b.a : null, r = b.b.a && .5 < q && 1 > q, t = !1;
   if (0 < m) {
     if (b.j.h && b.f) {
-      var w = Tc([c, d, e, f]), t = t | .25 < Y(w) / b.f
+      var w = Uc([c, d, e, f]), t = t | .25 < Y(w) / b.f
     }
     !r && b.b.h && q && (t |= .25 < q);
   }
-  if (t || !b.g || id(n, b.g)) {
+  if (t || !b.g || jd(n, b.g)) {
     if (!(t || isFinite(g[0]) && isFinite(g[1]) && isFinite(h[0]) && isFinite(h[1]) && isFinite(k[0]) && isFinite(k[1]) && isFinite(l[0]) && isFinite(l[1]))) {
       if (0 < m) {
         t = !0;
@@ -6332,7 +6350,7 @@ function sk(b, c, d, e, f, g, h, k, l, m) {
         return;
       }
     }
-    if (0 < m && (t || (q = b.c([(c[0] + e[0]) / 2, (c[1] + e[1]) / 2]), n = r ? (Gc(g[0], b.a) + Gc(k[0], b.a)) / 2 - Gc(q[0], b.a) : (g[0] + k[0]) / 2 - q[0], q = (g[1] + k[1]) / 2 - q[1], t = n * n + q * q > b.l), t)) {
+    if (0 < m && (t || (q = b.c([(c[0] + e[0]) / 2, (c[1] + e[1]) / 2]), n = r ? (Hc(g[0], b.a) + Hc(k[0], b.a)) / 2 - Hc(q[0], b.a) : (g[0] + k[0]) / 2 - q[0], q = (g[1] + k[1]) / 2 - q[1], t = n * n + q * q > b.l), t)) {
       Math.abs(c[0] - e[0]) <= Math.abs(c[1] - e[1]) ? (r = [(d[0] + e[0]) / 2, (d[1] + e[1]) / 2], n = b.c(r), q = [(f[0] + c[0]) / 2, (f[1] + c[1]) / 2], t = b.c(q), sk(b, c, d, r, q, g, h, n, t, m - 1), sk(b, q, r, e, f, t, n, k, l, m - 1)) : (r = [(c[0] + d[0]) / 2, (c[1] + d[1]) / 2], n = b.c(r), q = [(e[0] + f[0]) / 2, (e[1] + f[1]) / 2], t = b.c(q), sk(b, c, r, q, f, g, n, t, l, m - 1), sk(b, r, d, e, q, n, h, k, t, m - 1));
       return;
     }
@@ -6347,12 +6365,12 @@ function sk(b, c, d, e, f, g, h, k, l, m) {
   }
 }
 function tk(b) {
-  var c = Uc();
+  var c = Vc();
   b.h.forEach(function(b) {
     b = b.source;
-    Vc(c, b[0]);
-    Vc(c, b[1]);
-    Vc(c, b[2]);
+    Wc(c, b[0]);
+    Wc(c, b[1]);
+    Wc(c, b[2]);
   });
   return c;
 }
@@ -6363,21 +6381,21 @@ function tk(b) {
   this.i = null;
   this.f = void 0;
   this.b = null;
-  Q(this, Dc(this.a), this.g, !1, this);
-  void 0 !== b && (b instanceof Md || !b ? vk(this, b) : Bc(this, b));
+  Q(this, Ec(this.a), this.g, !1, this);
+  void 0 !== b && (b instanceof Md || !b ? vk(this, b) : Cc(this, b));
 }
 H(uk, X);
 uk.prototype.clone = function() {
-  var b = new uk(Ec(this));
+  var b = new uk(Fc(this));
   wk(b, this.a);
-  var c = this.L();
+  var c = this.M();
   c && vk(b, c.clone());
   if (c = this.i) {
     b.i = c, b.f = c ? xk(c) : void 0, b.c();
   }
   return b;
 };
-uk.prototype.L = function() {
+uk.prototype.M = function() {
   return this.get(this.a);
 };
 uk.prototype.l = function() {
@@ -6385,7 +6403,7 @@ uk.prototype.l = function() {
 };
 uk.prototype.g = function() {
   this.b && (T(this.b), this.b = null);
-  var b = this.L();
+  var b = this.M();
   b && (this.b = Q(b, "change", this.l, !1, this));
   this.c();
 };
@@ -6393,9 +6411,9 @@ function vk(b, c) {
   b.j(b.a, c);
 }
 function wk(b, c) {
-  sc(b, Dc(b.a), b.g, !1, b);
+  tc(b, Ec(b.a), b.g, !1, b);
   b.a = c;
-  Q(b, Dc(b.a), b.g, !1, b);
+  Q(b, Ec(b.a), b.g, !1, b);
   b.g();
 }
 function xk(b) {
@@ -6508,8 +6526,8 @@ function Pk(b, c) {
     Qk(b, g);
     return;
   }
-  var d = b.A.clone(), e = Oa(d.Ra()), f = v.FormData && !1;
-  !(0 <= La.indexOf.call(Ok, "GET", void 0)) || e || f || Yf(d, "Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+  var d = b.A.clone(), e = Pa(d.Ra()), f = v.FormData && !1;
+  !(0 <= Ma.indexOf.call(Ok, "GET", void 0)) || e || f || Yf(d, "Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
   d.forEach(function(b, c) {
     this.G.setRequestHeader(c, b);
   }, b);
@@ -6522,9 +6540,9 @@ function Pk(b, c) {
   }
 }
 function Sk(b) {
-  return O && Ib(9) && ga(b.timeout) && ba(b.ontimeout);
+  return O && Jb(9) && ga(b.timeout) && ba(b.ontimeout);
 }
-function Pa(b) {
+function Qa(b) {
   return "content-type" == b.toLowerCase();
 }
 Lk.prototype.w = function() {
@@ -6540,9 +6558,9 @@ function Qk(b, c) {
 function Uk(b) {
   b.l || (b.l = !0, W(b, "complete"), W(b, "error"));
 }
-Lk.prototype.I = function() {
+Lk.prototype.J = function() {
   this.G && (this.a && (this.a = !1, this.c = !0, this.G.abort(), this.c = !1), Tk(this, !0));
-  Lk.O.I.call(this);
+  Lk.O.J.call(this);
 };
 Lk.prototype.H = function() {
   this.X || (this.s || this.h || this.c ? Vk(this) : this.F());
@@ -6699,11 +6717,11 @@ a: {
 ;function dl(b, c, d) {
   return function(e, f, g) {
     var h = new Lk;
-    h.g = "arraybuffer" == c.M() ? "arraybuffer" : "text";
+    h.g = "arraybuffer" == c.K() ? "arraybuffer" : "text";
     Q(h, "complete", function(b) {
       b = b.target;
       if (Yk(b)) {
-        var e = c.M(), f;
+        var e = c.K(), f;
         if ("json" == e) {
           f = Zk(b);
         } else {
@@ -6726,7 +6744,7 @@ a: {
         }
         f && d.call(this, c.c(f, {featureProjection:g}), el(c, fl(f)));
       }
-      Sb(b);
+      Tb(b);
     }, !1, this);
     ha(b) ? Pk(h, b(e, f, g)) : Pk(h, b);
   };
@@ -6750,7 +6768,7 @@ function gl(b, c) {
       }
       this.lb = Math.max(4, b || 9);
       this.Nb = Math.max(2, Math.ceil(.4 * this.lb));
-      d && this.zc(d);
+      d && this.Ac(d);
       this.clear();
     }
     function d(b, c) {
@@ -6861,7 +6879,7 @@ function gl(b, c) {
         if (c.aa && (k = c.children.indexOf(b), -1 !== k)) {
           c.children.splice(k, 1);
           e.push(c);
-          this.yc(e);
+          this.zc(e);
           break;
         }
         l || c.aa || !m(c.bbox, d) ? h ? (g++, c = h.children[g], l = !1) : c = null : (e.push(c), f.push(g), g = 0, h = c, c = c.children[0]);
@@ -6895,7 +6913,7 @@ function gl(b, c) {
       }
       d(k, this.ea);
       return k;
-    }, xc:function(b, c, d, e) {
+    }, yc:function(b, c, d, e) {
       for (var f, g, h, l, m, n, q, r;;) {
         e.push(c);
         if (c.aa || e.length - 1 === d) {
@@ -6912,20 +6930,20 @@ function gl(b, c) {
     }, Mb:function(b, c, d) {
       var e = this.ea;
       d = d ? b.bbox : e(b);
-      var e = [], g = this.xc(d, this.data, c, e);
+      var e = [], g = this.yc(d, this.data, c, e);
       g.children.push(b);
       for (f(g.bbox, d);0 <= c;) {
         if (e[c].children.length > this.lb) {
-          this.Ac(e, c), c--;
+          this.Bc(e, c), c--;
         } else {
           break;
         }
       }
-      this.uc(d, e, c);
-    }, Ac:function(b, c) {
+      this.vc(d, e, c);
+    }, Bc:function(b, c) {
       var e = b[c], f = e.children.length, g = this.Nb;
-      this.vc(e, g, f);
-      f = this.wc(e, g, f);
+      this.wc(e, g, f);
+      f = this.xc(e, g, f);
       f = {children:e.children.splice(f, e.children.length - f), height:e.height, bbox:null, aa:!1};
       e.aa && (f.aa = !0);
       d(e, this.ea);
@@ -6934,14 +6952,14 @@ function gl(b, c) {
     }, Ob:function(b, c) {
       this.data = {children:[b, c], height:b.height + 1, bbox:null, aa:!1};
       d(this.data, this.ea);
-    }, wc:function(b, c, d) {
+    }, xc:function(b, c, d) {
       var f, g, h, l, m, n, q;
       m = n = Infinity;
       for (f = c;f <= d - c;f++) {
         g = e(b, 0, f, this.ea), h = e(b, f, d, this.ea), l = Math.max(0, Math.min(g[2], h[2]) - Math.max(g[0], h[0])) * Math.max(0, Math.min(g[3], h[3]) - Math.max(g[1], h[1])), g = k(g) + k(h), l < m ? (m = l, q = f, n = g < n ? g : n) : l === m && g < n && (n = g, q = f);
       }
       return q;
-    }, vc:function(b, c, d) {
+    }, wc:function(b, c, d) {
       var e = b.aa ? this.pb : g, f = b.aa ? this.qb : h, k = this.Kb(b, c, d, e);
       c = this.Kb(b, c, d, f);
       k < c && b.children.sort(e);
@@ -6956,15 +6974,15 @@ function gl(b, c) {
         q = b.children[n], f(k, b.aa ? g(q) : q.bbox), m += l(k);
       }
       return m;
-    }, uc:function(b, c, d) {
+    }, vc:function(b, c, d) {
       for (;0 <= d;d--) {
         f(c[d].bbox, b);
       }
-    }, yc:function(b) {
+    }, zc:function(b) {
       for (var c = b.length - 1, e;0 <= c;c--) {
         0 === b[c].children.length ? 0 < c ? (e = b[c - 1].children, e.splice(e.indexOf(b[c]), 1)) : this.clear() : d(b[c], this.ea);
       }
-    }, zc:function(b) {
+    }, Ac:function(b) {
       var c = ["return a", " - b", ";"];
       this.pb = new Function("a", "b", c.join(b[0]));
       this.qb = new Function("a", "b", c.join(b[1]));
@@ -7000,7 +7018,7 @@ p.remove = function(b) {
 };
 function ll(b, c, d) {
   var e = C(d);
-  ad(b.a[e].slice(0, 4), c) || (b.remove(d), b.V(c, d));
+  bd(b.a[e].slice(0, 4), c) || (b.remove(d), b.V(c, d));
 }
 function ml(b) {
   return b.c.all().map(function(b) {
@@ -7024,7 +7042,7 @@ function pl(b, c, d) {
   return e;
 }
 p.ra = function() {
-  return rb(this.a);
+  return sb(this.a);
 };
 p.clear = function() {
   this.c.clear();
@@ -7058,13 +7076,13 @@ function tl(b, c) {
   var d = C(c).toString();
   if (ul(b, d, c)) {
     vl(b, d, c);
-    var e = c.L();
+    var e = c.M();
     e ? (d = e.D(), b.a && b.a.V(d, c)) : b.b[d] = c;
     W(b, new wl("addfeature", c));
   }
 }
 function vl(b, c, d) {
-  b.s[c] = [Q(d, "change", b.ic, !1, b), Q(d, "propertychange", b.ic, !1, b)];
+  b.s[c] = [Q(d, "change", b.jc, !1, b), Q(d, "propertychange", b.jc, !1, b)];
 }
 function ul(b, c, d) {
   var e = !0, f = d.za;
@@ -7082,7 +7100,7 @@ function hl(b, c) {
     g = k[e];
     d = C(g).toString();
     vl(b, d, g);
-    var m = g.L();
+    var m = g.M();
     m ? (d = m.D(), h.push(d), l.push(g)) : b.b[d] = g;
   }
   b.a && b.a.load(h, l);
@@ -7115,7 +7133,7 @@ p.clear = function(b) {
     }
     this.f || (this.s = {}, this.g = {}, this.l = {});
   } else {
-    b = this.kc, this.a && (this.a.forEach(b, this), nb(this.b, b, this));
+    b = this.lc, this.a && (this.a.forEach(b, this), ob(this.b, b, this));
   }
   this.f && this.f.clear();
   this.a && this.a.clear();
@@ -7133,9 +7151,9 @@ function zl(b) {
 p.D = function() {
   return this.a.D();
 };
-p.ic = function(b) {
+p.jc = function(b) {
   b = b.target;
-  var c = C(b).toString(), d = b.L();
+  var c = C(b).toString(), d = b.M();
   d ? (d = d.D(), c in this.b ? (delete this.b[c], this.a && this.a.V(d, b)) : this.a && ll(this.a, d, b)) : c in this.b || (this.a && this.a.remove(b), this.b[c] = b);
   d = b.za;
   void 0 !== d ? (d = d.toString(), c in this.l ? (delete this.l[c], this.g[d] = b) : this.g[d] !== b && (Al(this, b), this.g[d] = b)) : c in this.l || (Al(this, b), this.l[c] = b);
@@ -7143,7 +7161,7 @@ p.ic = function(b) {
   W(this, new wl("changefeature", b));
 };
 p.ra = function() {
-  return this.a.ra() && rb(this.b);
+  return this.a.ra() && sb(this.b);
 };
 function Bl(b, c, d, e) {
   var f = b.w;
@@ -7153,17 +7171,17 @@ function Bl(b, c, d, e) {
   for (h = c.length;g < h;++g) {
     var k = c[g];
     ql(f, k, function(b) {
-      return $c(b.extent, k);
+      return ad(b.extent, k);
     }) || (b.u.call(b, k, d, e), f.V(k, {extent:k.slice()}));
   }
 }
 function xl(b, c) {
   var d = C(c).toString();
   d in b.b ? delete b.b[d] : b.a && b.a.remove(c);
-  b.kc(c);
+  b.lc(c);
   b.c();
 }
-p.kc = function(b) {
+p.lc = function(b) {
   var c = C(b).toString();
   this.s[c].forEach(T);
   delete this.s[c];
@@ -7189,7 +7207,7 @@ function Ph(b) {
   this.a = this.g = null;
   this.i = !1;
   this.u = null;
-  this.H = Qc();
+  this.H = Rc();
   this.A = this.C = this.w = NaN;
   this.f = this.j = null;
   this.N = [0, 0];
@@ -7203,9 +7221,9 @@ Ph.prototype.o = function(b, c) {
     b = b.Y();
     return 2 == b || 4 == b || 3 == b && !S;
   }
-  var e = b.pixelRatio, f = b.viewState, g = f.projection, h = this.b, k = h.Z(), l = k.ya(g), m = zf(l, f.resolution), n = Ef(k, m, g), q = n[0] / Fc(yf(l, m), this.N)[0], r = l.R(m), q = r / q, t = f.center, w;
-  r == f.resolution ? (t = Fh(t, r, b.size), w = gd(t, r, f.rotation, b.size)) : w = b.extent;
-  void 0 !== c.extent && (w = hd(w, c.extent));
+  var e = b.pixelRatio, f = b.viewState, g = f.projection, h = this.b, k = h.Z(), l = k.ya(g), m = zf(l, f.resolution), n = Ef(k, m, g), q = n[0] / Gc(yf(l, m), this.N)[0], r = l.R(m), q = r / q, t = f.center, w;
+  r == f.resolution ? (t = Fh(t, r, b.size), w = hd(t, r, f.rotation, b.size)) : w = b.extent;
+  void 0 !== c.extent && (w = id(w, c.extent));
   if (w[2] < w[0] || w[3] < w[1]) {
     return !1;
   }
@@ -7215,7 +7233,7 @@ Ph.prototype.o = function(b, c) {
   this.j ? (y = this.j, u = y.c - y.a + 1) : (u /= n[0], y /= n[1], J = A.a - Math.floor((u - (A.c - A.a + 1)) / 2), G = A.h - Math.floor((y - we(A)) / 2), this.w = m, this.C = n[0], this.A = n[1], this.j = new te(J, J + u - 1, G, G + y - 1), this.f = Array(u * y), y = this.j);
   B = {};
   B[m] = {};
-  var K = [], E = Ah(k, g, B), S = h.get("useInterimTilesOnError"), U = Uc(), N = new te(0, 0, 0, 0), L, F, R;
+  var K = [], E = Ah(k, g, B), S = h.get("useInterimTilesOnError"), U = Vc(), N = new te(0, 0, 0, 0), L, F, R;
   for (G = A.a;G <= A.c;++G) {
     for (R = A.h;R <= A.b;++R) {
       F = Hh(k, m, G, R, e, g), !d(F) && F.a && (F = F.a), d(F) ? B[m][F.ba.toString()] = F : (L = rf(l, F.ba, E, N, U), L || (K.push(F), (L = uf(l, F.ba, N, U)) && E(m + 1, L)));
@@ -7226,18 +7244,18 @@ Ph.prototype.o = function(b, c) {
     F = K[E], G = n[0] * (F.ba[1] - y.a), R = n[1] * (y.b - F.ba[2]), x.clearRect(G, R, n[0], n[1]);
   }
   K = Object.keys(B).map(Number);
-  K.sort(bb);
-  var M = k.zb(g), Ta = jd(sf(l, [m, y.a, y.b], U)), Ha, De, Ia, wd, Ub, Dg, E = 0;
+  K.sort(cb);
+  var M = k.zb(g), Wa = kd(sf(l, [m, y.a, y.b], U)), Ka, Ee, La, yd, Xb, Fg, E = 0;
   for (L = K.length;E < L;++E) {
-    if (Ha = K[E], n = Ef(k, Ha, g), wd = B[Ha], Ha == m) {
-      for (De in wd) {
-        F = wd[De], J = (F.ba[2] - y.h) * u + (F.ba[1] - y.a), this.f[J] != F && (G = n[0] * (F.ba[1] - y.a), R = n[1] * (y.b - F.ba[2]), Ia = F.Y(), 4 != Ia && (3 != Ia || S) && M || x.clearRect(G, R, n[0], n[1]), 2 == Ia && x.drawImage(F.da(), 0, 0, n[0], n[1], G, R, n[0], n[1]), this.f[J] = F);
+    if (Ka = K[E], n = Ef(k, Ka, g), yd = B[Ka], Ka == m) {
+      for (Ee in yd) {
+        F = yd[Ee], J = (F.ba[2] - y.h) * u + (F.ba[1] - y.a), this.f[J] != F && (G = n[0] * (F.ba[1] - y.a), R = n[1] * (y.b - F.ba[2]), La = F.Y(), 4 != La && (3 != La || S) && M || x.clearRect(G, R, n[0], n[1]), 2 == La && x.drawImage(F.da(), 0, 0, n[0], n[1], G, R, n[0], n[1]), this.f[J] = F);
       }
     } else {
-      for (De in Ha = l.R(Ha) / r, wd) {
-        for (F = wd[De], J = sf(l, F.ba, U), G = (J[0] - Ta[0]) / q, R = (Ta[1] - J[3]) / q, Dg = Ha * n[0], Ub = Ha * n[1], Ia = F.Y(), 4 != Ia && M || x.clearRect(G, R, Dg, Ub), 2 == Ia && x.drawImage(F.da(), 0, 0, n[0], n[1], G, R, Dg, Ub), F = tf(l, J, m, N), J = Math.max(F.a, y.a), R = Math.min(F.c, y.c), G = Math.max(F.h, y.h), F = Math.min(F.b, y.b), Ia = J;Ia <= R;++Ia) {
-          for (Ub = G;Ub <= F;++Ub) {
-            J = (Ub - y.h) * u + (Ia - y.a), this.f[J] = void 0;
+      for (Ee in Ka = l.R(Ka) / r, yd) {
+        for (F = yd[Ee], J = sf(l, F.ba, U), G = (J[0] - Wa[0]) / q, R = (Wa[1] - J[3]) / q, Fg = Ka * n[0], Xb = Ka * n[1], La = F.Y(), 4 != La && M || x.clearRect(G, R, Fg, Xb), 2 == La && x.drawImage(F.da(), 0, 0, n[0], n[1], G, R, Fg, Xb), F = tf(l, J, m, N), J = Math.max(F.a, y.a), R = Math.min(F.c, y.c), G = Math.max(F.h, y.h), F = Math.min(F.b, y.b), La = J;La <= R;++La) {
+          for (Xb = G;Xb <= F;++Xb) {
+            J = (Xb - y.h) * u + (La - y.a), this.f[J] = void 0;
           }
         }
       }
@@ -7247,7 +7265,7 @@ Ph.prototype.o = function(b, c) {
   Gh(b, k, l, e, g, w, m, h.get("preload"));
   Bh(b, k);
   Dh(b, k);
-  xh(this.H, e * b.size[0] / 2, e * b.size[1] / 2, e * q / f.resolution, e * q / f.resolution, f.rotation, (Ta[0] - t[0]) / q, (t[1] - Ta[1]) / q);
+  xh(this.H, e * b.size[0] / 2, e * b.size[1] / 2, e * q / f.resolution, e * q / f.resolution, f.rotation, (Wa[0] - t[0]) / q, (t[1] - Wa[1]) / q);
   return !0;
 };
 function Rh(b) {
@@ -7255,7 +7273,7 @@ function Rh(b) {
   this.j = !1;
   this.w = -1;
   this.u = NaN;
-  this.f = Uc();
+  this.f = Vc();
   this.a = this.i = null;
   this.g = ug();
 }
@@ -7266,11 +7284,11 @@ Rh.prototype.s = function(b, c, d) {
   var q = this.a;
   if (q && !q.ra()) {
     var r;
-    xc(this.b, "render") ? (this.g.canvas.width = d.canvas.width, this.g.canvas.height = d.canvas.height, r = this.g) : r = d;
+    yc(this.b, "render") ? (this.g.canvas.width = d.canvas.width, this.g.canvas.height = d.canvas.height, r = this.g) : r = d;
     var t = r.globalAlpha;
     r.globalAlpha = c.opacity;
     jk(q, r, f, n, h, g);
-    if (m.o && k.a && !$c(l, e)) {
+    if (m.o && k.a && !ad(l, e)) {
       c = e[0];
       k = Y(l);
       for (m = 0;c < l[0];) {
@@ -7332,13 +7350,13 @@ Rh.prototype.o = function(b) {
   }
   var l = b.extent, k = b.viewState, f = k.projection, m = k.resolution, n = b.pixelRatio, g = d.h, q = d.f, h = d.get("renderOrder");
   void 0 === h && (h = kk);
-  l = Yc(l, q * m);
+  l = Zc(l, q * m);
   q = k.projection.D();
-  e.o && k.projection.a && !$c(q, b.extent) && (b = Math.max(Y(l) / 2, Y(q)), l[0] = q[0] - b, l[2] = q[2] + b);
-  if (!this.j && this.u == m && this.w == g && this.i == h && $c(this.f, l)) {
+  e.o && k.projection.a && !ad(q, b.extent) && (b = Math.max(Y(l) / 2, Y(q)), l[0] = q[0] - b, l[2] = q[2] + b);
+  if (!this.j && this.u == m && this.w == g && this.i == h && ad(this.f, l)) {
     return !0;
   }
-  Sb(this.a);
+  Tb(this.a);
   this.a = null;
   this.j = !1;
   var r = new dk(.5 * m / n, l, m, d.f);
@@ -7382,7 +7400,7 @@ function Dl(b, c) {
 function El(b) {
   return 1 === b.length ? b[0] : function(c, d, e) {
     if (c) {
-      return b[Gc((c[1] << c[0]) + c[2], b.length)](c, d, e);
+      return b[Hc((c[1] << c[0]) + c[2], b.length)](c, d, e);
     }
   };
 }
@@ -7433,7 +7451,7 @@ function Il(b, c) {
   b.tileUrlFunction = c;
   b.c();
 }
-Hl.prototype.sc = function(b, c, d) {
+Hl.prototype.tc = function(b, c, d) {
   b = this.Xa(b, c, d);
   this.a.b.hasOwnProperty(b) && this.a.get(b);
 };
@@ -7446,12 +7464,12 @@ function Jl(b, c) {
   this.a.className = "ol-unselectable";
   b.insertBefore(this.a, b.childNodes[0] || null);
   this.b = !0;
-  this.v = Qc();
+  this.v = Rc();
 }
 H(Jl, Kh);
 function Kl(b, c, d) {
   var e = b.g, f = b.j;
-  if (xc(e, c)) {
+  if (yc(e, c)) {
     var g = d.extent, h = d.pixelRatio, k = d.viewState.rotation, l = d.pixelRatio, m = d.viewState, n = m.resolution;
     b = xh(b.v, b.a.width / 2, b.a.height / 2, l / n, -l / n, -m.rotation, -m.center[0], -m.center[1]);
     g = new wj(f, h, g, b, k);
@@ -7459,7 +7477,7 @@ function Kl(b, c, d) {
     Ij(g);
   }
 }
-Jl.prototype.M = function() {
+Jl.prototype.K = function() {
   return "canvas";
 };
 Jl.prototype.f = function(b) {
@@ -7469,14 +7487,14 @@ Jl.prototype.f = function(b) {
     d = b.viewState;
     e = b.coordinateToPixelMatrix;
     xh(e, b.size[0] / 2, b.size[1] / 2, 1 / d.resolution, -1 / d.resolution, -d.rotation, -d.center[0], -d.center[1]);
-    Rc(e, b.pixelToCoordinateMatrix);
+    Sc(e, b.pixelToCoordinateMatrix);
     Kl(this, "precompose", b);
     d = b.layerStatesArray;
-    Ya(d);
+    Za(d);
     var e = b.viewState.resolution, f, g, h, k;
     f = 0;
     for (g = d.length;f < g;++f) {
-      k = d[f], h = k.layer, h = Nh(this, h), k.visible && e >= k.minResolution && e < k.maxResolution && "ready" == k.Yd && h.o(b, k) && h.s(b, k, c);
+      k = d[f], h = k.layer, h = Nh(this, h), k.visible && e >= k.minResolution && e < k.maxResolution && "ready" == k.Zd && h.o(b, k) && h.s(b, k, c);
     }
     Kl(this, "postcompose", b);
     this.b || (Ye(this.a, !0), this.b = !0);
@@ -7499,13 +7517,13 @@ function Ml(b) {
   this.hb = void 0 !== b.loadTilesWhileInteracting ? b.loadTilesWhileInteracting : !1;
   this.jb = void 0 !== b.pixelRatio ? b.pixelRatio : vg;
   this.ib = c.logos;
-  this.i = new Rf(this.Ud, void 0, this);
-  Rb(this, this.i);
-  this.wa = Qc();
-  this.kb = Qc();
+  this.i = new Rf(this.Vd, void 0, this);
+  Sb(this, this.i);
+  this.wa = Rc();
+  this.kb = Rc();
   this.xa = 0;
   this.b = null;
-  this.la = Uc();
+  this.la = Vc();
   this.s = this.A = null;
   this.a = document.createElement("DIV");
   this.a.className = "ol-viewport";
@@ -7521,36 +7539,36 @@ function Ml(b) {
   this.a.appendChild(this.u);
   this.o = document.createElement("DIV");
   this.o.className = "ol-overlaycontainer-stopevent";
-  Q(this.o, ["click", "dblclick", "mousedown", "touchstart", "MSPointerDown", oh, zb ? "DOMMouseScroll" : "mousewheel"], Tb);
+  Q(this.o, ["click", "dblclick", "mousedown", "touchstart", "MSPointerDown", oh, Ab ? "DOMMouseScroll" : "mousewheel"], Ub);
   this.a.appendChild(this.o);
   b = new gh(this);
-  Q(b, qb(rh), this.$b, !1, this);
-  Rb(this, b);
+  Q(b, rb(rh), this.ac, !1, this);
+  Sb(this, b);
   this.$ = c.keyboardEventTarget;
   this.l = new fg;
-  Q(this.l, "key", this.Zb, !1, this);
-  Rb(this, this.l);
+  Q(this.l, "key", this.$b, !1, this);
+  Sb(this, this.l);
   b = new ng(this.a);
-  Q(b, "mousewheel", this.Zb, !1, this);
-  Rb(this, b);
+  Q(b, "mousewheel", this.$b, !1, this);
+  Sb(this, b);
   this.C = c.controls;
   this.g = c.interactions;
   this.N = c.overlays;
   this.ca = {};
-  this.T = new c.Wd(this.a, this);
-  Rb(this, this.T);
+  this.T = new c.Xd(this.a, this);
+  Sb(this, this.T);
   this.na = new ag;
-  Rb(this, this.na);
+  Sb(this, this.na);
   this.F = this.f = null;
   this.w = [];
   this.fa = [];
-  this.ma = new Vh(this.Kc.bind(this), this.Zc.bind(this));
+  this.ma = new Vh(this.Lc.bind(this), this.$c.bind(this));
   this.W = {};
-  Q(this, Dc("layergroup"), this.Oc, !1, this);
-  Q(this, Dc("view"), this.$c, !1, this);
-  Q(this, Dc("size"), this.Wc, !1, this);
-  Q(this, Dc("target"), this.Yc, !1, this);
-  Bc(this, c.values);
+  Q(this, Ec("layergroup"), this.Pc, !1, this);
+  Q(this, Ec("view"), this.ad, !1, this);
+  Q(this, Ec("size"), this.Xc, !1, this);
+  Q(this, Ec("target"), this.Zc, !1, this);
+  Cc(this, c.values);
   this.C.forEach(function(b) {
     b.setMap(this);
   }, this);
@@ -7581,7 +7599,7 @@ function Ml(b) {
 }
 H(Ml, X);
 p = Ml.prototype;
-p.Cc = function(b) {
+p.Dc = function(b) {
   this.g.push(b);
 };
 p.Pb = function(b) {
@@ -7593,12 +7611,12 @@ p.oa = function(b) {
   this.render();
   Array.prototype.push.apply(this.w, arguments);
 };
-p.I = function() {
+p.J = function() {
   Oe(this.a);
-  Ml.O.I.call(this);
+  Ml.O.J.call(this);
 };
 function Ol(b, c, d, e, f) {
-  b.b && (c = b.ga(c), Mh(b.T, c, b.b, d, void 0 !== e ? e : null, void 0 !== f ? f : md));
+  b.b && (c = b.ga(c), Mh(b.T, c, b.b, d, void 0 !== e ? e : null, void 0 !== f ? f : nd));
 }
 function Qf(b, c) {
   var d, e = b.a;
@@ -7629,7 +7647,7 @@ p.cb = function() {
 p.U = function() {
   return this.get("view");
 };
-p.Kc = function(b, c, d, e) {
+p.Lc = function(b, c, d, e) {
   var f = this.b;
   if (!(f && c in f.wantedTiles && f.wantedTiles[c][b.ba.toString()])) {
     return Infinity;
@@ -7638,11 +7656,11 @@ p.Kc = function(b, c, d, e) {
   d = d[1] - f.focus[1];
   return 65536 * Math.log(e) + Math.sqrt(b * b + d * d) / e;
 };
-p.Zb = function(b, c) {
+p.$b = function(b, c) {
   var d = new eh(c || b.type, this, b);
-  this.$b(d);
+  this.ac(d);
 };
-p.$b = function(b) {
+p.ac = function(b) {
   if (this.b) {
     this.F = b.coordinate;
     b.frameState = this.b;
@@ -7657,11 +7675,11 @@ p.$b = function(b) {
     }
   }
 };
-p.Vc = function() {
+p.Wc = function() {
   var b = this.b, c = this.ma;
   if (!c.ra()) {
     var d = 16, e = d, f = 0;
-    b && (f = b.viewHints, f[0] && (d = this.gb ? 8 : 0, e = 2), f[1] && (d = this.hb ? 8 : 0, e = 2), f = pb(b.wantedTiles));
+    b && (f = b.viewHints, f[0] && (d = this.gb ? 8 : 0, e = 2), f[1] && (d = this.hb ? 8 : 0, e = 2), f = qb(b.wantedTiles));
     d *= f;
     e *= f;
     if (c.h < d) {
@@ -7686,40 +7704,40 @@ p.Vc = function() {
   }
   c.length = 0;
 };
-p.Wc = function() {
+p.Xc = function() {
   this.render();
 };
-p.Yc = function() {
+p.Zc = function() {
   var b = Pl(this);
   mg(this.l);
-  b ? (b.appendChild(this.a), gg(this.l, this.$ ? this.$ : b), this.f || (this.f = Q(this.na, "resize", this.rc, !1, this))) : (Oe(this.a), this.f && (T(this.f), this.f = null));
-  this.rc();
+  b ? (b.appendChild(this.a), gg(this.l, this.$ ? this.$ : b), this.f || (this.f = Q(this.na, "resize", this.sc, !1, this))) : (Oe(this.a), this.f && (T(this.f), this.f = null));
+  this.sc();
 };
-p.Zc = function() {
+p.$c = function() {
+  this.render();
+};
+p.bd = function() {
   this.render();
 };
 p.ad = function() {
-  this.render();
-};
-p.$c = function() {
   this.A && (T(this.A), this.A = null);
   var b = this.U();
-  b && (this.A = Q(b, "propertychange", this.ad, !1, this));
-  this.render();
-};
-p.Pc = function() {
+  b && (this.A = Q(b, "propertychange", this.bd, !1, this));
   this.render();
 };
 p.Qc = function() {
   this.render();
 };
-p.Oc = function() {
-  this.s && (this.s.forEach(T), this.s = null);
-  var b = this.get("layergroup");
-  b && (this.s = [Q(b, "propertychange", this.Qc, !1, this), Q(b, "change", this.Pc, !1, this)]);
+p.Rc = function() {
   this.render();
 };
-p.Vd = function() {
+p.Pc = function() {
+  this.s && (this.s.forEach(T), this.s = null);
+  var b = this.get("layergroup");
+  b && (this.s = [Q(b, "propertychange", this.Rc, !1, this), Q(b, "change", this.Qc, !1, this)]);
+  this.render();
+};
+p.Wd = function() {
   var b = this.i;
   Sf(b);
   b.j();
@@ -7727,7 +7745,7 @@ p.Vd = function() {
 p.render = function() {
   null != this.i.a || this.i.start();
 };
-p.Ud = function(b) {
+p.Vd = function(b) {
   var c, d, e, f = this.cb(), g = this.U(), h = null;
   if (c = void 0 !== f && 0 < f[0] && 0 < f[1] && g) {
     c = !!g.ja() && void 0 !== g.R();
@@ -7739,7 +7757,7 @@ p.Ud = function(b) {
       l[C(k[c].layer)] = k[c];
     }
     e = g.Y();
-    h = {animate:!1, attributions:{}, coordinateToPixelMatrix:this.wa, extent:null, focus:this.F ? this.F : e.center, index:this.xa++, layerStates:l, layerStatesArray:k, logos:tb(this.ib), pixelRatio:this.jb, pixelToCoordinateMatrix:this.kb, postRenderFunctions:[], size:f, skippedFeatureUids:this.W, tileQueue:this.ma, time:b, usedTiles:{}, viewState:e, viewHints:h, wantedTiles:{}};
+    h = {animate:!1, attributions:{}, coordinateToPixelMatrix:this.wa, extent:null, focus:this.F ? this.F : e.center, index:this.xa++, layerStates:l, layerStatesArray:k, logos:ub(this.ib), pixelRatio:this.jb, pixelToCoordinateMatrix:this.kb, postRenderFunctions:[], size:f, skippedFeatureUids:this.W, tileQueue:this.ma, time:b, usedTiles:{}, viewState:e, viewHints:h, wantedTiles:{}};
   }
   if (h) {
     b = this.w;
@@ -7748,25 +7766,25 @@ p.Ud = function(b) {
       g = b[c], g(this, h) && (b[f++] = g);
     }
     b.length = f;
-    h.extent = gd(e.center, e.resolution, e.rotation, h.size);
+    h.extent = hd(e.center, e.resolution, e.rotation, h.size);
   }
   this.b = h;
   this.T.f(h);
-  h && (h.animate && this.render(), Array.prototype.push.apply(this.fa, h.postRenderFunctions), 0 !== this.w.length || h.viewHints[0] || h.viewHints[1] || ad(h.extent, this.la) || (W(this, new cf("moveend", this, h)), Zc(h.extent, this.la)));
+  h && (h.animate && this.render(), Array.prototype.push.apply(this.fa, h.postRenderFunctions), 0 !== this.w.length || h.viewHints[0] || h.viewHints[1] || bd(h.extent, this.la) || (W(this, new cf("moveend", this, h)), $c(h.extent, this.la)));
   W(this, new cf("postrender", this, h));
-  c = e = this.Vc;
+  c = e = this.Wc;
   this && (c = na(e, this));
   !ha(v.setImmediate) || v.Window && v.Window.prototype && v.Window.prototype.setImmediate == v.setImmediate ? (Vf || (Vf = Wf()), Vf(c)) : v.setImmediate(c);
 };
 p.Ib = function(b) {
   this.j("size", b);
 };
-p.nc = function(b) {
+p.oc = function(b) {
   b = C(b).toString();
   this.W[b] = !0;
   this.render();
 };
-p.rc = function() {
+p.sc = function() {
   var b = Pl(this);
   if (b) {
     var c = 9 == b.nodeType ? b : b.ownerDocument || b.document, d = O && b.currentStyle, e;
@@ -7784,7 +7802,7 @@ p.rc = function() {
       } else {
         c = We(b, "paddingLeft"), e = We(b, "paddingRight"), f = We(b, "paddingTop"), g = We(b, "paddingBottom"), c = new Ve(parseFloat(f), parseFloat(e), parseFloat(g), parseFloat(c));
       }
-      !O || 9 <= Kb ? (e = We(b, "borderLeftWidth"), f = We(b, "borderRightWidth"), g = We(b, "borderTopWidth"), b = We(b, "borderBottomWidth"), b = new Ve(parseFloat(g), parseFloat(f), parseFloat(b), parseFloat(e))) : (e = bf(b, "borderLeft"), f = bf(b, "borderRight"), g = bf(b, "borderTop"), b = bf(b, "borderBottom"), b = new Ve(g, f, b, e));
+      !O || 9 <= Lb ? (e = We(b, "borderLeftWidth"), f = We(b, "borderRightWidth"), g = We(b, "borderTopWidth"), b = We(b, "borderBottomWidth"), b = new Ve(parseFloat(g), parseFloat(f), parseFloat(b), parseFloat(e))) : (e = bf(b, "borderLeft"), f = bf(b, "borderRight"), g = bf(b, "borderTop"), b = bf(b, "borderBottom"), b = new Ve(g, f, b, e));
       b = new Ge(d.width - b.left - c.left - c.right - b.right, d.height - b.top - c.top - c.bottom - b.bottom);
     }
     this.Ib([b.width, b.height]);
@@ -7792,7 +7810,7 @@ p.rc = function() {
     this.Ib(void 0);
   }
 };
-p.pc = function(b) {
+p.qc = function(b) {
   b = C(b).toString();
   delete this.W[b];
   this.render();
@@ -7843,10 +7861,10 @@ function Nl(b) {
     g = h;
   }
   b = void 0 !== b.overlays ? ea(b.overlays) ? new ye(b.overlays.slice()) : b.overlays : new ye;
-  return {controls:l, interactions:g, keyboardEventTarget:c, logos:e, overlays:b, Wd:f, values:d};
+  return {controls:l, interactions:g, keyboardEventTarget:c, logos:e, overlays:b, Xd:f, values:d};
 }
-yd(Yi);
-yd(ej);
+xd(Yi);
+xd(ej);
 ej.forEach(function(b) {
   Yi.forEach(function(c) {
     zd(b, c, Zi);
@@ -7864,7 +7882,7 @@ function Ql(b) {
   this.u = void 0;
   this.o = "";
   df.call(this, {element:this.b, render:b.render ? b.render : Rl, target:b.target});
-  Q(this, Dc("units"), this.w, !1, this);
+  Q(this, Ec("units"), this.w, !1, this);
   this.j("units", b.units || "metric");
 }
 H(Ql, df);
@@ -7912,8 +7930,8 @@ function Vl(b, c) {
   return d;
 }
 function Wl(b, c, d) {
-  var e = d ? xd(d.featureProjection) : null;
-  d = d ? xd(d.dataProjection) : null;
+  var e = d ? wd(d.featureProjection) : null;
+  d = d ? wd(d.dataProjection) : null;
   e && d && !Id(e, d) ? b instanceof Md ? (b = c ? b.clone() : b, b.nb(Jd(c ? e : d, c ? d : e)), c = b) : c = Ld(c ? b.slice() : b, c ? e : d, c ? d : e) : c = b;
   return c;
 }
@@ -7924,7 +7942,7 @@ H(Xl, Ul);
 function fl(b) {
   return ia(b) ? b : z(b) ? (b = zk(b)) ? b : null : null;
 }
-Xl.prototype.M = function() {
+Xl.prototype.K = function() {
   return "json";
 };
 Xl.prototype.c = function(b, c) {
@@ -7974,7 +7992,7 @@ function $l(b, c, d, e, f) {
           k = q;
         }
         d = .5 * l;
-        for (var h = Xa, k = 0, l = g.length, r;k < l;) {
+        for (var h = Ya, k = 0, l = g.length, r;k < l;) {
           m = k + l >> 1, n = h(d, g[m]), 0 < n ? k = m + 1 : (l = m, r = !n);
         }
         h = r ? k : ~k;
@@ -7997,7 +8015,7 @@ p.clone = function() {
   bm(b, this.g, this.a.slice());
   return b;
 };
-p.J = function() {
+p.I = function() {
   return Ud(this.a, 0, this.a.length, this.B);
 };
 function Ej(b) {
@@ -8016,7 +8034,7 @@ p.Ea = function(b) {
   bm(b, "XY", c);
   return b;
 };
-p.M = function() {
+p.K = function() {
   return "LineString";
 };
 p.S = function(b, c) {
@@ -8040,7 +8058,7 @@ p.clone = function() {
   b.c();
   return b;
 };
-p.J = function() {
+p.I = function() {
   return Vd(this.a, 0, this.b, this.B);
 };
 p.Qa = function() {
@@ -8053,7 +8071,7 @@ function Fj(b) {
   g = 0;
   for (h = f.length;g < h;++g) {
     var k = f[g], e = $l(d, e, k, b);
-    Sa(c, e);
+    Ta(c, e);
     e = k;
   }
   return c;
@@ -8073,7 +8091,7 @@ p.Ea = function(b) {
   b.c();
   return b;
 };
-p.M = function() {
+p.K = function() {
   return "MultiLineString";
 };
 p.S = function(b, c) {
@@ -8098,10 +8116,10 @@ dm.prototype.clone = function() {
   b.c();
   return b;
 };
-dm.prototype.J = function() {
+dm.prototype.I = function() {
   return Ud(this.a, 0, this.a.length, this.B);
 };
-dm.prototype.M = function() {
+dm.prototype.K = function() {
   return "MultiPoint";
 };
 dm.prototype.S = function(b, c) {
@@ -8120,13 +8138,13 @@ function em(b, c) {
 H(em, Z);
 p = em.prototype;
 p.clone = function() {
-  var b = new em(null), c = ub(this.b);
+  var b = new em(null), c = vb(this.b);
   Pd(b, this.g, this.a.slice());
   b.b = c;
   b.c();
   return b;
 };
-p.J = function(b) {
+p.I = function(b) {
   var c;
   void 0 !== b ? (c = Gj(this).slice(), ee(c, this.b, this.B, b)) : c = this.a;
   b = c;
@@ -8143,10 +8161,10 @@ p.J = function(b) {
 };
 function Hj(b) {
   if (b.w != b.h) {
-    var c = b.a, d = b.b, e = b.B, f = 0, g = [], h, k, l = Uc();
+    var c = b.a, d = b.b, e = b.B, f = 0, g = [], h, k, l = Vc();
     h = 0;
     for (k = d.length;h < k;++h) {
-      var m = d[h], l = cd(Xc(Infinity, Infinity, -Infinity, -Infinity, void 0), c, f, m[0], e);
+      var m = d[h], l = dd(Yc(Infinity, Infinity, -Infinity, -Infinity, void 0), c, f, m[0], e);
       g.push((l[0] + l[2]) / 2, (l[1] + l[3]) / 2);
       f = m[m.length - 1];
     }
@@ -8201,7 +8219,7 @@ p.Ea = function(b) {
   e.c();
   return e;
 };
-p.M = function() {
+p.K = function() {
   return "MultiPolygon";
 };
 p.S = function(b, c) {
@@ -8230,7 +8248,7 @@ function hm(b) {
   var c, d;
   if (b.a) {
     for (c = 0, d = b.a.length;c < d;++c) {
-      sc(b.a[c], "change", b.c, !1, b);
+      tc(b.a[c], "change", b.c, !1, b);
     }
   }
 }
@@ -8256,14 +8274,14 @@ p.clone = function() {
   return b;
 };
 p.Va = function(b) {
-  Xc(Infinity, Infinity, -Infinity, -Infinity, b);
+  Yc(Infinity, Infinity, -Infinity, -Infinity, b);
   for (var c = this.a, d = 0, e = c.length;d < e;++d) {
-    bd(b, c[d].D());
+    cd(b, c[d].D());
   }
   return b;
 };
 p.Ab = function(b) {
-  this.s != this.h && (sb(this.f), this.i = 0, this.s = this.h);
+  this.s != this.h && (tb(this.f), this.i = 0, this.s = this.h);
   if (0 > b || 0 !== this.i && b < this.i) {
     return this;
   }
@@ -8284,7 +8302,7 @@ p.Ab = function(b) {
   this.i = b;
   return this;
 };
-p.M = function() {
+p.K = function() {
   return "GeometryCollection";
 };
 p.ra = function() {
@@ -8298,14 +8316,14 @@ p.nb = function(b) {
   }
   this.c();
 };
-p.I = function() {
+p.J = function() {
   hm(this);
-  fm.O.I.call(this);
+  fm.O.J.call(this);
 };
 function im(b) {
   b = b ? b : {};
   this.defaultDataProjection = null;
-  this.defaultDataProjection = xd(b.defaultDataProjection ? b.defaultDataProjection : "EPSG:4326");
+  this.defaultDataProjection = wd(b.defaultDataProjection ? b.defaultDataProjection : "EPSG:4326");
   this.a = b.geometryName;
 }
 H(im, Xl);
@@ -8313,7 +8331,7 @@ function jm(b, c) {
   return b ? Wl((0,km[b.type])(b), !1, c) : null;
 }
 function lm(b, c) {
-  return (0,mm[b.M()])(Wl(b, !0, c), c);
+  return (0,mm[b.K()])(Wl(b, !0, c), c);
 }
 var km = {Point:function(b) {
   return new Zd(b.coordinates);
@@ -8333,21 +8351,21 @@ var km = {Point:function(b) {
   });
   return new fm(d);
 }}, mm = {Point:function(b) {
-  return {type:"Point", coordinates:b.J()};
+  return {type:"Point", coordinates:b.I()};
 }, LineString:function(b) {
-  return {type:"LineString", coordinates:b.J()};
+  return {type:"LineString", coordinates:b.I()};
 }, Polygon:function(b, c) {
   var d;
   c && (d = c.rightHanded);
-  return {type:"Polygon", coordinates:b.J(d)};
+  return {type:"Polygon", coordinates:b.I(d)};
 }, MultiPoint:function(b) {
-  return {type:"MultiPoint", coordinates:b.J()};
+  return {type:"MultiPoint", coordinates:b.I()};
 }, MultiLineString:function(b) {
-  return {type:"MultiLineString", coordinates:b.J()};
+  return {type:"MultiLineString", coordinates:b.I()};
 }, MultiPolygon:function(b, c) {
   var d;
   c && (d = c.rightHanded);
-  return {type:"MultiPolygon", coordinates:b.J(d)};
+  return {type:"MultiPolygon", coordinates:b.I(d)};
 }, GeometryCollection:function(b, c) {
   return {type:"GeometryCollection", geometries:b.a.map(function(b) {
     return lm(b, c);
@@ -8361,22 +8379,22 @@ function Yl(b, c, d) {
   b.a && wk(e, b.a);
   vk(e, d);
   void 0 !== c.id && (e.za = c.id, e.c());
-  c.properties && Bc(e, c.properties);
+  c.properties && Cc(e, c.properties);
   return e;
 }
 function el(b, c) {
   var d = c.crs;
-  return d ? "name" == d.type ? xd(d.properties.name) : "EPSG" == d.type ? xd("EPSG:" + d.properties.code) : null : b.defaultDataProjection;
+  return d ? "name" == d.type ? wd(d.properties.name) : "EPSG" == d.type ? wd("EPSG:" + d.properties.code) : null : b.defaultDataProjection;
 }
 function Zl(b, c, d) {
   d = Vl(b, d);
   b = {type:"Feature"};
   var e = c.za;
   void 0 !== e && (b.id = e);
-  (e = c.L()) ? b.geometry = lm(e, d) : b.geometry = null;
-  d = Ec(c);
+  (e = c.M()) ? b.geometry = lm(e, d) : b.geometry = null;
+  d = Fc(c);
   delete d[c.a];
-  rb(d) ? b.properties = null : b.properties = d;
+  sb(d) ? b.properties = null : b.properties = d;
   return b;
 }
 ;function nm(b) {
@@ -8408,9 +8426,9 @@ om.prototype.clone = function() {
 };
 om.prototype.Va = function(b) {
   var c = this.a, d = c[this.B] - c[0];
-  return Xc(c[0] - d, c[1] - d, c[0] + d, c[1] + d, b);
+  return Yc(c[0] - d, c[1] - d, c[0] + d, c[1] + d, b);
 };
-om.prototype.M = function() {
+om.prototype.K = function() {
   return "Circle";
 };
 function pm(b, c, d, e) {
@@ -8438,13 +8456,13 @@ function pm(b, c, d, e) {
   return e;
 }
 function rm(b, c, d, e, f) {
-  var g = xd("EPSG:4326");
+  var g = wd("EPSG:4326");
   return qm(function(e) {
     return [b, c + (d - c) * e];
   }, Jd(g, e), f);
 }
 function sm(b, c, d, e, f) {
-  var g = xd("EPSG:4326");
+  var g = wd("EPSG:4326");
   return qm(function(e) {
     return [c + (d - c) * e, b];
   }, Jd(g, e), f);
@@ -8479,7 +8497,7 @@ function wm(b, c, d, e, f, g, h) {
   c = rm(c, d, e, b.c, f);
   k = void 0 !== b.j[k] ? b.j[k] : new am(null);
   bm(k, "XY", c);
-  id(k.D(), g) && (b.j[h++] = k);
+  jd(k.D(), g) && (b.j[h++] = k);
   return h;
 }
 function xm(b, c, d, e, f) {
@@ -8499,7 +8517,7 @@ function ym(b, c, d, e, f) {
   c = sm(c, b.g, b.h, b.c, d);
   g = void 0 !== b.f[g] ? b.f[g] : new am(null);
   bm(g, "XY", c);
-  id(g.D(), e) && (b.f[f++] = g);
+  jd(g.D(), e) && (b.f[f++] = g);
   return f;
 }
 function zm(b, c, d, e, f) {
@@ -8522,7 +8540,7 @@ tm.prototype.X = function(b) {
   b = d.pixelRatio;
   b = h * h / (4 * b * b);
   if (!this.c || !Id(this.c, g)) {
-    var k = xd("EPSG:4326"), l = g.D(), m = g.l, n = Ld(m, k, g), q = m[2], r = m[1], t = m[0], w = n[3], A = n[2], u = n[1], n = n[0];
+    var k = wd("EPSG:4326"), l = g.D(), m = g.l, n = Ld(m, k, g), q = m[2], r = m[1], t = m[0], w = n[3], A = n[2], u = n[1], n = n[0];
     this.v = m[3];
     this.h = q;
     this.l = r;
@@ -8533,7 +8551,7 @@ tm.prototype.X = function(b) {
     this.T = n;
     this.o = Jd(k, g);
     this.H = Jd(g, k);
-    this.u = this.H(fd(l));
+    this.u = this.H(gd(l));
     this.c = g;
   }
   k = 0;
@@ -8621,7 +8639,7 @@ tm.prototype.X = function(b) {
   }
 };
 tm.prototype.setMap = function(b) {
-  this.s && (sc(this.s, "postcompose", this.X, !1, this), this.s.render());
+  this.s && (tc(this.s, "postcompose", this.X, !1, this), this.s.render());
   b && (b.v("postcompose", this.X, this), b.render());
   this.s = b;
 };
@@ -8636,10 +8654,10 @@ function Am(b, c, d, e, f) {
 }
 H(Am, kf);
 p = Am.prototype;
-p.I = function() {
+p.J = function() {
   1 == this.state && Bm(this);
-  this.a && Sb(this.a);
-  Am.O.I.call(this);
+  this.a && Tb(this.a);
+  Am.O.J.call(this);
 };
 p.da = function(b) {
   if (void 0 !== b) {
@@ -8647,7 +8665,7 @@ p.da = function(b) {
     if (c in this.b) {
       return this.b[c];
     }
-    b = rb(this.b) ? this.c : this.c.cloneNode(!1);
+    b = sb(this.b) ? this.c : this.c.cloneNode(!1);
     return this.b[c] = b;
   }
   return this.c;
@@ -8655,18 +8673,18 @@ p.da = function(b) {
 p.getKey = function() {
   return this.j;
 };
-p.td = function() {
+p.ud = function() {
   this.state = 3;
   Bm(this);
   lf(this);
 };
-p.ud = function() {
+p.vd = function() {
   this.state = this.c.naturalWidth && this.c.naturalHeight ? 2 : 4;
   Bm(this);
   lf(this);
 };
 p.load = function() {
-  0 == this.state && (this.state = 1, lf(this), this.h = [rc(this.c, "error", this.td, !1, this), rc(this.c, "load", this.ud, !1, this)], this.g(this, this.j));
+  0 == this.state && (this.state = 1, lf(this), this.h = [sc(this.c, "error", this.ud, !1, this), sc(this.c, "load", this.vd, !1, this)], this.g(this, this.j));
 };
 function Bm(b) {
   b.h.forEach(T);
@@ -8683,7 +8701,7 @@ function Dm(b) {
   this.C = !1;
   this.na = b.source ? b.source : null;
   this.la = b.features ? b.features : null;
-  this.Bc = b.snapTolerance ? b.snapTolerance : 12;
+  this.Cc = b.snapTolerance ? b.snapTolerance : 12;
   this.F = b.type;
   this.b = Hm(this.F);
   this.fa = b.minPoints ? b.minPoints : this.b === Im ? 3 : 2;
@@ -8693,7 +8711,7 @@ function Dm(b) {
     if ("Circle" === this.F) {
       c = function(b, c) {
         var d = c ? c : new om([NaN, NaN]);
-        pm(d, b[0], Math.sqrt(Mc(b[0], b[1])));
+        pm(d, b[0], Math.sqrt(Nc(b[0], b[1])));
         return d;
       };
     } else {
@@ -8708,18 +8726,18 @@ function Dm(b) {
   }
   this.w = c;
   this.A = this.o = this.a = this.u = this.f = this.i = null;
-  this.Ec = b.clickTolerance ? b.clickTolerance * b.clickTolerance : 36;
+  this.Fc = b.clickTolerance ? b.clickTolerance * b.clickTolerance : 36;
   this.W = new Qh({source:new rl({useSpatialIndex:!1, wrapX:b.wrapX ? b.wrapX : !1}), style:b.style ? b.style : Lm()});
   this.ma = b.geometryName;
   this.kb = b.condition ? b.condition : fi;
   this.$ = b.freehandCondition ? b.freehandCondition : gi;
-  Q(this, Dc("active"), this.xa, !1, this);
+  Q(this, Ec("active"), this.xa, !1, this);
 }
 H(Dm, ji);
 function Lm() {
   var b = vj();
   return function(c) {
-    return b[c.L().M()];
+    return b[c.M().K()];
   };
 }
 Dm.prototype.setMap = function(b) {
@@ -8746,21 +8764,21 @@ function Em(b) {
 function Gm(b) {
   this.C = !1;
   var c = this.T, d = b.pixel, e = c[0] - d[0], c = c[1] - d[1], d = !0;
-  e * e + c * c <= this.Ec && (Nm(this, b), this.i ? this.b === Pm ? Qm(this) : Rm(this, b) ? Qm(this) : Mm(this, b) : (Om(this, b), this.b === Jm && Qm(this)), d = !1);
+  e * e + c * c <= this.Fc && (Nm(this, b), this.i ? this.b === Pm ? Qm(this) : Rm(this, b) ? Qm(this) : Mm(this, b) : (Om(this, b), this.b === Jm && Qm(this)), d = !1);
   return d;
 }
 function Nm(b, c) {
   if (b.i) {
-    var d = c.coordinate, e = b.f.L(), f;
+    var d = c.coordinate, e = b.f.M(), f;
     b.b === Jm ? f = b.a : b.b === Im ? (f = b.a[0], f = f[f.length - 1], Rm(b, c) && (d = b.i.slice())) : (f = b.a, f = f[f.length - 1]);
     f[0] = d[0];
     f[1] = d[1];
     b.w(b.a, e);
-    b.u && b.u.L().S(d);
-    e instanceof fe && b.b !== Im ? (b.o || (b.o = new uk(new am(null))), 0 >= e.b.length ? d = null : (d = new Yd(null), Pd(d, e.g, e.a.slice(0, e.b[0])), d.c()), e = b.o.L(), bm(e, d.g, d.a)) : b.A && (e = b.o.L(), e.S(b.A));
+    b.u && b.u.M().S(d);
+    e instanceof fe && b.b !== Im ? (b.o || (b.o = new uk(new am(null))), e = e.Yb(0), d = b.o.M(), bm(d, e.g, e.a)) : b.A && (d = b.o.M(), d.S(b.A));
     Sm(b);
   } else {
-    e = c.coordinate.slice(), b.u ? b.u.L().S(e) : (b.u = new uk(new Zd(e)), Sm(b));
+    d = c.coordinate.slice(), b.u ? b.u.M().S(d) : (b.u = new uk(new Zd(d)), Sm(b));
   }
   return !0;
 }
@@ -8771,7 +8789,7 @@ function Rm(b, c) {
     b.b === Km ? e = b.a.length > b.fa : b.b === Im && (e = b.a[0].length > b.fa, f = [b.a[0][0], b.a[0][b.a[0].length - 2]]);
     if (e) {
       for (var e = c.map, g = 0, h = f.length;g < h;g++) {
-        var k = f[g], l = qi(e, k), m = c.pixel, d = m[0] - l[0], l = m[1] - l[1], m = b.C && b.$(c) ? 1 : b.Bc;
+        var k = f[g], l = qi(e, k), m = c.pixel, d = m[0] - l[0], l = m[1] - l[1], m = b.C && b.$(c) ? 1 : b.Cc;
         if (d = Math.sqrt(d * d + l * l) <= m) {
           b.i = k;
           break;
@@ -8794,7 +8812,7 @@ function Om(b, c) {
   W(b, new Cm("drawstart", b.f));
 }
 function Mm(b, c) {
-  var d = c.coordinate, e = b.f.L(), f, g;
+  var d = c.coordinate, e = b.f.M(), f, g;
   if (b.b === Km) {
     b.i = d.slice(), g = b.a, g.push(d.slice()), f = g.length > b.ca, b.w(g, e);
   } else {
@@ -8811,7 +8829,7 @@ function Mm(b, c) {
   f && Qm(b);
 }
 function Qm(b) {
-  var c = Tm(b), d = b.a, e = c.L();
+  var c = Tm(b), d = b.a, e = c.M();
   b.b === Km ? (d.pop(), b.w(d, e)) : b.b === Im && (d[0].pop(), d[0].push(d[0][0]), b.w(d, e));
   "MultiPoint" === b.F ? vk(c, new dm([d])) : "MultiLineString" === b.F ? vk(c, new cm([d])) : "MultiPolygon" === b.F && vk(c, new em([d]));
   W(b, new Cm("drawend", c));
@@ -8824,7 +8842,7 @@ function Tm(b) {
   c && (b.f = null, b.u = null, b.o = null, b.W.Z().clear(!0));
   return c;
 }
-Dm.prototype.Ba = ld;
+Dm.prototype.Ba = md;
 function Sm(b) {
   var c = [];
   b.f && c.push(b.f);
@@ -8854,7 +8872,7 @@ function Um(b, c, d) {
 H(Um, P);
 function Vm(b) {
   ji.call(this, {handleDownEvent:Wm, handleDragEvent:Xm, handleEvent:Ym, handleUpEvent:Zm});
-  this.ca = b.deleteCondition ? b.deleteCondition : od(fi, ei);
+  this.ca = b.deleteCondition ? b.deleteCondition : pd(fi, ei);
   this.$ = this.b = null;
   this.T = [0, 0];
   this.u = this.C = !1;
@@ -8863,19 +8881,19 @@ function Vm(b) {
   this.i = this.W = !1;
   this.f = null;
   this.A = new Qh({source:new rl({useSpatialIndex:!1, wrapX:!!b.wrapX}), style:b.style ? b.style : $m(), updateWhileAnimating:!0, updateWhileInteracting:!0});
-  this.F = {Point:this.Cd, LineString:this.cc, LinearRing:this.cc, Polygon:this.Dd, MultiPoint:this.Ad, MultiLineString:this.zd, MultiPolygon:this.Bd, GeometryCollection:this.yd};
+  this.F = {Point:this.Dd, LineString:this.dc, LinearRing:this.dc, Polygon:this.Ed, MultiPoint:this.Bd, MultiLineString:this.Ad, MultiPolygon:this.Cd, GeometryCollection:this.zd};
   this.o = b.features;
   this.o.forEach(this.Gb, this);
-  Q(this.o, "add", this.wd, !1, this);
-  Q(this.o, "remove", this.xd, !1, this);
+  Q(this.o, "add", this.xd, !1, this);
+  Q(this.o, "remove", this.yd, !1, this);
 }
 H(Vm, ji);
 p = Vm.prototype;
 p.Gb = function(b) {
-  var c = b.L();
-  c.M() in this.F && this.F[c.M()].call(this, b, c);
+  var c = b.M();
+  c.K() in this.F && this.F[c.K()].call(this, b, c);
   (c = this.s) && an(this, this.T, c);
-  Q(b, "change", this.bc, !1, this);
+  Q(b, "change", this.cc, !1, this);
 };
 function bn(b, c) {
   b.u || (b.u = !0, W(b, new Um("modifystart", b.o, c)));
@@ -8883,7 +8901,7 @@ function bn(b, c) {
 function cn(b, c) {
   dn(b, c);
   b.b && 0 === Ae(b.o) && (xl(b.A.Z(), b.b), b.b = null);
-  sc(c, "change", b.bc, !1, b);
+  tc(c, "change", b.cc, !1, b);
 }
 function dn(b, c) {
   var d = b.a, e = [];
@@ -8898,72 +8916,72 @@ p.setMap = function(b) {
   this.A.setMap(b);
   Vm.O.setMap.call(this, b);
 };
-p.wd = function(b) {
+p.xd = function(b) {
   this.Gb(b.element);
 };
-p.bc = function(b) {
+p.cc = function(b) {
   this.i || (b = b.target, cn(this, b), this.Gb(b));
 };
-p.xd = function(b) {
+p.yd = function(b) {
   cn(this, b.element);
 };
-p.Cd = function(b, c) {
-  var d = c.J(), d = {feature:b, geometry:c, K:[d, d]};
+p.Dd = function(b, c) {
+  var d = c.I(), d = {feature:b, geometry:c, L:[d, d]};
   this.a.V(c.D(), d);
 };
-p.Ad = function(b, c) {
-  var d = c.J(), e, f, g;
+p.Bd = function(b, c) {
+  var d = c.I(), e, f, g;
   f = 0;
   for (g = d.length;f < g;++f) {
-    e = d[f], e = {feature:b, geometry:c, depth:[f], index:f, K:[e, e]}, this.a.V(c.D(), e);
+    e = d[f], e = {feature:b, geometry:c, depth:[f], index:f, L:[e, e]}, this.a.V(c.D(), e);
   }
 };
-p.cc = function(b, c) {
-  var d = c.J(), e, f, g, h;
+p.dc = function(b, c) {
+  var d = c.I(), e, f, g, h;
   e = 0;
   for (f = d.length - 1;e < f;++e) {
-    g = d.slice(e, e + 2), h = {feature:b, geometry:c, index:e, K:g}, this.a.V(Tc(g), h);
+    g = d.slice(e, e + 2), h = {feature:b, geometry:c, index:e, L:g}, this.a.V(Uc(g), h);
   }
 };
-p.zd = function(b, c) {
-  var d = c.J(), e, f, g, h, k, l, m;
+p.Ad = function(b, c) {
+  var d = c.I(), e, f, g, h, k, l, m;
   h = 0;
   for (k = d.length;h < k;++h) {
     for (e = d[h], f = 0, g = e.length - 1;f < g;++f) {
-      l = e.slice(f, f + 2), m = {feature:b, geometry:c, depth:[h], index:f, K:l}, this.a.V(Tc(l), m);
+      l = e.slice(f, f + 2), m = {feature:b, geometry:c, depth:[h], index:f, L:l}, this.a.V(Uc(l), m);
     }
   }
 };
-p.Dd = function(b, c) {
-  var d = c.J(), e, f, g, h, k, l, m;
+p.Ed = function(b, c) {
+  var d = c.I(), e, f, g, h, k, l, m;
   h = 0;
   for (k = d.length;h < k;++h) {
     for (e = d[h], f = 0, g = e.length - 1;f < g;++f) {
-      l = e.slice(f, f + 2), m = {feature:b, geometry:c, depth:[h], index:f, K:l}, this.a.V(Tc(l), m);
+      l = e.slice(f, f + 2), m = {feature:b, geometry:c, depth:[h], index:f, L:l}, this.a.V(Uc(l), m);
     }
   }
 };
-p.Bd = function(b, c) {
-  var d = c.J(), e, f, g, h, k, l, m, n, q, r;
+p.Cd = function(b, c) {
+  var d = c.I(), e, f, g, h, k, l, m, n, q, r;
   l = 0;
   for (m = d.length;l < m;++l) {
     for (n = d[l], h = 0, k = n.length;h < k;++h) {
       for (e = n[h], f = 0, g = e.length - 1;f < g;++f) {
-        q = e.slice(f, f + 2), r = {feature:b, geometry:c, depth:[h, l], index:f, K:q}, this.a.V(Tc(q), r);
+        q = e.slice(f, f + 2), r = {feature:b, geometry:c, depth:[h, l], index:f, L:q}, this.a.V(Uc(q), r);
       }
     }
   }
 };
-p.yd = function(b, c) {
+p.zd = function(b, c) {
   var d, e = c.a;
   for (d = 0;d < e.length;++d) {
-    this.F[e[d].M()].call(this, b, e[d]);
+    this.F[e[d].K()].call(this, b, e[d]);
   }
 };
 function en(b, c) {
   var d = b.b;
   if (d) {
-    d.L().S(c);
+    d.M().S(c);
   } else {
     d = new uk(new Zd(c));
     b.b = d;
@@ -8981,17 +8999,17 @@ function Wm(b) {
   this.u = !1;
   var c = this.b;
   if (c) {
-    var d = [], c = c.L().J(), e = Tc([c]), e = nl(this.a, e), f = {};
+    var d = [], c = c.M().I(), e = Uc([c]), e = nl(this.a, e), f = {};
     e.sort(fn);
     for (var g = 0, h = e.length;g < h;++g) {
-      var k = e[g], l = k.K, m = C(k.feature), n = k.depth;
+      var k = e[g], l = k.L, m = C(k.feature), n = k.depth;
       n && (m += "-" + n.join("-"));
       f[m] || (f[m] = Array(2));
-      if (Kc(l[0], c) && !f[m][0]) {
+      if (Lc(l[0], c) && !f[m][0]) {
         this.f.push([k, 0]), f[m][0] = k;
       } else {
-        if (Kc(l[1], c) && !f[m][1]) {
-          if ("LineString" !== k.geometry.M() && "MultiLineString" !== k.geometry.M() || !f[m][0] || 0 !== f[m][0].index) {
+        if (Lc(l[1], c) && !f[m][1]) {
+          if ("LineString" !== k.geometry.K() && "MultiLineString" !== k.geometry.K() || !f[m][0] || 0 !== f[m][0].index) {
             this.f.push([k, 1]), f[m][1] = k;
           }
         } else {
@@ -9001,7 +9019,7 @@ function Wm(b) {
     }
     d.length && bn(this, b);
     for (b = d.length - 1;0 <= b;--b) {
-      this.bd.apply(this, d[b]);
+      this.cd.apply(this, d[b]);
     }
   }
   return !!this.b;
@@ -9011,10 +9029,10 @@ function Xm(b) {
   bn(this, b);
   b = b.coordinate;
   for (var c = 0, d = this.f.length;c < d;++c) {
-    for (var e = this.f[c], f = e[0], g = f.depth, h = f.geometry, k = h.J(), l = f.K, e = e[1];b.length < h.B;) {
+    for (var e = this.f[c], f = e[0], g = f.depth, h = f.geometry, k = h.I(), l = f.L, e = e[1];b.length < h.B;) {
       b.push(0);
     }
-    switch(h.M()) {
+    switch(h.K()) {
       case "Point":
         k = b;
         l[0] = l[1] = b;
@@ -9047,7 +9065,7 @@ function Xm(b) {
 }
 function Zm(b) {
   for (var c, d = this.f.length - 1;0 <= d;--d) {
-    c = this.f[d][0], ll(this.a, Tc(c.K), c);
+    c = this.f[d][0], ll(this.a, Uc(c.L), c);
   }
   this.u && (W(this, new Um("modifyend", this.o, b)), this.u = !1);
   return !1;
@@ -9062,16 +9080,16 @@ function Ym(b) {
     if (b.type == kh && this.C) {
       c = !0;
     } else {
-      this.b.L();
+      this.b.M();
       bn(this, b);
       c = this.f;
       var d = {}, e, f, g, h, k, l, m, n, q;
       for (k = c.length - 1;0 <= k;--k) {
-        if (g = c[k], n = g[0], h = n.geometry, f = h.J(), q = C(n.feature), n.depth && (q += "-" + n.depth.join("-")), m = e = l = void 0, 0 === g[1] ? (e = n, l = n.index) : 1 == g[1] && (m = n, l = n.index + 1), q in d || (d[q] = [m, e, l]), g = d[q], void 0 !== m && (g[0] = m), void 0 !== e && (g[1] = e), void 0 !== g[0] && void 0 !== g[1]) {
+        if (g = c[k], n = g[0], h = n.geometry, f = h.I(), q = C(n.feature), n.depth && (q += "-" + n.depth.join("-")), m = e = l = void 0, 0 === g[1] ? (e = n, l = n.index) : 1 == g[1] && (m = n, l = n.index + 1), q in d || (d[q] = [m, e, l]), g = d[q], void 0 !== m && (g[0] = m), void 0 !== e && (g[1] = e), void 0 !== g[0] && void 0 !== g[1]) {
           e = f;
           q = !1;
           m = l - 1;
-          switch(h.M()) {
+          switch(h.K()) {
             case "MultiLineString":
               f[n.depth[0]].splice(l, 1);
               q = !0;
@@ -9085,7 +9103,7 @@ function Ym(b) {
             case "Polygon":
               e = e[n.depth[0]], 4 < e.length && (l == e.length - 1 && (l = 0), e.splice(l, 1), q = !0, 0 === l && (e.pop(), e.push(e[0]), m = e.length - 1));
           }
-          q && (this.a.remove(g[0]), this.a.remove(g[1]), e = h, this.i = !0, e.S(f), this.i = !1, f = {depth:n.depth, feature:n.feature, geometry:n.geometry, index:m, K:[g[0].K[0], g[1].K[1]]}, this.a.V(Tc(f.K), f), gn(this, h, l, n.depth, -1), this.b && (xl(this.A.Z(), this.b), this.b = null));
+          q && (this.a.remove(g[0]), this.a.remove(g[1]), e = h, this.i = !0, e.S(f), this.i = !1, f = {depth:n.depth, feature:n.feature, geometry:n.geometry, index:m, L:[g[0].L[0], g[1].L[1]]}, this.a.V(Uc(f.L), f), gn(this, h, l, n.depth, -1), this.b && (xl(this.A.Z(), this.b), this.b = null));
         }
       }
       c = !0;
@@ -9098,17 +9116,17 @@ function Ym(b) {
 }
 function an(b, c, d) {
   function e(b, c) {
-    return Nc(f, b.K) - Nc(f, c.K);
+    return Oc(f, b.L) - Oc(f, c.L);
   }
-  var f = d.ga(c), g = d.ga([c[0] - b.w, c[1] + b.w]), h = d.ga([c[0] + b.w, c[1] - b.w]), g = Tc([g, h]), g = nl(b.a, g);
+  var f = d.ga(c), g = d.ga([c[0] - b.w, c[1] + b.w]), h = d.ga([c[0] + b.w, c[1] - b.w]), g = Uc([g, h]), g = nl(b.a, g);
   if (0 < g.length) {
     g.sort(e);
-    var h = g[0].K, k = Ic(f, h), l = qi(d, k);
-    if (Math.sqrt(Mc(c, l)) <= b.w) {
+    var h = g[0].L, k = Jc(f, h), l = qi(d, k);
+    if (Math.sqrt(Nc(c, l)) <= b.w) {
       c = qi(d, h[0]);
       d = qi(d, h[1]);
-      c = Mc(l, c);
-      d = Mc(l, d);
+      c = Nc(l, c);
+      d = Nc(l, d);
       b.W = Math.sqrt(Math.min(c, d)) <= b.w;
       b.W && (k = c > d ? h[1] : h[0]);
       en(b, k);
@@ -9116,7 +9134,7 @@ function an(b, c, d) {
       d[C(h)] = !0;
       c = 1;
       for (l = g.length;c < l;++c) {
-        if (k = g[c].K, Kc(h[0], k[0]) && Kc(h[1], k[1]) || Kc(h[0], k[1]) && Kc(h[1], k[0])) {
+        if (k = g[c].L, Lc(h[0], k[0]) && Lc(h[1], k[1]) || Lc(h[0], k[1]) && Lc(h[1], k[0])) {
           d[C(k)] = !0;
         } else {
           break;
@@ -9128,25 +9146,25 @@ function an(b, c, d) {
   }
   b.b && (xl(b.A.Z(), b.b), b.b = null);
 }
-p.bd = function(b, c) {
-  for (var d = b.K, e = b.feature, f = b.geometry, g = b.depth, h = b.index, k;c.length < f.B;) {
+p.cd = function(b, c) {
+  for (var d = b.L, e = b.feature, f = b.geometry, g = b.depth, h = b.index, k;c.length < f.B;) {
     c.push(0);
   }
-  switch(f.M()) {
+  switch(f.K()) {
     case "MultiLineString":
-      k = f.J();
+      k = f.I();
       k[g[0]].splice(h + 1, 0, c);
       break;
     case "Polygon":
-      k = f.J();
+      k = f.I();
       k[g[0]].splice(h + 1, 0, c);
       break;
     case "MultiPolygon":
-      k = f.J();
+      k = f.I();
       k[g[1]][g[0]].splice(h + 1, 0, c);
       break;
     case "LineString":
-      k = f.J();
+      k = f.I();
       k.splice(h + 1, 0, c);
       break;
     default:
@@ -9158,17 +9176,17 @@ p.bd = function(b, c) {
   k = this.a;
   k.remove(b);
   gn(this, f, h, g, 1);
-  var l = {K:[d[0], c], feature:e, geometry:f, depth:g, index:h};
-  k.V(Tc(l.K), l);
+  var l = {L:[d[0], c], feature:e, geometry:f, depth:g, index:h};
+  k.V(Uc(l.L), l);
   this.f.push([l, 1]);
-  d = {K:[c, d[1]], feature:e, geometry:f, depth:g, index:h + 1};
-  k.V(Tc(d.K), d);
+  d = {L:[c, d[1]], feature:e, geometry:f, depth:g, index:h + 1};
+  k.V(Uc(d.L), d);
   this.f.push([d, 0]);
   this.C = !0;
 };
 function gn(b, c, d, e, f) {
   ql(b.a, c.D(), function(b) {
-    b.geometry === c && (void 0 === e || void 0 === b.depth || $a(b.depth, e)) && b.index > d && (b.index += f);
+    b.geometry === c && (void 0 === e || void 0 === b.depth || ab(b.depth, e)) && b.index > d && (b.index += f);
   });
 }
 function $m() {
@@ -9188,11 +9206,11 @@ function jn(b) {
   Yh.call(this, {handleEvent:kn});
   var c = b ? b : {};
   this.o = c.condition ? c.condition : ei;
-  this.i = c.addCondition ? c.addCondition : ld;
-  this.C = c.removeCondition ? c.removeCondition : ld;
+  this.i = c.addCondition ? c.addCondition : md;
+  this.C = c.removeCondition ? c.removeCondition : md;
   this.F = c.toggleCondition ? c.toggleCondition : gi;
   this.l = c.multi ? c.multi : !1;
-  this.g = c.filter ? c.filter : md;
+  this.g = c.filter ? c.filter : nd;
   var d = new Qh({source:new rl({useSpatialIndex:!1, features:c.features, wrapX:c.wrapX}), style:c.style ? c.style : ln(), updateWhileAnimating:!0, updateWhileInteracting:!0});
   this.a = d;
   if (c.layers) {
@@ -9207,7 +9225,7 @@ function jn(b) {
       };
     }
   } else {
-    b = md;
+    b = nd;
   }
   this.f = b;
   this.b = {};
@@ -9232,7 +9250,7 @@ function kn(b) {
         this.b[d] = c;
         return !this.l;
       }
-    }, this, this.f), 0 < l.length && 1 == Ae(h) && h.item(0) == l[0] || (m = !0, 0 !== Ae(h) && (k = Array.prototype.concat(h.a), h.clear()), h.Fb(l), 0 === l.length ? sb(this.b) : 0 < k.length && k.forEach(function(b) {
+    }, this, this.f), 0 < l.length && 1 == Ae(h) && h.item(0) == l[0] || (m = !0, 0 !== Ae(h) && (k = Array.prototype.concat(h.a), h.clear()), h.Fb(l), 0 === l.length ? tb(this.b) : 0 < k.length && k.forEach(function(b) {
       b = C(b);
       delete this.b[b];
     }, this));
@@ -9263,31 +9281,31 @@ function kn(b) {
 }
 jn.prototype.setMap = function(b) {
   var c = this.s, d = zl(this.a.Z());
-  c && d.forEach(c.pc, c);
+  c && d.forEach(c.qc, c);
   jn.O.setMap.call(this, b);
   this.a.setMap(b);
-  b && d.forEach(b.nc, b);
+  b && d.forEach(b.oc, b);
 };
 function ln() {
   var b = vj();
-  Sa(b.Polygon, b.LineString);
-  Sa(b.GeometryCollection, b.LineString);
+  Ta(b.Polygon, b.LineString);
+  Ta(b.GeometryCollection, b.LineString);
   return function(c) {
-    return b[c.L().M()];
+    return b[c.M().K()];
   };
 }
 jn.prototype.u = function(b) {
   b = b.element;
   var c = this.s;
-  c && c.nc(b);
+  c && c.oc(b);
 };
 jn.prototype.A = function(b) {
   b = b.element;
   var c = this.s;
-  c && c.pc(b);
+  c && c.qc(b);
 };
 function mn(b) {
-  ji.call(this, {handleEvent:nn, handleDownEvent:md, handleUpEvent:on});
+  ji.call(this, {handleEvent:nn, handleDownEvent:nd, handleUpEvent:on});
   b = b ? b : {};
   this.i = b.source ? b.source : null;
   this.f = b.features ? b.features : null;
@@ -9300,47 +9318,47 @@ function mn(b) {
   this.b = void 0 !== b.pixelTolerance ? b.pixelTolerance : 10;
   this.W = pn.bind(this);
   this.a = new kl;
-  this.F = {Point:this.Jd, LineString:this.fc, LinearRing:this.fc, Polygon:this.Kd, MultiPoint:this.Hd, MultiLineString:this.Gd, MultiPolygon:this.Id, GeometryCollection:this.Fd};
+  this.F = {Point:this.Kd, LineString:this.gc, LinearRing:this.gc, Polygon:this.Ld, MultiPoint:this.Id, MultiLineString:this.Hd, MultiPolygon:this.Jd, GeometryCollection:this.Gd};
 }
 H(mn, ji);
 function qn(b, c, d) {
   d = void 0 !== d ? d : !0;
-  var e = c.L(), f = b.F[e.M()];
+  var e = c.M(), f = b.F[e.K()];
   if (f) {
     var g = C(c);
-    b.C[g] = e.D(Uc());
+    b.C[g] = e.D(Vc());
     f.call(b, c, e);
-    d && (b.w[g] = e.v("change", b.Nc.bind(b, c), b), b.u[g] = c.v(Dc(c.a), b.Ed, b));
+    d && (b.w[g] = e.v("change", b.Oc.bind(b, c), b), b.u[g] = c.v(Ec(c.a), b.Fd, b));
   }
 }
 p = mn.prototype;
-p.Ic = function(b) {
+p.Jc = function(b) {
   qn(this, b);
 };
-p.Jc = function(b) {
+p.Kc = function(b) {
   rn(this, b);
-};
-p.dc = function(b) {
-  var c;
-  b instanceof wl ? c = b.feature : b instanceof xe && (c = b.element);
-  qn(this, c);
 };
 p.ec = function(b) {
   var c;
   b instanceof wl ? c = b.feature : b instanceof xe && (c = b.element);
+  qn(this, c);
+};
+p.fc = function(b) {
+  var c;
+  b instanceof wl ? c = b.feature : b instanceof xe && (c = b.element);
   rn(this, c);
 };
-p.Ed = function(b) {
+p.Fd = function(b) {
   b = b.b;
   rn(this, b, !0);
   qn(this, b, !0);
 };
-p.Nc = function(b) {
+p.Oc = function(b) {
   if (this.l) {
     var c = C(b);
     c in this.o || (this.o[c] = b);
   } else {
-    this.qc(b);
+    this.rc(b);
   }
 };
 function rn(b, c, d) {
@@ -9359,67 +9377,67 @@ function rn(b, c, d) {
 }
 p.setMap = function(b) {
   var c = this.s, d = this.T, e, f;
-  this.f ? f = this.f : this.i && (f = this.i, f.f ? e = f.f.a : f.a && (e = ml(f.a), rb(f.b) || Sa(e, qb(f.b))), f = e);
+  this.f ? f = this.f : this.i && (f = this.i, f.f ? e = f.f.a : f.a && (e = ml(f.a), sb(f.b) || Ta(e, rb(f.b))), f = e);
   e = f;
-  c && (d.forEach(zc), d.length = 0, e.forEach(this.Jc, this));
+  c && (d.forEach(Ac), d.length = 0, e.forEach(this.Kc, this));
   mn.O.setMap.call(this, b);
-  b && (this.f ? (d.push(this.f.v("add", this.dc, this)), d.push(this.f.v("remove", this.ec, this))) : this.i && (d.push(this.i.v("addfeature", this.dc, this)), d.push(this.i.v("removefeature", this.ec, this))), e.forEach(this.Ic, this));
+  b && (this.f ? (d.push(this.f.v("add", this.ec, this)), d.push(this.f.v("remove", this.fc, this))) : this.i && (d.push(this.i.v("addfeature", this.ec, this)), d.push(this.i.v("removefeature", this.fc, this))), e.forEach(this.Jc, this));
 };
-p.Ba = ld;
-p.qc = function(b) {
+p.Ba = md;
+p.rc = function(b) {
   rn(this, b, !1);
   qn(this, b, !1);
 };
-p.Fd = function(b, c) {
+p.Gd = function(b, c) {
   var d, e = c.a;
   for (d = 0;d < e.length;++d) {
-    this.F[e[d].M()].call(this, b, e[d]);
+    this.F[e[d].K()].call(this, b, e[d]);
   }
 };
-p.fc = function(b, c) {
-  var d = c.J(), e, f, g, h;
+p.gc = function(b, c) {
+  var d = c.I(), e, f, g, h;
   e = 0;
   for (f = d.length - 1;e < f;++e) {
-    g = d.slice(e, e + 2), h = {feature:b, K:g}, this.a.V(Tc(g), h);
-  }
-};
-p.Gd = function(b, c) {
-  var d = c.J(), e, f, g, h, k, l, m;
-  h = 0;
-  for (k = d.length;h < k;++h) {
-    for (e = d[h], f = 0, g = e.length - 1;f < g;++f) {
-      l = e.slice(f, f + 2), m = {feature:b, K:l}, this.a.V(Tc(l), m);
-    }
+    g = d.slice(e, e + 2), h = {feature:b, L:g}, this.a.V(Uc(g), h);
   }
 };
 p.Hd = function(b, c) {
-  var d = c.J(), e, f, g;
-  f = 0;
-  for (g = d.length;f < g;++f) {
-    e = d[f], e = {feature:b, K:[e, e]}, this.a.V(c.D(), e);
+  var d = c.I(), e, f, g, h, k, l, m;
+  h = 0;
+  for (k = d.length;h < k;++h) {
+    for (e = d[h], f = 0, g = e.length - 1;f < g;++f) {
+      l = e.slice(f, f + 2), m = {feature:b, L:l}, this.a.V(Uc(l), m);
+    }
   }
 };
 p.Id = function(b, c) {
-  var d = c.J(), e, f, g, h, k, l, m, n, q, r;
+  var d = c.I(), e, f, g;
+  f = 0;
+  for (g = d.length;f < g;++f) {
+    e = d[f], e = {feature:b, L:[e, e]}, this.a.V(c.D(), e);
+  }
+};
+p.Jd = function(b, c) {
+  var d = c.I(), e, f, g, h, k, l, m, n, q, r;
   l = 0;
   for (m = d.length;l < m;++l) {
     for (n = d[l], h = 0, k = n.length;h < k;++h) {
       for (e = n[h], f = 0, g = e.length - 1;f < g;++f) {
-        q = e.slice(f, f + 2), r = {feature:b, K:q}, this.a.V(Tc(q), r);
+        q = e.slice(f, f + 2), r = {feature:b, L:q}, this.a.V(Uc(q), r);
       }
     }
   }
 };
-p.Jd = function(b, c) {
-  var d = c.J(), d = {feature:b, K:[d, d]};
+p.Kd = function(b, c) {
+  var d = c.I(), d = {feature:b, L:[d, d]};
   this.a.V(c.D(), d);
 };
-p.Kd = function(b, c) {
-  var d = c.J(), e, f, g, h, k, l, m;
+p.Ld = function(b, c) {
+  var d = c.I(), e, f, g, h, k, l, m;
   h = 0;
   for (k = d.length;h < k;++h) {
     for (e = d[h], f = 0, g = e.length - 1;f < g;++f) {
-      l = e.slice(f, f + 2), m = {feature:b, K:l}, this.a.V(Tc(l), m);
+      l = e.slice(f, f + 2), m = {feature:b, L:l}, this.a.V(Uc(l), m);
     }
   }
 };
@@ -9428,20 +9446,20 @@ function nn(b) {
   c = b.map;
   var g = c.ga([e[0] - this.b, e[1] + this.b]);
   d = c.ga([e[0] + this.b, e[1] - this.b]);
-  var g = Tc([g, d]), h = nl(this.a, g), k = !1, g = !1, l = null;
+  var g = Uc([g, d]), h = nl(this.a, g), k = !1, g = !1, l = null;
   d = null;
-  0 < h.length && (this.A = f, h.sort(this.W), h = h[0].K, l = Ic(f, h), d = qi(c, l), Math.sqrt(Mc(e, d)) <= this.b && (g = !0, e = qi(c, h[0]), f = qi(c, h[1]), e = Mc(d, e), f = Mc(d, f), k = Math.sqrt(Math.min(e, f)) <= this.b)) && (l = e > f ? h[1] : h[0], d = qi(c, l), d = [Math.round(d[0]), Math.round(d[1])]);
+  0 < h.length && (this.A = f, h.sort(this.W), h = h[0].L, l = Jc(f, h), d = qi(c, l), Math.sqrt(Nc(e, d)) <= this.b && (g = !0, e = qi(c, h[0]), f = qi(c, h[1]), e = Nc(d, e), f = Nc(d, f), k = Math.sqrt(Math.min(e, f)) <= this.b)) && (l = e > f ? h[1] : h[0], d = qi(c, l), d = [Math.round(d[0]), Math.round(d[1])]);
   c = l;
   g && (b.coordinate = c.slice(0, 2), b.pixel = d);
   return ki.call(this, b);
 }
 function on() {
-  var b = qb(this.o);
-  b.length && (b.forEach(this.qc, this), this.o = {});
+  var b = rb(this.o);
+  b.length && (b.forEach(this.rc, this), this.o = {});
   return !1;
 }
 function pn(b, c) {
-  return Nc(this.A, b.K) - Nc(this.A, c.K);
+  return Oc(this.A, b.L) - Oc(this.A, c.L);
 }
 ;function sn(b, c, d, e, f, g, h, k, l, m) {
   kf.call(this, f, 0);
@@ -9458,13 +9476,13 @@ function pn(b, c) {
   g = sf(e, this.v);
   m = this.i.D();
   f = this.g.D();
-  g = m ? hd(g, m) : g;
-  if (0 === dd(g)) {
+  g = m ? id(g, m) : g;
+  if (0 === ed(g)) {
     this.state = 4;
   } else {
-    (m = b.D()) && (f ? f = hd(f, m) : f = m);
+    (m = b.D()) && (f ? f = id(f, m) : f = m);
     m = e.R(this.v[0]);
-    var n = fd(g);
+    var n = gd(g);
     e = Jd(d, b)(n, void 0, n.length);
     m = d.getPointResolution(m, n);
     n = Bd(d);
@@ -9480,7 +9498,7 @@ function pn(b, c) {
       if (this.l = new rk(b, d, g, f, e * (void 0 !== l ? l : .5)), 0 === this.l.h.length) {
         this.state = 4;
       } else {
-        if (this.f = zf(c, e), d = tk(this.l), f && (b.a ? (d[1] = Ea(d[1], f[1], f[3]), d[3] = Ea(d[3], f[1], f[3])) : d = hd(d, f)), dd(d)) {
+        if (this.f = zf(c, e), d = tk(this.l), f && (b.a ? (d[1] = Ea(d[1], f[1], f[3]), d[3] = Ea(d[3], f[1], f[3])) : d = id(d, f)), ed(d)) {
           if (b = tf(c, d, this.f), 100 > (b.c - b.a + 1) * we(b)) {
             for (c = b.a;c <= b.c;c++) {
               for (d = b.h;d <= b.b;d++) {
@@ -9499,9 +9517,9 @@ function pn(b, c) {
   }
 }
 H(sn, kf);
-sn.prototype.I = function() {
+sn.prototype.J = function() {
   1 == this.state && (this.b.forEach(T), this.b = null);
-  sn.O.I.call(this);
+  sn.O.J.call(this);
 };
 sn.prototype.da = function(b) {
   if (void 0 !== b) {
@@ -9509,7 +9527,7 @@ sn.prototype.da = function(b) {
     if (c in this.h) {
       return this.h[c];
     }
-    b = rb(this.h) ? this.j : this.j.cloneNode(!1);
+    b = sb(this.h) ? this.j : this.j.cloneNode(!1);
     return this.h[c] = b;
   }
   return this.j;
@@ -9540,7 +9558,7 @@ sn.prototype.load = function() {
       if (0 == d || 1 == d) {
         b++;
         var e;
-        e = lc(c, "change", function() {
+        e = mc(c, "change", function() {
           var d = c.Y();
           if (2 == d || 3 == d || 4 == d) {
             T(e), b--, 0 === b && (this.b.forEach(T), this.b = null, this.s());
@@ -9565,15 +9583,15 @@ function tn(b) {
 }
 H(tn, Hl);
 p = tn.prototype;
-p.gc = function() {
-  return hf(this.a) ? !0 : ob(this.g, function(b) {
+p.hc = function() {
+  return hf(this.a) ? !0 : pb(this.g, function(b) {
     return hf(b);
   });
 };
-p.hc = function(b, c) {
+p.ic = function(b, c) {
   var d = this.Sa(b);
   jf(this.a, this.a == d ? c : {});
-  nb(this.g, function(b) {
+  ob(this.g, function(b) {
     jf(b, b == d ? c : {});
   });
 };
@@ -9650,7 +9668,7 @@ function yn(b) {
     return function(c) {
       if (c) {
         var d = {TileMatrix:f.i[c[0]], TileCol:c[1], TileRow:-c[2] - 1};
-        wb(d, h);
+        xb(d, h);
         c = b;
         return c = "KVP" == e ? Ik(Kk([c], d)) : c.replace(/\{(\w+?)\}/g, function(b, c) {
           return d[c];
@@ -9669,7 +9687,7 @@ function yn(b) {
   var d = b.urls;
   void 0 === d && void 0 !== b.url && (d = Gl(b.url));
   var e = this.na = void 0 !== b.requestEncoding ? b.requestEncoding : "KVP", f = b.tileGrid, g = {layer:this.$, style:this.ca, tilematrixset:this.F};
-  "KVP" == e && wb(g, {Service:"WMTS", Request:"GetTile", Version:this.fa, Format:this.W});
+  "KVP" == e && xb(g, {Service:"WMTS", Request:"GetTile", Version:this.fa, Format:this.W});
   var h = this.f, k = d && 0 < d.length ? El(d.map(c)) : Fl;
   tn.call(this, {attributions:b.attributions, crossOrigin:b.crossOrigin, logo:b.logo, projection:b.projection, reprojectionErrorThreshold:b.reprojectionErrorThreshold, tileClass:b.tileClass, tileGrid:f, tileLoadFunction:b.tileLoadFunction, tilePixelRatio:b.tilePixelRatio, tileUrlFunction:k, urls:d, wrapX:void 0 !== b.wrapX ? b.wrapX : !1});
 }
@@ -9685,28 +9703,30 @@ function zn(b) {
   b.s = d.join("/");
 }
 ;D("ol.extent.getWidth", Y);
-D("ol.extent.getTopLeft", jd);
+D("ol.extent.getTopLeft", kd);
 D("ol.Map", Ml);
-Ml.prototype.addInteraction = Ml.prototype.Cc;
+Ml.prototype.addInteraction = Ml.prototype.Dc;
 Ml.prototype.getSize = Ml.prototype.cb;
 Ml.prototype.setSize = Ml.prototype.Ib;
 Ml.prototype.getView = Ml.prototype.U;
-Ml.prototype.once = Ml.prototype.tc;
+Ml.prototype.once = Ml.prototype.uc;
 Ml.prototype.on = Ml.prototype.v;
-Ml.prototype.renderSync = Ml.prototype.Vd;
+Ml.prototype.renderSync = Ml.prototype.Wd;
 D("ol.View", je);
-je.prototype.fit = je.prototype.Hc;
-je.prototype.calculateExtent = je.prototype.Fc;
+je.prototype.fit = je.prototype.Ic;
+je.prototype.calculateExtent = je.prototype.Gc;
 je.prototype.getCenter = je.prototype.ja;
-je.prototype.getZoom = je.prototype.Lc;
+je.prototype.getZoom = je.prototype.Mc;
 je.prototype.setCenter = je.prototype.sa;
-je.prototype.setZoom = je.prototype.Xd;
+je.prototype.setZoom = je.prototype.Yd;
 D("ol.Collection", ye);
-ye.prototype.getArray = ye.prototype.sd;
+ye.prototype.getArray = ye.prototype.td;
 ye.prototype.extend = ye.prototype.Fb;
 ye.prototype.clear = ye.prototype.clear;
 D("ol.Graticule", tm);
-D("ol.Sphere", pd);
+D("ol.Sphere", qd);
+qd.prototype.geodesicArea = qd.prototype.c;
+qd.prototype.haversineDistance = qd.prototype.a;
 D("ol.tilegrid.WMTS", xn);
 D("ol.source.WMTS", yn);
 D("ol.source.Vector", rl);
@@ -9725,17 +9745,24 @@ D("ol.format.GeoJSON", im);
 im.prototype.readFeatures = im.prototype.c;
 im.prototype.writeFeatures = im.prototype.b;
 Yh.prototype.setActive = Yh.prototype.wa;
+Yh.prototype.on = Yh.prototype.v;
 D("ol.interaction.Draw", Dm);
 D("ol.interaction.Select", jn);
-jn.prototype.on = jn.prototype.v;
 jn.prototype.getFeatures = jn.prototype.w;
 D("ol.interaction.Modify", Vm);
 D("ol.interaction.Snap", mn);
 uk.prototype.set = uk.prototype.j;
+uk.prototype.getGeometry = uk.prototype.M;
+Zd.prototype.getType = Zd.prototype.K;
+am.prototype.getType = am.prototype.K;
+am.prototype.getCoordinates = am.prototype.I;
+fe.prototype.getType = fe.prototype.K;
+fe.prototype.getLinearRing = fe.prototype.Yb;
+Yd.prototype.getCoordinates = Yd.prototype.I;
 D("ol.control.defaults", Mf);
 D("ol.control.ScaleLine", Ql);
 D("ol.control.MousePosition", Nf);
 D("ol.coordinate.toStringHDMS", function(b) {
-  return b ? Jc(b[1], "NS") + " " + Jc(b[0], "EW") : "";
+  return b ? Kc(b[1], "NS") + " " + Kc(b[0], "EW") : "";
 });
 

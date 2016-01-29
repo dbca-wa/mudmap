@@ -20,7 +20,7 @@
       html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
       .container { width: 100%; height: 100%; display: flex; flex-direction: column; }
       .container .row { width: 100%; }
-      .controls .button, .controls h4, .controls input { margin: 0; }
+      .controls .button, .controls h4, .controls input, .slider { margin: 0; }
       .controls h4 { margin: 0 1rem; }
       .dropdown-pane.button-group { padding: 0px; background-color: transparent; border: none; }
       #colour button:hover { text-decoration: underline; }
@@ -47,7 +47,7 @@
             <button id="pnt" type="button" class="button small secondary toggle" title="Draw points with clicks">Point</button>
             <button id="lns" type="button" class="button small secondary toggle" title="Draw a line with clicks, shift and drag for continuous">Line</button>
             <button id="pol" type="button" class="button small secondary toggle" title="Draw a polygon with clicks, shift and drag for continuous">Polygon</button>
-            <div class="columns"></div>
+            <div class="columns align-middle" title="Feature measurements">&nbsp;<small id="measure"></small></div>
             <button id="siz" type="button" class="dropdown button small secondary toggle" data-toggle="sizelist">Size</button>
             <div class="dropdown-pane button-group small" id="sizelist" data-dropdown>
                 <div class="row"><button type="button" class="small button secondary" style="font-size: 0.7rem;">light</button></div>
@@ -67,11 +67,16 @@
                 <button type="button" class="small button" style="background-color:#555753;">gray</button>
                 <button type="button" class="small button" style="background-color:#000000;">black</button>
             </div>
-            <button id="lbl" type="button" class="button small secondary toggle" title="Set a text label for a feature">Label</button>
             <button id="mod" type="button" class="button small secondary toggle" title="Drag to move nodes on features, click to remove">Edit</button>
             <button id="del" type="button" class="button small secondary toggle" title="Remove an entire feature by clicking">Remove</button>
-            <div class="columns"></div>
-            <div class="columns shrink align-middle" title="Feature measurements"><small id="measure"></small>&nbsp;</div>
+            <button id="lbl" type="button" class="button small secondary toggle" title="Set a text label for a feature">Label</button>
+            <div id="rotation" class="columns align-middle slider" data-slider data-initial-start="0" data-end="360" title="Text rotation">
+              <span class="slider-handle"  data-slider-handle role="slider" tabindex="1"></span>
+              <span class="slider-fill" data-slider-fill></span>
+              <input type="hidden">
+            </div>
+            <div class="columns">
+            </div>
             <button id="zoom" type="button" class="button small secondary" title="Zoom to drawing (number of features)">Zoom <span id="numfeatures"></span></button>
             <button id="undo" type="button" class="button small secondary" title="Undo last action">Undo<span id="undos"></span></button>
             <button id="redo" type="button" class="button small secondary" title="Redo last undone action">Redo<span id="redos"></span></button>

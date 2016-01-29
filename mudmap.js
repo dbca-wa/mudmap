@@ -121,7 +121,7 @@ $(document).ready(function() {
                         }),
                         text: new ol.style.Text({
                             font: fontsize + "px Calibri,sans-serif",
-                            rotation: feature.get("rotation"),
+                            rotation: parseInt(feature.get("rotation")) * Math.PI / 180,
                             fill: new ol.style.Fill({
                                 color: feature.get("colour")
                             }),
@@ -143,7 +143,7 @@ $(document).ready(function() {
                         text: new ol.style.Text({
                             font: fontsize + "px Calibri,sans-serif",
                             textAlign: "left",
-                            rotation: feature.get("rotation"),
+                            rotation: parseInt(feature.get("rotation")) * Math.PI / 180,
                             offsetX: fontsize / 2,
                             fill: new ol.style.Fill({
                                 color: feature.get("colour")
@@ -223,13 +223,39 @@ $(document).ready(function() {
         map.formatArea = function(polygon) {
             var area = Math.abs(wgs84Sphere.geodesicArea(polygon.getLinearRing(0).getCoordinates()));
             if (area > 10000) {
-                var output = (Math.round(area / 1000000 * 100) / 100) + ' km<sup>2</sup>';
+                var output = (Math.round(area / 10000 * 100) / 100) + ' ha';
             } else {
                 var output = (Math.round(area * 100) / 100) + ' m<sup>2</sup>';
             }
             return output;
         };
         // Create interactions, add them to map
+        map.lblFeature = function(feature) {
+            var label = window.prompt("Label feature?", feature.get("label") || map.currentStyles.label);
+            if (label) {
+                feature.set("label", label);
+                if (feature.getGeometry().getType() == "Point") {
+                    var textonly = window.confirm("Centre and rotate text?");
+                    if (textonly) {
+                        feature.set("textonly", true);
+                        $("#rotation input").val(feature.get("rotation")).change();
+                        $("#rotation").removeClass("disabled");
+                        map.rotateFeature = feature;
+                    } else {
+                        feature.set("textonly", false);
+                        feature.set("rotation", 0);
+                        $("#rotation").addClass("disabled");
+                        map.rotateFeature = false;
+                    }
+                } else {
+                    $("#rotation input").val(feature.get("rotation")).change();
+                    $("#rotation").removeClass("disabled");
+                    map.rotateFeature = feature;
+                }
+                map.lbl.getFeatures().clear();
+                feature.style = null;
+            }
+        }
         $.each({
             pnt: "Point",
             lns: "LineString",
@@ -238,6 +264,9 @@ $(document).ready(function() {
             map[key] = new ol.interaction.Draw({
                 features: map.features,
                 type: value
+            });
+            map[key].on("drawend", function(e) {
+                map.lblFeature(e.feature);
             });
             map.addInteraction(map[key]);
         });
@@ -275,12 +304,13 @@ $(document).ready(function() {
                 window.alert("Please click a feature to set its label.");
                 return;
             }
-            var label = window.prompt("Label feature?", e.selected[0].get("label"));
-            if (label) {
-                e.selected[0].set("label", label);
-                e.selected[0].style = null;
+            map.lblFeature(e.selected[0]);
+        })
+        map.lbl.on("change:active", function(e) {
+            if (!map.lbl.get("active")) {
+                $("#rotation").addClass("disabled");
             }
-            map.lbl.getFeatures().remove(e.selected[0]);
+            map.lbl.getFeatures().clear();
         });
         map.col = new ol.interaction.Select();
         map.addInteraction(map.col);
@@ -318,6 +348,11 @@ $(document).ready(function() {
             $(this).removeClass("hollow");
             map.deinteract();
             map[$(this).attr("id")].setActive(true);
+        });
+        $("#rotation").on("moved.zf.slider", function() {
+            var rotation = parseInt($(this).find("input").val());
+            map.rotateFeature.set("rotation", rotation);
+            map.rotateFeature.style = null;
         });
         // Save history into localforage
         map.saveversion = function() {
