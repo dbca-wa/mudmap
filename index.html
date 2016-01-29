@@ -11,8 +11,7 @@
     <script src="//static.dpaw.wa.gov.au/static/libs/moment.js/2.9.0/moment.min.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/foundation/6.1.2/foundation.min.js"></script>
-    <script src="//static.dpaw.wa.gov.au/static/libs/ol3/3.13.0/ol-debug.js"></script>
-    <script src="//static.dpaw.wa.gov.au/static/js/ol/graticule.js"></script>
+    <script src="ol.js"></script>
     <script src="mudmap.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/jspdf/1.1.135/jspdf.min.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/jszip/2.5.0/jszip.min.js"></script>
@@ -23,7 +22,7 @@
       .container .row { width: 100%; }
       .controls .button, .controls h4, .controls input { margin: 0; }
       .controls h4 { margin: 0 1rem; }
-      #colour { padding: 0px; background-color: transparent; border: none; }
+      .dropdown-pane.button-group { padding: 0px; background-color: transparent; border: none; }
       #colour button:hover { text-decoration: underline; }
       .controls { background-color: #ccc; color: #444; }
       .controls .button.hollow, .controls .button-group .button { border: none; }
@@ -38,14 +37,25 @@
     <div class="container">
         <div class="row expanded align-justify controls show-for-medium collapse">
             <div class="columns shrink align-middle"><h4>P&W Mudmap</h4></div>
+            <button id="maps" type="button" class="dropdown button small" data-toggle="maplist"><span id="mapid"></span></button>
+            <div class="dropdown-pane small" id="maplist" data-dropdown>
+                <ul class="menu vertical">
+                    <li><a href="./" class="button">New Map</a></li>
+                </ul>
+            </div>
             <button id="pan" type="button" class="button small secondary toggle" title="Zoom and pan the map">Pan</button>
             <button id="pnt" type="button" class="button small secondary toggle" title="Draw points with clicks">Point</button>
             <button id="lns" type="button" class="button small secondary toggle" title="Draw a line with clicks, shift and drag for continuous">Line</button>
             <button id="pol" type="button" class="button small secondary toggle" title="Draw a polygon with clicks, shift and drag for continuous">Polygon</button>
             <div class="columns"></div>
-            <button id="lbl" type="button" class="button small secondary toggle" title="Set a text label for a feature">Label</button>
-            <button id="col" type="button" class="button small secondary toggle" title="Set the colour of a feature">Colour</button>
+            <button id="siz" type="button" class="dropdown button small secondary toggle" data-toggle="sizelist">Size</button>
+            <div class="dropdown-pane button-group small" id="sizelist" data-dropdown>
+                <div class="row"><button type="button" class="small button secondary" style="font-size: 0.7rem;">light</button></div>
+                <div class="row"><button type="button" class="small button secondary" style="font-size: 1rem;">medium</button></div>
+                <div class="row"><button type="button" class="small button secondary" style="font-size: 2rem;">heavy</button></div>
+            </div>
             <button id="colourbutton" type="button" class="dropdown button small secondary arrow-only" data-toggle="colour" style="background-color:#000000;"></button>
+            <button id="col" type="button" class="button small secondary toggle" title="Set the colour of a feature">Colour</button>
             <div class="dropdown-pane button-group small" id="colour" data-dropdown>
                 <button type="button" class="small button" style="background-color:#cc0000;">red</button>
                 <button type="button" class="small button" style="background-color:#f57900;">orange</button>
@@ -57,22 +67,11 @@
                 <button type="button" class="small button" style="background-color:#555753;">gray</button>
                 <button type="button" class="small button" style="background-color:#000000;">black</button>
             </div>
-            <button id="sizebutton" type="button" class="dropdown button small secondary" data-toggle="sizelist">Size</button>
-            <div class="dropdown-pane small" id="sizelist" data-dropdown>
-                <ul class="menu vertical">
-                </ul>
-            </div>
+            <button id="lbl" type="button" class="button small secondary toggle" title="Set a text label for a feature">Label</button>
             <button id="mod" type="button" class="button small secondary toggle" title="Drag to move nodes on features, click to remove">Edit</button>
             <button id="del" type="button" class="button small secondary toggle" title="Remove an entire feature by clicking">Remove</button>
             <div class="columns"></div>
-            <button id="maps" type="button" class="dropdown button small" data-toggle="maplist"><span id="mapid"></span></button>
-            <div class="dropdown-pane small" id="maplist" data-dropdown>
-                <ul class="menu vertical">
-                    <li><a href="./" class="button">New Map</a></li>
-                </ul>
-            </div>
-            <div class="columns shrink align-middle" title="Feature measurements">&nbsp;<small id="measure"></small></div>
-            <div class="columns"></div>
+            <div class="columns shrink align-middle" title="Feature measurements"><small id="measure"></small>&nbsp;</div>
             <button id="zoom" type="button" class="button small secondary" title="Zoom to drawing (number of features)">Zoom <span id="numfeatures"></span></button>
             <button id="undo" type="button" class="button small secondary" title="Undo last action">Undo<span id="undos"></span></button>
             <button id="redo" type="button" class="button small secondary" title="Redo last undone action">Redo<span id="redos"></span></button>

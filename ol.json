@@ -1,0 +1,57 @@
+{
+  "exports": [
+    "ol.extent.getWidth", "ol.extent.getTopLeft",
+    "ol.Map", "ol.Map#addInteraction", "ol.Map#getSize", "ol.Map#setSize", "ol.Map#getView", "ol.Map#once", "ol.Map#on", "ol.Map#renderSync",
+    "ol.View", "ol.View#fit", "ol.View#calculateExtent", "ol.View#getCenter", "ol.View#getZoom", "ol.View#setCenter", "ol.View#setZoom",
+    "ol.Collection", "ol.Collection#getArray", "ol.Collection#extend", "ol.Collection#clear",
+    "ol.Graticule",
+    "ol.Sphere",
+    "ol.tilegrid.WMTS",
+    "ol.source.WMTS",
+    "ol.source.Vector", "ol.source.Vector#getExtent",
+    "ol.layer.Tile",
+    "ol.layer.Vector", "ol.layer.Vector#getSource",
+    "ol.style.Style", "ol.style.Style#getText",
+    "ol.style.Stroke",
+    "ol.style.Circle",
+    "ol.style.Fill",
+    "ol.style.Text", "ol.style.Text#setText",
+    "ol.format.GeoJSON", "ol.format.GeoJSON#readFeatures", "ol.format.GeoJSON#writeFeatures",
+    "ol.interaction.Interaction#setActive",
+    "ol.interaction.Draw",
+    "ol.interaction.Select", "ol.interaction.Select#on", "ol.interaction.Select#getFeatures",
+    "ol.interaction.Modify",
+    "ol.interaction.Snap",
+    "ol.Feature#set",
+    "ol.control.defaults",
+    "ol.control.ScaleLine",
+    "ol.control.MousePosition",
+    "ol.coordinate.toStringHDMS"
+  ],
+  "compile": {
+    "externs": [
+      "externs/geojson.js",
+      "externs/oli.js",
+      "externs/olx.js"
+    ],
+    "define": [
+      "ol.ENABLE_DOM=false",
+      "ol.ENABLE_WEBGL=false",
+      "ol.ENABLE_IMAGE=false",
+      "goog.array.ASSUME_NATIVE_FUNCTIONS=true",
+      "goog.dom.ASSUME_STANDARDS_MODE=true",
+      "goog.json.USE_NATIVE_JSON=true",
+      "goog.DEBUG=false"
+    ],
+    "jscomp_off": [
+      "unknownDefines"
+    ],
+    "extra_annotation_name": [
+      "api", "observable"
+    ],
+    "compilation_level": "ADVANCED",
+    "use_types_for_optimization": true,
+    "manage_closure_dependencies": true,
+    "formatting": "PRETTY_PRINT"
+  }
+}

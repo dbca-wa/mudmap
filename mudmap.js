@@ -17,8 +17,6 @@ $(document).ready(function() {
             withCredentials: true
         }
     });
-    // Lonlat projection by default with slightly less warped ground pixels
-    window.projection = ol.proj.get("EPSG:4326");
     window.geojson = new ol.format.GeoJSON();
     // Convenience loader to create a WMTS layer from a kmi datasource
     $.loadKMI = function(args) {
@@ -31,8 +29,7 @@ $(document).ready(function() {
             $.extend(options, args);
         }
         var tileSize = 1024;
-        var projectionExtent = projection.getExtent();
-        var size = ol.extent.getWidth(projectionExtent) / tileSize;
+        var size = ol.extent.getWidth([ -180, -90, 180, 90 ]) / tileSize;
         var resolutions = [ .17578125, .087890625, .0439453125, .02197265625, .010986328125, .0054931640625, .00274658203125, .001373291015625, .0006866455078125, .0003433227539062, .0001716613769531, 858306884766e-16, 429153442383e-16, 214576721191e-16, 107288360596e-16, 53644180298e-16, 26822090149e-16, 13411045074e-16 ];
         var matrixIds = new Array(18);
         for (var z = 0; z < 18; ++z) {
@@ -41,14 +38,15 @@ $(document).ready(function() {
         var layer = new ol.layer.Tile({
             opacity: options.opacity || 1,
             source: new ol.source.WMTS({
-                url: "/geoserver/gwc/service/wmts",
+                url: "https://kmi.dpaw.wa.gov.au/geoserver/gwc/service/wmts",
+                crossOrigin: 'https://' + window.location.hostname,
                 layer: options.layer,
                 matrixSet: "gda94",
                 format: options.format || "image/jpeg",
-                projection: projection,
+                projection: "EPSG:4326",
                 wrapX: true,
                 tileGrid: new ol.tilegrid.WMTS({
-                    origin: ol.extent.getTopLeft(projectionExtent),
+                    origin: ol.extent.getTopLeft([ -180, -90, 180, 90 ]),
                     resolutions: resolutions,
                     matrixIds: matrixIds,
                     tileSize: tileSize
@@ -65,7 +63,7 @@ $(document).ready(function() {
             renderer: "canvas",
             target: "map",
             view: new ol.View({
-                projection: projection,
+                projection: "EPSG:4326",
                 center: [ 123.75, -24.966 ],
                 zoom: 5,
                 maxZoom: 21,
@@ -74,7 +72,7 @@ $(document).ready(function() {
             controls: ol.control.defaults().extend([
                 new ol.control.ScaleLine(),
                 new ol.control.MousePosition({
-                    projection: 'EPSG:4326',
+                    projection: "EPSG:4326",
                     coordinateFormat: function(coord) {
                         return ol.coordinate.toStringHDMS(coord);
                     }
@@ -83,35 +81,95 @@ $(document).ready(function() {
         });
         map.features = new ol.Collection();
         // default styling for drawn features
+        map.currentStyles = {
+            label: "",
+            rotation: 0,
+            textonly: false,
+            size: 1
+        }
         $("#colour button").on("click", function() {
-            window.colour = $(this).css("background-color");
+            map.currentStyles.colour = $(this).css("background-color");
             $("#colourbutton").css({
-                "background-color": colour
+                "background-color": map.currentStyles.colour
             }).click();
             $("#col").click();
         });
-        window.colour = $("#colourbutton").css("background-color");
-        map.style = new ol.style.Style({
-            fill: new ol.style.Fill({
-                color: "rgba(255, 255, 255, 0.2)"
-            }),
-            stroke: new ol.style.Stroke({
-                color: colour,
-                width: 2
-            }),
-            text: new ol.style.Text({
-                font: "14px Calibri,sans-serif",
-                textAlign: "left",
-                offsetX: 8,
-                fill: new ol.style.Fill({
-                    color: colour
-                }),
-                stroke: new ol.style.Stroke({
-                    color: "rgba(255, 255, 255, 0.7)",
-                    width: 4
-                })
-            })
+        map.currentStyles.colour = $("#colourbutton").css("background-color");
+        $("#sizelist button").on("click", function() {
+            map.currentStyles.size = $(this).css("font-size").slice(0,-2) / $("body").css("font-size").slice(0,-2)
+            $("#siz").click();
         });
+        // overlay which all interactions use
+        map.featureOverlay = new ol.layer.Vector({
+            source: new ol.source.Vector({
+                features: map.features
+            }),
+            style: function(feature) {
+                if (feature.style) { return feature.style }
+                $.each(map.currentStyles, function(key, value) {
+                    if (!feature.get(key)) { feature.set(key, value) }
+                });
+                var fontsize = 16 * feature.get("size");
+                if (feature.get("textonly")) {
+                    feature.style = new ol.style.Style({
+                        fill: new ol.style.Fill({
+                            color: "rgba(255, 255, 255, 0.2)"
+                        }),
+                        stroke: new ol.style.Stroke({
+                            color: feature.get("colour"),
+                            width: 2 * feature.get("size")
+                        }),
+                        text: new ol.style.Text({
+                            font: fontsize + "px Calibri,sans-serif",
+                            rotation: feature.get("rotation"),
+                            fill: new ol.style.Fill({
+                                color: feature.get("colour")
+                            }),
+                            stroke: new ol.style.Stroke({
+                                color: "rgba(255, 255, 255, 0.7)",
+                                width: 4
+                            })
+                        })
+                    });
+                } else {
+                    feature.style = new ol.style.Style({
+                        fill: new ol.style.Fill({
+                            color: "rgba(255, 255, 255, 0.2)"
+                        }),
+                        stroke: new ol.style.Stroke({
+                            color: feature.get("colour"),
+                            width: 2 * feature.get("size")
+                        }),
+                        text: new ol.style.Text({
+                            font: fontsize + "px Calibri,sans-serif",
+                            textAlign: "left",
+                            rotation: feature.get("rotation"),
+                            offsetX: fontsize / 2,
+                            fill: new ol.style.Fill({
+                                color: feature.get("colour")
+                            }),
+                            stroke: new ol.style.Stroke({
+                                color: "rgba(255, 255, 255, 0.7)",
+                                width: 4
+                            })
+                        }),
+                        image: new ol.style.Circle({
+                            radius: 4 * feature.get("size"),
+                            fill: new ol.style.Fill({
+                                color: feature.get("colour")
+                            }),
+                            stroke: new ol.style.Stroke({
+                                color: "rgba(255, 255, 255, 0.7)",
+                                width: 2
+                            })
+                        })
+                    });
+                }
+                feature.style.getText().setText(feature.get("label"));
+                return feature.style;
+            }
+        });
+        map.featureOverlay.setMap(map);
         // graticule for printing etc
         var lonFormatter = function(lon) {
           var formattedLon = Math.abs(Math.round(lon * 100) / 100);
@@ -171,35 +229,6 @@ $(document).ready(function() {
             }
             return output;
         };
-        // overlay which all interactions use
-        map.featureOverlay = new ol.layer.Vector({
-            source: new ol.source.Vector({
-                features: map.features
-            }),
-            style: function(feature) {
-                if (!feature.get("colour")) {
-                    feature.set("colour", colour);
-                }
-                if (!feature.get("label")) {
-                    feature.set("label", "");
-                }
-                map.style.getText().setText(feature.get("label"));
-                map.style.stroke_.color_ = feature.get("colour");
-                map.style.image_ = new ol.style.Circle({
-                    radius: 4,
-                    fill: new ol.style.Fill({
-                        color: feature.get("colour")
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: "rgba(255, 255, 255, 0.7)",
-                        width: 2
-                    })
-                });
-                map.style.text_.fill_.color_ = feature.get("colour");
-                return map.style;
-            }
-        });
-        map.featureOverlay.setMap(map);
         // Create interactions, add them to map
         $.each({
             pnt: "Point",
@@ -243,12 +272,13 @@ $(document).ready(function() {
         map.addInteraction(map.lbl);
         map.lbl.on("select", function(e) {
             if (!e.selected[0]) {
-                window.alert("Please click a feature to set it's label.");
+                window.alert("Please click a feature to set its label.");
                 return;
             }
             var label = window.prompt("Label feature?", e.selected[0].get("label"));
             if (label) {
                 e.selected[0].set("label", label);
+                e.selected[0].style = null;
             }
             map.lbl.getFeatures().remove(e.selected[0]);
         });
@@ -256,14 +286,30 @@ $(document).ready(function() {
         map.addInteraction(map.col);
         map.col.on("select", function(e) {
             if (!e.selected[0]) {
-                window.alert("Please click a feature to set it's colour.");
+                window.alert("Please click a feature to set its colour.");
                 return;
             }
-            e.selected[0].set("colour", colour);
+            e.selected[0].set("colour", map.currentStyles.colour);
+            e.selected[0].style = null;
             map.col.getFeatures().remove(e.selected[0]);
         });
+        map.siz = new ol.interaction.Select();
+        map.addInteraction(map.siz);
+        map.siz.on("select", function(e) {
+            if (!e.selected[0]) {
+                window.alert("Please click a feature to set its size.");
+                return;
+            }
+            e.selected[0].set("size", map.currentStyles.size);
+            e.selected[0].style = null;
+            map.siz.getFeatures().remove(e.selected[0]);
+        });
+        map.snap = new ol.interaction.Snap({
+            source: map.featureOverlay.getSource()
+        });
+        map.addInteraction(map.snap);
         map.deinteract = function() {
-            $.each([ map.pnt, map.lns, map.pol, map.mod, map.del, map.lbl, map.col, map.pan ], function(index, ctrl) {
+            $.each([ map.pnt, map.lns, map.pol, map.mod, map.del, map.lbl, map.col, map.pan, map.siz ], function(index, ctrl) {
                 ctrl.setActive(false);
             });
         };
@@ -275,11 +321,12 @@ $(document).ready(function() {
         });
         // Save history into localforage
         map.saveversion = function() {
-            if (map.features.array_.length == 0) {
+            if (map.features.getArray().length == 0 || map.saving) {
                 return;
             }
+            map.saving = true;
             setTimeout(function() {
-                var currentfeatures = geojson.writeFeatures(map.features.array_);
+                var currentfeatures = geojson.writeFeatures(map.features.getArray());
                 map.savedstate.lastsave = moment().format();
                 if (!map.savedstate.features) {
                     map.savedstate.features = currentfeatures;
@@ -291,8 +338,8 @@ $(document).ready(function() {
                     map.savedstate.features = currentfeatures;
                 }
                 localforage.setItem(foragekey, map.savedstate);
-                if (map.features.array_.length) {
-                    $("#numfeatures").text(" (" + map.features.array_.length + ")");
+                if (map.features.getArray().length) {
+                    $("#numfeatures").text(" (" + map.features.getArray().length + ")");
                 }
                 if (map.savedstate.history) {
                     $("#undos").text(" (" + map.savedstate.history.length + ")");
@@ -300,6 +347,7 @@ $(document).ready(function() {
                 if (map.savedstate.redo) {
                     $("#redos").text(" (" + map.savedstate.redo.length + ")");
                 }
+                map.saving = false;
             }, 100);
         };
         $("#upload").on("change", function() {
@@ -409,7 +457,7 @@ $(document).ready(function() {
         document.body.style.cursor = "auto";
     });
     $("#export-json").on("click", function() {
-        var jsonblob = new Blob([geojson.writeFeatures(map.features.array_)], {
+        var jsonblob = new Blob([geojson.writeFeatures(map.features.getArray())], {
             type: "application/vnd.geo+json;charset=utf-8"
         });
         saveAs(jsonblob, "p&w_mudmap_" + mapid + "_" + map.savedstate.lastsave + ".json");
