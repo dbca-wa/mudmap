@@ -137,7 +137,11 @@
                 }
                 formated_scale_value = format_scale(scale_value);
                 pdf.text(x - Math.floor(formated_scale_value.length / 2) * offset_per_letter,295,formated_scale_value + "(" + scale_bar_metadata["scale_unit"] + ")");
-                pdf.save(self.persistent_key + "_" + self.state.lastsave + ".pdf");
+                if (self.state.lastsave) {
+                    pdf.save(self.map_key + "_" + self.state.lastsave + ".pdf");
+                } else {
+                    pdf.save(self.map_key + ".pdf");
+                }
             } catch(err) {
                 alert(err);
             } finally {

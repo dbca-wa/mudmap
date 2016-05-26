@@ -1,8 +1,10 @@
 (function(mudmap) {
     var self = mudmap;
 
-    // Create interactions, add them to map
-    var _lblFeature = function(feature) {
+    //listen to change_label feature
+    // popup a dialog to input the label
+    self.on("change_label",function(e){
+        var feature = e.feature;
         $("#lblform").toggle(true);
         $("input#label").off().val(feature.get("label") || self.currentStyles.label);
         $("input#label").on("keyup", function() { 
@@ -11,50 +13,22 @@
                 feature.style = null;
             }, 500);
         });
-        /*
-        var label = window.prompt("Label feature?", feature.get("label") || map.currentStyles.label);
-        if (label) {
-            feature.set("label", label);
-            if (feature.getGeometry().getType() == "Point") {
-                var textonly = window.confirm("Centre and rotate text?");
-                if (textonly) {
-                    feature.set("textonly", true);
-                    $("#rotation input").val(feature.get("rotation")).change();
-                    $("#rotation").removeClass("disabled");
-                    map.rotateFeature = feature;
-                } else {
-                    feature.set("textonly", false);
-                    feature.set("rotation", 0);
-                    $("#rotation").addClass("disabled");
-                    map.rotateFeature = false;
-                }
-            } else {
-                $("#rotation input").val(feature.get("rotation")).change();
-                $("#rotation").removeClass("disabled");
-                map.rotateFeature = feature;
-            }
-            map.lbl.getFeatures().clear();
-            feature.style = null;
-        
-        */
-    }
-    self.on("label_feature",function(e){
-        _lblFeature(e.feature);
     });
 
-    self.on("drawend",function(e) {
-        _lblFeature(e.feature);
-    });
-
+    //listen to interact_lbl_inactive event
+    //hiden the label change dialog
     self.on("interact_lbl_inactive",function() {
         $("#lblform").toggle(false);
     });
 
+    //listen to interact_lbl_inactive event
+    //reset measure html to empty
     self.on("interact_pan_inactive",function() {
         $("#measure").html("");
     });
 
 
+    //listen to statechanged event
     self.on("statechanged",function() {
         if (self.state.features.featureSize) {
             $("#numfeatures").text(" (" + self.state.features.featureSize + ")");
@@ -93,7 +67,7 @@
     });
 
     // Create interactions, add them to map
-    self.on("init",function() {
+    self.on("post_init",function() {
         $("#colour button").on("click", function() {
             self.currentStyles.colour = $(this).css("background-color");
             $("#colourbutton").css({
@@ -171,4 +145,38 @@
         $("#pan").click();
     });
 
+    self.on("layers_loaded",function(e,listener_chain) {
+        $("#layerlist").DataTable({
+            bPaginate:false,
+            bAutoWidth:false,
+            bProcessing:false,
+            bServerSide:false,
+            bInfo:false,
+            aaData: self.layers,
+            aoColumnDefs:[
+                {
+                    targets:0,
+                    data:"selected",
+                    orderable:false,
+                    calssName:"sorting_disabled",
+                    mRender: function(data,type,full) {
+                        return '<i class="' + (data?"fi-check":"fi-x") + '" onclick="$(this).toggleClass(\'fi-x fi-check\')"></i>';
+                    }
+                },
+                {
+                    targets:1,
+                    orderable:false,
+                    data:"name"
+                },
+                {
+                    targets:2,
+                    orderable:false,
+                    data:null,
+                    mRender: function(data,type,full) {
+                        return '<i class="fi-plus"></i>';
+                    }
+                }
+            ],
+        });
+    });
 })(mudmap);

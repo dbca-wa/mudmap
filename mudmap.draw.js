@@ -1,6 +1,7 @@
 (function(mudmap) {
     var self = mudmap;
 
+    //current draw style
     self.currentStyles = {
         label: "",
         rotation: 0,
@@ -8,34 +9,44 @@
         size: 1
     };
 
+    //inlude all supported interacts
     self.draw = {};
 
+    //currently drawed features
     var _features = new ol.Collection();
+    //the overlay to contain all features.
     var _featureOverlay = null;
 
+    //export feature to a geojson file
     self.exportGeojson = function() {
         var jsonblob = new Blob([self.geojson.writeFeatures(_features.getArray())], {
             type: "application/vnd.geo+json;charset=utf-8"
         });
         if (!('lastsave' in self.state) || self.state.lastsave == null) {
-            saveAs(jsonblob, "p&w_mudmap_" + self.map_name + ".json");
+            //saveAs(jsonblob, "p&w_mudmap_" + self.map_name + ".json");
+            saveAs(jsonblob, self.map_key + ".json");
         } else {
-            saveAs(jsonblob, "p&w_mudmap_" + self.map_name + "_" + self.state.lastsave + ".json");
+            saveAs(jsonblob, self.map_key + "_" + self.state.lastsave + ".json");
         }
     }
 
+    //fit features in the view.
     self.fitFeatures =  function() {
         if (_features.getLength() > 0) {
             self.map.getView().fit(_featureOverlay.getSource().getExtent(), self.map.getSize());
         }
     }
 
+    //current active interact. 
+    //only one interact is active at any time.
     var _active_interact = null;
 
+    //set all interacts inactive.
     self.deinteract = function() {
         self.activeInteract(null);
     }
 
+    //inactive the current active interact and active the request interact.
     self.activeInteract = function(interact) {
         if (_active_interact == interact) {
             //interact already enabled
@@ -54,6 +65,7 @@
         }
     }
 
+    //listen to upload event
     self.on("upload", function(e) {
         var reader = new FileReader();
         reader.onload = function(f) {
@@ -65,12 +77,17 @@
         };
         if (e.file.name.endsWith(".json")) {
             reader.readAsText(e.file);
+            //file is uploaded, no need other listeners to process.
             return false;
         } else {
+            //require other listener to process the file.
             return true;
         }
     });
 
+    //listen to changestate event.
+    //change the map state based on features
+    //if under undo_redo_mode, map state is already processed by undo or redo functions, so just do nothing.
     self.on("changestate",function() {
         if (_undo_redo_mode) {
             return;
@@ -90,11 +107,14 @@
         }
     });
     
+    //listen to post_statechanged.
+    //set undo_redo_mode to false
     self.on("post_statechanged",function() {
         _undo_redo_mode = false;
     });
 
     var _undo_redo_mode = false;
+    //undo an action
     self.undo = function() {
         if (_undo_redo_mode) {
             return ;
@@ -109,7 +129,7 @@
             self.state.featureSize = _features == null?0:_features.getArray().length;
         }
     }
-
+    //redo an action
     self.redo = function() {
         if (_undo_redo_mode) {
             return ;
@@ -125,13 +145,8 @@
         }
     }
 
-    self.on("init_map",function() {
-        if (self.state.features) {
-            self.map.once("postrender", function() {
-                _features.extend(self.geojson.readFeatures(self.state.features));
-                self.fitFeatures();
-            });
-        }
+    //listen to init_draw
+    self.on("init_draw",function() {
         // overlay which all interactions use
         _featureOverlay = new ol.layer.Vector({
             source: new ol.source.Vector({
@@ -215,7 +230,7 @@
                 type: value
             });
             self.draw[key].on("drawend", function(e) {
-                self.on({"name":"drawend","feature":e.feature});
+                self.on({"name":"change_label","feature":e.feature});
             });
             self.map.addInteraction(self.draw[key]);
         });
@@ -262,7 +277,7 @@
             if (!e.selected[0]) {
                 return;
             }
-            self.on({"name":"label_feature","feature":e.selected[0]});
+            self.on({"name":"change_label","feature":e.selected[0]});
         })
         self.draw.lbl.on("change:active", function(e) {
             self.draw.lbl.getFeatures().clear();
@@ -303,6 +318,13 @@
         $.each(self.draw,function(interact,ctl){
             ctl.setActive(false);
         });
+
+        if (self.state.features) {
+            self.map.once("postrender", function() {
+                _features.extend(self.geojson.readFeatures(self.state.features));
+                self.fitFeatures();
+            });
+        }
     });
 
 })(mudmap);

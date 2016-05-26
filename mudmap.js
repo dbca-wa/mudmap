@@ -5,8 +5,10 @@ var mudmap = new function(){
 
     self.geojson = new ol.format.GeoJSON();
 
+    //The application to which the map is belonging.
     self.map_app = null;
-    self.map_name = null;
+    //The name of the current map.
+    self.map_name = "default";
 
     //authenticated user 
     self.user = {};
@@ -14,7 +16,7 @@ var mudmap = new function(){
     //openlayer map object
     self.map = null;
 
-    //mudmap state 
+    //default mudmap state 
     self.default_state = {
         layers : [{
             opacity: 1,
@@ -22,13 +24,16 @@ var mudmap = new function(){
             format: "image/jpeg"
         }],
         projection : "EPSG:4326",
+        tileSize:1024,
         center : [ 123.75, -24.966 ],
         zoom:5,
         maxZoom:21,
         minZoom:3
     }
-    self.state =  null;
+    //current map state, if null, default state will be used.
+    self.state =  _.defaults({},self.default_state);
 
+    //delay to call a function.
     self.delay = (function(){
       var timer = 0;
       return function(callback, ms){
@@ -37,6 +42,24 @@ var mudmap = new function(){
       };
     })();
 
+    //the map key, used to save map state and download map states.
+    self.map_key = null;
+    //the map key prefix, all named maps sharing the same map key prefix are belonging to the same user and same map application.
+    self.map_key_prefix = null;
+    //return the map key with the map name
+    self.get_map_key = function(name) {
+        if (self.map_key_prefix == null) {
+            if (self.map_app == null) {
+                self.map_key_prefix = "mudmap_" + self.user.email.toLowerCase() + "_";
+            } else {
+                self.map_key_prefix = "mudmap" + self.map_app + "_" + self.user.email.toLowerCase() + "_";
+            }
+        }
+        return self.map_key_prefix + name;
+    }
+
+    //A class maintains a listener pointer and provide a "call" method to call the listeners for the events in the order,
+    //This is used when the listener has async logic and need to call the listeners in the async code.
     self.ListenerChain = function(events) {
         var self = this;
         //the next listener's event index;
@@ -50,14 +73,50 @@ var mudmap = new function(){
 
         var _listeners = [];
         $.each(events, function(index,e) {
-            if (typeof e == "string") {
-                e = {"name":e};
+            if (typeof e == "ListenerChain") {
+                $.each(e.export(),function(index, event_listeners){
+                    _listeners.push(event_listeners);
+                });
+            } else {
+                if (typeof e == "string") {
+                    e = {"name":e};
+                }
+                if (e.name in _events) {
+                    _listeners.push({"event":e,"listeners":_events[e.name]})
+                };
             }
-            if (e.name in _events) {
-                _listeners.push({"event":e,"listeners":_events[e.name]})
-            };
         });
 
+        //export the uncalled listeners in the chain
+        self.export = function() {
+            var listeners = [];
+            var event_index = _event_index;
+            var listener_index = _listener_index;
+
+            if (event_index >= _listeners.length) {
+                return listeners;
+            }
+            while(true) {
+                while(listener_index >= _listeners[event_index]["listeners"].length) {
+                    listener_index = 0;
+                    event_index += 1;
+                    if (event_index >= _listeners.length) {
+                        return listeners;
+                    }
+                }
+                if (listener_index == 0) {
+                    listeners.push(_listeners[event_index]);
+                } else {   
+                    listeners.push({"event":_listeners[event_index].event,"listeners":_listeners[event_index].listeners.slice(listener_index)});
+                }
+                event_index += 1;
+                if (event_index >= _listeners.length) {
+                    return listeners;
+                }
+                listener_index = 0;
+            }
+        }
+        //call the listeners in the chain
         self.call = function() {
             if (_event_index >= _listeners.length) {
                 return ;
@@ -69,25 +128,28 @@ var mudmap = new function(){
                     if (_event_index >= _listeners.length) {
                         return ;
                     }
-                }
-                var ret = _listeners[_event_index]["listeners"][_listener_index](_listeners[_event_index]["event"],self);
-                if (ret != false) {
-                    console.log(_listeners[_event_index]["event"]["name"] + ":" + ret);
-                }
+                }   
+                var tmp_index = _listener_index;
+                _listener_index += 1;
+                var ret = _listeners[_event_index]["listeners"][tmp_index](_listeners[_event_index]["event"],self);
+                //if (ret != false) {
+                //    console.log(_listeners[_event_index]["event"]["name"] + ":" + ret);
+                //}
                 if (typeof ret != "undefined" && ret == false) {
                     //two conditions:
                     //1. the listener detect some special condition, and no need to call other listener.
                     //2. the listener has aysnc logic and already call the listeners. and no need to call the listeners again.
-                    _listener_index += 1;
                     return;
-                } else {
-                    _listener_index += 1;
                 }
             }
         }
     }
 
+    //the map between event and listeners.
     var _events = {};
+    //register a listener or trigger a event.
+    //if func is not null, register a event
+    //if func is null, trigger a event or a event array.
     self.on = function(e,func) {
         if(func == null || typeof func == "undefined") {
             //trigger event mode
@@ -102,6 +164,7 @@ var mudmap = new function(){
         }
     }
 
+    //how many pixels a millimeter equals to
     var _px_per_mm = null;
     /*
      * len: length in mm
@@ -119,25 +182,15 @@ var mudmap = new function(){
         return len / _px_per_mm;
     }
 
+    //upload a file
+    //the file can be json file or zip file, this method just trigger a event, the listener will implement the acutal upload logic.
     self.upload = function(file) {
         self.on({"name":"upload","file":file});
     }
 
-    // Download map
-    self.download = function() {
-        document.body.style.cursor = "progress";
-        var zip = new JSZip();
-        zip.file("mudmap.json", JSON.stringify(self.state));
-        var content = zip.generate({
-            type: "blob",
-            compression: "DEFLATE"
-        });
-        saveAs(content, "p&w_mudmap_" + self.map_name + "_" + self.state.lastsave + ".zip");
-        document.body.style.cursor = "auto";
-    }
-
-    // Save history into localforage
     var _changestate_processing = false;
+    // called when map is changed.
+    //this method will trigger events "changestate","statechanged" and "post_statechanged" in order
     var _changestate = function() {
         if (_changestate_processing) {
             return;
@@ -155,48 +208,9 @@ var mudmap = new function(){
         _changestate_processing = false;
     })
 
-    // Convenience loader to create a WMTS layer from a kmi datasource
-    self.create_tile_layer = function(args) {
-        var options = {
-            opacity: 1,
-            layer: "dpaw:mapbox_outdoors",
-            format: "image/jpeg"
-        };
-        if (args) {
-            $.extend(options, args);
-        }
-        var tileSize = 1024;
-        var size = ol.extent.getWidth([ -180, -90, 180, 90 ]) / tileSize;
-        var resolutions = [ .17578125, .087890625, .0439453125, .02197265625, .010986328125, .0054931640625, .00274658203125, .001373291015625, .0006866455078125, .0003433227539062, .0001716613769531, 858306884766e-16, 429153442383e-16, 214576721191e-16, 107288360596e-16, 53644180298e-16, 26822090149e-16, 13411045074e-16 ];
-        var matrixIds = new Array(18);
-        for (var z = 0; z < 18; ++z) {
-            matrixIds[z] = "gda94:" + z;
-        }
-        var layer = new ol.layer.Tile({
-            opacity: options.opacity || 1,
-            source: new ol.source.WMTS({
-                url: "https://kmi.dpaw.wa.gov.au/geoserver/gwc/service/wmts",
-                crossOrigin: 'https://' + window.location.hostname,
-                layer: options.layer,
-                matrixSet: "gda94",
-                format: options.format || "image/jpeg",
-                projection: "EPSG:4326",
-                wrapX: true,
-                tileGrid: new ol.tilegrid.WMTS({
-                    origin: ol.extent.getTopLeft([ -180, -90, 180, 90 ]),
-                    resolutions: resolutions,
-                    matrixIds: matrixIds,
-                    tileSize: tileSize
-                })
-            })
-        });
-        return layer;
-    }
-
-    /*
-     * init the map
-     */
-    var _initMap = function() {
+    //listen to create_map event.
+    //create the map and trigger events "init_map","post_init_map","init_map_view" to init the map
+    self.on("create_map",function() {
         if (self.state == null) {
             self.state =  _.defaults({},self.default_state);
         }
@@ -224,13 +238,17 @@ var mudmap = new function(){
             ])
         });
 
-        self.on(["init_map","post_init_map","init_map_view"]);
-    }
+        self.on(["load_layers","init_map","init_draw","post_init_map","init_map_view"]);
+    });
 
+    //listen to post_init_map event
+    //register a map listener to listen to "postrender" event
     self.on("post_init_map",function() {
         self.map.on("postrender", _changestate);
     });
 
+    //init method , called when document ready
+    //trigger events "init_app","init_name","create_map","post_init" 
     self.init = function() {
         //get px per mm.
         $("body").append('<div id="px_per_mm" style="width:1mm;display:none"></div>');
@@ -240,10 +258,9 @@ var mudmap = new function(){
         // Initialise with user info
         $.get("/auth", function(userdata) {
             self.user = JSON.parse(userdata);
+            self.map_key = self.get_map_key(self.map_name);
 
-            self.on("init",_initMap);
-            //call hooked init functions.
-            self.on("init");
+            self.on(["init_app","init_name","create_map","post_init"]);
         });
 
     }
