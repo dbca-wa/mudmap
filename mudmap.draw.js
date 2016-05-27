@@ -145,8 +145,8 @@
         }
     }
 
-    //listen to init_draw
-    self.on("init_draw",function() {
+    //listen to init_interact
+    self.on("init_interact",function() {
         // overlay which all interactions use
         _featureOverlay = new ol.layer.Vector({
             source: new ol.source.Vector({

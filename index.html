@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="//cdn.jsdelivr.net/foundation-icons/3.0/foundation-icons.css" type="text/css">
     <link rel="stylesheet" href="//static.dpaw.wa.gov.au/static/libs/ol3/3.13.0/ol.css" type="text/css">
     <link rel="stylesheet" href="//static.dpaw.wa.gov.au/static/libs/datatables/1.10.12/css/jquery.dataTables.min.css" type="text/css">
-    <link rel="stylesheet" href="//static.dpaw.wa.gov.au/static/libs/datatables/1.10.12/css/dataTables.foundations.min.css" type="text/css">
+    <link rel="stylesheet" href="//static.dpaw.wa.gov.au/static/libs/datatables/1.10.12/css/dataTables.foundation.min.css" type="text/css">
+    <link rel="stylesheet" href="//static.dpaw.wa.gov.au/static/libs/datatables/1.10.12/RowReorder-1.1.2/css/rowReorder.dataTables.min.css" type="text/css">
+    <link rel="stylesheet" href="//static.dpaw.wa.gov.au/static/libs/datatables/1.10.12/RowReorder-1.1.2/css/rowReorder.foundation.min.css" type="text/css">
     <link rel="stylesheet" href="mudmap.css" type="text/css">
     <script src="//static.dpaw.wa.gov.au/static/libs/localforage/1.3.2/localforage.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/underscore.js/1.8.3/underscore-min.js"></script>
@@ -20,6 +22,8 @@
     <script src="//static.dpaw.wa.gov.au/static/libs/ol3/3.15.1/ol-debug.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/datatables/1.10.12/js/jquery.dataTables.min.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/datatables/1.10.12/js/dataTables.foundation.min.js"></script>
+    <script src="//static.dpaw.wa.gov.au/static/libs/datatables/1.10.12/RowReorder-1.1.2/js/dataTables.rowReorder.min.js"></script>
+    <script src="//static.dpaw.wa.gov.au/static/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
     <script src="mudmap.js"></script>
     <script src="mudmap.kmi.js"></script>
     <script src="mudmap.app.js"></script>
@@ -51,12 +55,63 @@
     </style>
   </head>
   <body>
+    <script id="layer_template" type="text/x-handlebars-template">
+        <div class="row">
+            <div class="small-8 columns">{{title}}</div>
+            <div class="small-1 columns">
+            {{#if selected}}
+                <i class="select fi-check" layer="{{name}}"></i>
+            {{else}}
+                <i class="select fi-x" layer="{{name}}"></i>
+            {{/if}}
+            </div>
+            <div class="small-12 columns">{{abstract}}</div>
+        </div>
+    </script>
+    <script id="activelayer_template" type="text/x-handlebars-template">
+        <div class="row">
+            <div class="small-8 columns title">{{title}}</div>
+            <div class="small-1 columns">
+                <i class="remove fi-trash" layer="{{name}}"></i>
+            </div>
+            <!--div class="small-12 columns">{{abstract}}</div-->
+            <div class="small-12 columns">
+                <div class="slider" data-slider id="slider_{{id}}" data-start="0" data-end="100" data-initial-start="{{opacity}}" data-step="1" data-decimal="0" layer="{{name}}"> 
+                    <span class="slider-handle"  data-slider-handle role="slider" tabindex="1"></span>
+                    <span class="slider-fill" data-slider-fill></span>
+                    <input type="hidden" id="opacity_{{id}}">
+                </div>
+            </div>
+        </div>
+    </script>
     <div class="container">
         <div class="row expanded align-justify controls show-for-medium collapse">
-            <button id="layersetting" type="button" class="dropdown button small" data-toggle="layersettings"></button>
-            <div class="dropdown-pane small" id="layersettings" data-dropdown style="width:400px">
-                <table id="layerlist" class="display" cellspacing="0" width="100%">
-                </table>
+            <button id="layersetting" type="button" class="dropdown button small" data-toggle="layersetting_section"></button>
+            <div class="dropdown-pane small" id="layersetting_section" data-dropdown  style="width:400px">
+                <ul class="tabs" data-tabs id="layers-tabs">
+                    <li class="tabs-title is-active"><a href="#panel_layers" aria-selected="true">Layers</a></li>
+                    <li class="tabs-title"><a href="#panel_activelayers">Active Layers</a></li>
+                </ul>
+                <div class="tabs-content" data-tabs-content="layers-tabs">
+                    <div class="tabs-panel is-active" id="panel_layers">
+                        <table id="layerlist" class="display" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <td width="400px">&nbsp;</td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="tabs-panel" id="panel_activelayers">
+                        <table id="activelayerlist" class="display" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <td width="400px">&nbsp;</td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
             </div>
             <div class="columns shrink align-middle"><h4>SSS</h4></div>
 

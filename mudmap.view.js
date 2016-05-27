@@ -1,6 +1,11 @@
 (function(mudmap) {
     var self = mudmap;
 
+    var _layers_table = null;
+    var _activelayers_table = null;
+    var _layer_template = null;
+    var _activelayer_template = null;
+
     //listen to change_label feature
     // popup a dialog to input the label
     self.on("change_label",function(e){
@@ -65,7 +70,6 @@
             $("#measure").html("");
         }
     });
-
     // Create interactions, add them to map
     self.on("post_init",function() {
         $("#colour button").on("click", function() {
@@ -145,38 +149,120 @@
         $("#pan").click();
     });
 
-    self.on("layers_loaded",function(e,listener_chain) {
-        $("#layerlist").DataTable({
+    var _select_layer = function() {
+        var addLayer = false;
+        if ($(this).hasClass("fi-x")) {
+            addLayer = true;
+            //$(this).removeClass("fi-x").addClass("fi-check");
+            self.on({"name":"add_layer","layer":self.get_layer($(this).attr("layer"))});
+        } else {
+            addLayer = false;
+            //$(this).removeClass("fi-check").addClass("fi-x");
+            self.on({"name":"remove_layer","layer":self.get_layer($(this).attr("layer"))});
+        }
+    }
+
+    var _remove_layer = function() {
+        self.on({"name":"remove_layer","layer":self.get_layer($(this).attr("layer"))});
+    }
+
+    self.on(["layer_removed","layer_added"],function(e){
+        _layers_table.rows().every(function(rowIdx,tableLoop,rowLoop){
+            if (this.data().name == e.layer.name) {
+                this.cell(rowIdx,0).invalidate();
+            }
+        });
+    });
+
+    self.on("layer_removed",function(e){
+        _activelayers_table.row(function(rowIdx,data,node){
+            return data.name == e.layer.name;
+        }).remove().draw();
+    });
+
+    self.on("layer_added",function(e){
+        _activelayers_table.rows.add([e.layer]).draw();
+        $('#slider_' + e.layer.id).foundation();
+    });
+
+    var _change_opacity = function() {
+        var layer = self.get_layer($(this).attr("layer"));
+        var opacity = $("#opacity_" + layer.id).val();
+        self.on({"name":"change_opacity","layer":layer,"opacity":opacity});
+    }
+
+    self.on("init_map_view",function(e,listener_chain) {
+        _layer_template = Handlebars.compile($("#layer_template").html());
+        _activelayer_template = Handlebars.compile($("#activelayer_template").html());
+        //init table for layers
+        _layers_table = $("#layerlist").DataTable({
+            dom:"ft",
+            data: self.layers,
+            scrollY:"750px",
+            scrollCollapse:true,
             bPaginate:false,
             bAutoWidth:false,
             bProcessing:false,
             bServerSide:false,
+            ordering:false,
             bInfo:false,
             aaData: self.layers,
-            aoColumnDefs:[
+            columnDefs:[
                 {
                     targets:0,
-                    data:"selected",
                     orderable:false,
-                    calssName:"sorting_disabled",
-                    mRender: function(data,type,full) {
-                        return '<i class="' + (data?"fi-check":"fi-x") + '" onclick="$(this).toggleClass(\'fi-x fi-check\')"></i>';
+                    data:"title",
+                    render: function(data,type,full) {
+                        return _layer_template(full);
                     }
                 },
-                {
-                    targets:1,
-                    orderable:false,
-                    data:"name"
-                },
-                {
-                    targets:2,
-                    orderable:false,
-                    data:null,
-                    mRender: function(data,type,full) {
-                        return '<i class="fi-plus"></i>';
-                    }
-                }
             ],
         });
+        //remove search label from filter widget.
+        $("#layerlist_filter label").replaceWith($("#layerlist_filter label input"));
+        //attach event to select columns
+        $("#layersetting_section").on('click',"table#layerlist td .select",_select_layer);
+
+        //init table for active layers
+        _activelayers_table = $("#activelayerlist").DataTable({
+            dom:"t",
+            data: self.state.layers,
+            scrollY:"750px",
+            scrollCollapse:true,
+            bPaginate:false,
+            bAutoWidth:false,
+            bProcessing:false,
+            bServerSide:false,
+            ordering:false,
+            bInfo:false,
+            rowReorder: {
+                selector:'tr .title',
+                update:false,
+            },
+            columnDefs:[
+                {
+                    targets:0,
+                    orderable:false,
+                    data:"name",
+                    render: function(data,type,full) {
+                        return _activelayer_template(full);
+                    }
+                },
+            ],
+        });
+
+        _activelayers_table.on("row-reorder",function(e,details,changes){
+            if (details == null || details.length == 0) {
+                //no row is moved
+                return;
+            }
+            var layer = self.layers[details[0].oldPosition];
+            self.on({"name":"move_layer","layer":layer,"newPosition":details[0].newPosition,"oldPosition":details[0].oldPosition});
+        });
+        //attach event to select columns
+        $("#layersetting_section").on('click',"table#activelayerlist td .remove",_remove_layer);
+
+        $("#layersetting_section").on('moved.zf.slider',"table td .slider",_change_opacity);
+        
     });
 })(mudmap);

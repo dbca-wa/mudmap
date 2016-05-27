@@ -1,3 +1,12 @@
-#layerlist .sorting, .sorting_asc, .sorting_desc {
+table.dataTable thead .sorting_asc, table.dataTable thead.sorting_desc {
         background : none;
+}
+table.dataTable td .select {
+        cursor:pointer;
+}
+table.dataTable td .remove {
+        cursor:pointer;
+}
+table#activelayerlist td .title {
+        cursor:pointer;
 }
