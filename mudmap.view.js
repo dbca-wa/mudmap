@@ -5,6 +5,7 @@
     var _activelayers_table = null;
     var _layer_template = null;
     var _activelayer_template = null;
+    var _vectorlayer_template = null;
 
     //listen to change_label feature
     // popup a dialog to input the label
@@ -70,8 +71,46 @@
             $("#measure").html("");
         }
     });
-    // Create interactions, add them to map
-    self.on("post_init",function() {
+
+    //attach the listener to buttons
+    self.on("init_map_view",function(){
+        $("#mapid").text(self.map_name);
+        $.each(self.saved_maps, function(index, name) {
+            var id = "saved_map_" + name;
+            $("#maplist ul").append(
+                '<li id="' + id + '"><div class="row"><div class="columns"><a href="./?' + 
+                $.param({name:name}) + '">' + name + '</a></div><div class="columns shrink"><button id="' + 
+                name + '" class="button hollow alert removemap">Remove<button></div></li>'
+            );
+        })
+        $("button.removemap").on("click", function() {
+            var name = $(this).attr("id");
+            if (confirm("Are you sure you want to remove " + name + "?")) {
+                self.delete_saved_map(name);
+                $("#saved_map_" + name).remove();
+
+            }
+        })
+
+
+        $("div.controls .toggle").on("click", function() {
+            $("div.controls .toggle").addClass("hollow");
+            $(this).removeClass("hollow");
+            self.activeInteract($(this).attr("id"))
+        });
+        $("#rotation").on("moved.zf.slider", function() {
+            var rotation = parseInt($(this).find("input").val());
+            self.map.getView().setRotation(rotation);
+            //map.rotateFeature.set("rotation", rotation);
+            //map.rotateFeature.style = null;
+        });
+
+        $("#zoom").on("click", self.fitFeatures);
+        $("#undo").on("click", self.undo);
+        $("#redo").on("click", self.redo);
+        $("#pan").click();
+
+
         $("#colour button").on("click", function() {
             self.currentStyles.colour = $(this).css("background-color");
             $("#colourbutton").css({
@@ -111,59 +150,21 @@
         $("#download").on("click", self.download);
     });
 
-    self.on("init_map_view",function(){
-        $("#mapid").text(self.map_name);
-        $.each(self.saved_maps, function(index, name) {
-            var id = "saved_map_" + name;
-            $("#maplist ul").append(
-                '<li id="' + id + '"><div class="row"><div class="columns"><a href="./?' + 
-                $.param({name:name}) + '">' + name + '</a></div><div class="columns shrink"><button id="' + 
-                name + '" class="button hollow alert removemap">Remove<button></div></li>'
-            );
-        })
-        $("button.removemap").on("click", function() {
-            var name = $(this).attr("id");
-            if (confirm("Are you sure you want to remove " + name + "?")) {
-                self.delete_saved_map(name);
-                $("#saved_map_" + name).remove();
-
-            }
-        })
-
-
-        $("div.controls .toggle").on("click", function() {
-            $("div.controls .toggle").addClass("hollow");
-            $(this).removeClass("hollow");
-            self.activeInteract($(this).attr("id"))
-        });
-        $("#rotation").on("moved.zf.slider", function() {
-            var rotation = parseInt($(this).find("input").val());
-            self.map.getView().setRotation(rotation);
-            //map.rotateFeature.set("rotation", rotation);
-            //map.rotateFeature.style = null;
-        });
-
-        $("#zoom").on("click", self.fitFeatures);
-        $("#undo").on("click", self.undo);
-        $("#redo").on("click", self.redo);
-        $("#pan").click();
-    });
-
     var _select_layer = function() {
         var addLayer = false;
         if ($(this).hasClass("fi-x")) {
             addLayer = true;
             //$(this).removeClass("fi-x").addClass("fi-check");
-            self.on({"name":"add_layer","layer":self.get_layer($(this).attr("layer"))});
+            self.on({"name":"add_layer","layer":self.getLayer($(this).attr("layer"))});
         } else {
             addLayer = false;
             //$(this).removeClass("fi-check").addClass("fi-x");
-            self.on({"name":"remove_layer","layer":self.get_layer($(this).attr("layer"))});
+            self.on({"name":"remove_layer","layer":self.getLayer($(this).attr("layer"))});
         }
     }
 
     var _remove_layer = function() {
-        self.on({"name":"remove_layer","layer":self.get_layer($(this).attr("layer"))});
+        self.on({"name":"remove_layer","layer":self.getLayer($(this).attr("layer"))});
     }
 
     self.on(["layer_removed","layer_added"],function(e){
@@ -175,22 +176,46 @@
     });
 
     self.on("layer_removed",function(e){
+        $("#slider_" + e.layer.id).foundation("destroy");
         _activelayers_table.row(function(rowIdx,data,node){
             return data.name == e.layer.name;
         }).remove().draw();
+
+        if (e.layer.wfs_url) {
+            $("#vectorlayer_" + e.layer.id).remove();
+        }
     });
 
     self.on("layer_added",function(e){
         _activelayers_table.rows.add([e.layer]).draw();
-        $('#slider_' + e.layer.id).foundation();
+        new Foundation.Slider($("#slider_" + e.layer.id),{"initialStart":e.layer.opacity});
+        if (e.layer.wfs_url) {
+            var before_layer = null;
+            $.each(self.layers,function(index,layer) {
+                if (!layer.selected) {
+                    return;
+                }
+                if (layer.name == e.layer.name) {
+                    if (before_layer) {
+                        $(_vectorlayer_template(layer)).insertAfter($("#vectorlayer_" + before_layer.id));
+                        return false;
+                    } else {
+                        $("#vectorlayerlist").prepend( _vectorlayer_template(layer));
+                        return false;
+                    }
+                } 
+
+            });
+        }
     });
 
     var _change_opacity = function() {
-        var layer = self.get_layer($(this).attr("layer"));
+        var layer = self.getLayer($(this).attr("layer"));
         var opacity = $("#opacity_" + layer.id).val();
         self.on({"name":"change_opacity","layer":layer,"opacity":opacity});
     }
 
+    //initialize the layerlist table and activelayerlist table
     self.on("init_map_view",function(e,listener_chain) {
         _layer_template = Handlebars.compile($("#layer_template").html());
         _activelayer_template = Handlebars.compile($("#activelayer_template").html());
@@ -224,7 +249,15 @@
         $("#layersetting_section").on('click',"table#layerlist td .select",_select_layer);
 
         //init table for active layers
-        _activelayers_table = $("#activelayerlist").DataTable({
+        _activelayers_table = $("#activelayerlist")
+        .on("init.dt",function(){
+            if (self.state.layers) {
+                $.each(self.state.layers,function(index,layer){ 
+                    new Foundation.Slider($("#slider_" + layer.id),{"initialStart":layer.opacity});
+                });
+            }
+        })
+        .DataTable({
             dom:"t",
             data: self.state.layers,
             scrollY:"750px",
@@ -259,10 +292,54 @@
             var layer = self.layers[details[0].oldPosition];
             self.on({"name":"move_layer","layer":layer,"newPosition":details[0].newPosition,"oldPosition":details[0].oldPosition});
         });
+
+        _activelayers_table.on("init",function(){
+            if (self.state.layers) {
+                $.each(self.state.layers,function(index,layer){ 
+                    new Foundation.Slider($("#slider_" + e.layer.id),{"initialStart":e.layer.opacity});
+                });
+            }
+        });
         //attach event to select columns
         $("#layersetting_section").on('click',"table#activelayerlist td .remove",_remove_layer);
+
 
         $("#layersetting_section").on('moved.zf.slider',"table td .slider",_change_opacity);
         
     });
+
+    //initialize the feature list
+    self.on("init_map_view",function(e,listener_chain) {
+        _vectorlayer_template = Handlebars.compile($("#vectorlayer_template").html());
+        $.each(self.layers,function(index,layer) {
+            if (!layer.selected) {
+                return;
+            } else if(!layer.wfs_url) {
+                return;
+            }
+            $("#vectorlayerlist").append( _vectorlayer_template(layer));
+            
+        });
+
+        $("#vectorlayerlist").on("click","button", function() {
+            var layer = self.getLayer($(this).attr("layer"));
+            self.on({"name":"choose_vectorlayer","layer":layer});
+            $("#feature").click();
+        });
+    });
+
+    self.on("vectorlayer_choosed",function(e) {
+        $("#vectorlayer_" + e.layer.id + " i").addClass("fi-check");
+    });
+    self.on("vectorlayer_unchoosed",function(e) {
+        $("#vectorlayer_" + e.layer.id + " i").removeClass("fi-check");
+    });
+    self.on("interact_feature_inactive",function() {
+        $("#vectorlayerlist").toggle(false);
+    });
+
+    self.on("interact_feature_active",function() {
+        $("#vectorlayerlist").toggle(true);
+    });
+
 })(mudmap);

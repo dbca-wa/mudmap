@@ -17,62 +17,49 @@ var mudmap = new function(){
     self.map = null;
     self.layers = null;
 
-    var _tile_layers = [];
+    //inlude all supported interacts
+    self.interacts = {};
+
+    //current active interact. 
+    //only one interact is active at any time.
+    var _active_interact = null;
+
+    //set all interacts inactive.
+    self.deinteract = function() {
+        self.activeInteract(null);
+    }
+
+    //inactive the current active interact and active the request interact.
+    self.activeInteract = function(interact) {
+        if (_active_interact == interact) {
+            //interact already enabled
+            return;
+        } else if (_active_interact != null && _active_interact != interact) {
+            if (self.interacts[_active_interact] instanceof ol.interaction.Select) {
+                self.interacts[_active_interact].getFeatures().clear();
+            }
+            self.interacts[_active_interact].setActive(false);
+            self.on("interact_" + _active_interact + "_inactive");
+        }
+        _active_interact = interact;
+        if (interact != null) {
+            self.interacts[interact].setActive(true);
+            self.on("interact_" + interact + "_active");
+        }
+    }
+
+    var _tile_layers = {};
+
+    self.getTileLayer = function(layer_name) {
+        return _tile_layers[layer_name];
+    }
 
     var _default_layer = {
-            opacity: 100,
+            opacity: 80,
             name: "dpaw:mapbox_outdoors",
             id: "dpaw_mapbox_outdoors",
             format: "image/jpeg"
     };
-
-    //the min z index for tile layer
-    var _zindex_min = 10001;
-    //the max z index for tile layer
-    var _zindex_max = 100000000;
-    //the initial interval between two adjacent tile layer's z index. 
-    //this is used to improve the performance by only modifing the affected layer's z index instead of changing all of the layer's z index
-    var _zindex_interval = 4096;
-
-    //get the layer's zindex based on up layer z index and down layer z index
-    //In the first, all layer's z index will get the value by adding or minus "_zindex_interval" from the neighbour's zindex value.
-    //if up_layer z index is null, means the layer will be added to the top
-    //if down_layer z index is null, means the layer will be added to the bottom
-    //if both up_layer z index and down_layer z index are null, means this is the first layer
-    //return the z index, if successfully;otherwise,return null, means all layer's z index need to be recalculated again.
-    var _getZIndex = function(up_layer_index,down_layer_index) {
-        if (up_layer_index != null && down_layer_index != null) {
-            var zindex = Math.floor((up_layer_index - down_layer_index) / 2) + down_layer_index
-            if (zindex == down_layer_index) {
-                //no more space to insert a new layer, recalculated all layer's z index
-                return null;
-            } else {
-                return zindex;
-            }
-        } else if (up_layer_index == null && down_layer_index == null) {
-            //try to get a zindex in the middle value of the avaialbe z index range 
-            var maximum_layers = Math.floor((_zindex_max - _zindex_min) / _zindex_interval)
-            //assume we can have maximum 1000 active layers. and try to get the first layers z index at the middle place
-            return (Math.floor((maximum_layers - 1000) / 2) * _zindex_interval) + _zindex_min;
-        } else if (up_layer_index == null) {
-            var zindex = down_layer_index + _zindex_interval;
-            if (zindex > _zindex_max) {
-                //no more space to add a new layer at the top, recalculated all layers' z index
-                return null;
-            } else {
-                return zindex;
-            }
-        } else {
-            var zindex = up_layer_index - _zindex_interval;
-            if (zindex < _zindex_min) {
-                //no more space to add a new layer at the bottom, recalculated all layers' z index
-                return null;
-            } else {
-                return zindex;
-            }
-        }
-    }
-
 
     //default mudmap state 
     self.default_state = {
@@ -246,7 +233,7 @@ var mudmap = new function(){
         return len / _px_per_mm;
     }
 
-    self.get_layer = function(name) {
+    self.getLayer = function(name) {
         var layer = null;
         $.each(self.layers,function(index,l){
             if (l.name == name) {
@@ -257,53 +244,37 @@ var mudmap = new function(){
         return layer;
     }
 
-    var _resetZIndex = function() {
-        var zindex = null;
-        for (var i = self.state.layers.length - 1;i >= 0; i--) {
-            zindex = _getZIndex(null,zindex);
-            self.state.layers[i].zindex = zindex;
-            if (self.map) {
-                _tile_layers[i].setZIndex(zindex);
-            }
-        }
-    }
-
     self.on("add_layer",function(e) {
+        self.on([{"name":"init_layer","layer":e.layer},{"name":"adding_layer","layer":e.layer}]);
+    });
+
+    self.on("adding_layer",function(e) {
         self.state.layers = self.state.layers || [];
         e.layer.selected = true;
-        var zindex = null;
-        if (self.state.layers.length > 0) {
-            zindex = _getZIndex(self.state.layers[self.state.layers.length - 1].zindex,null);
-        } else {
-            zindex = _getZIndex(self.state.layers[null,null]);
-        }
-        if (zindex == null) {
-            _resetZIndex();   
-            zindex = _getZIndex(self.state.layers[self.state.layers.length - 1].zindex,null)
-        } 
-        e.layer.zindex = zindex;
-        self.state.layers.push(e.layer);        
+        self.state.layers.push(e.layer);
 
         if (self.state.layers[0].name == e.layer.name) {
-            //this is the first added layer. remove the default layera
-            $.each(_tile_layers,function(index,layer){
-                if (layer.get("_layer_name") == _default_layer.name) {
-                    self.map.removeLayer(layer);
-                    _tile_layers.splice(index,1);
-                    return false;
-                }
-            });
+            //this is the first added layer. remove the default layer
+            var tile_layer = _tile_layers[_default_layer.name];
+            if (tile_layer) {
+                self.map.removeLayer(tile_layer);
+                delete _tile_layers[_default_layer.name];
+            }
         }
 
         var tile_layer = self.create_tile_layer(e.layer);
-        tile_layer.set("_layer_name",e.layer.name,true);
-        _tile_layers.push(tile_layer);
+        _tile_layers[e.layer.name]= tile_layer;
         self.map.addLayer(tile_layer);
-
         self.on({"name":"layer_added","layer":e.layer});
     });
 
     self.on("remove_layer",function(e) {
+        var tile_layer = _tile_layers[e.layer.name];
+        if (tile_layer) {
+            self.map.removeLayer(tile_layer);
+            delete _tile_layers[e.layer.name];
+        }
+
         self.state.layers = self.state.layers || [];
         $.each(self.state.layers,function(index,l){
             if (l.name == e.layer.name) {
@@ -311,47 +282,16 @@ var mudmap = new function(){
                 return false;
             }
         });
-        e.layer.zindex = null;
         e.layer.selected = false;
-
-        $.each(_tile_layers,function(index,layer){
-            if (layer.get("_layer_name") == e.layer.name) {
-                self.map.removeLayer(layer);
-                _tile_layers.splice(index,1);
-                return false;
-            }
-        });
 
         if (self.state.layers && self.state.layers.length == 0) {
             //add default layer
             var tile_layer = self.create_tile_layer(_default_layer);
-            tile_layer.set("_layer_name",_default_layer.name,true);
-            _tile_layers.push(tile_layer);
+            _tile_layers[_default_layer.name] = tile_layer;
             self.map.addLayer(tile_layer);
         }
 
         self.on({"name":"layer_removed","layer":e.layer});
-    });
-
-    self.on("move_layer",function(e){
-        if (Math.abs(e.newPosition - e.oldPosition) == 1) {
-            var oldZindex = self.state.layers[e.oldPosition].zindex;
-            self.state.layers[e.oldPosition].zindex = self.state.layers[e.newPosition].zindex;
-            _tile_layers[e.oldPosition].setZIndex(self.state.layers[e.newPosition].zindex);
-            self.state.layers[e.newPosition].zindex = oldZindex;
-            _tile_layers[e.newPosition].setZIndex(oldZindex);
-
-        } else {
-            var zindex = _getZIndex( (e.newPosition == 0)?null:self.state.layers[e.newPosition - 1].zindex,self.state.layers[e.newPosition].zindex );
-            if (zindex == null) {
-                _resetZIndex();
-                _getZIndex( (e.newPosition == 0)?null:self.state.layers[e.newPosition - 1].zindex,self.state.layers[e.newPosition].zindex );
-            }
-            self.state.layers[e.oldPosition].zindex = zindex;
-            _tile_layers[e.oldPosition].setZIndex(zindex);
-        }
-        self.state.layers.splice(e.newPosition,0,self.state.layers.splice(e.oldPosition,1)[0]);
-        _tile_layers.splice(e.newPosition,0,_tile_layers.splice(e.oldPosition,1)[0]);
     });
 
     //upload a file
@@ -394,17 +334,20 @@ var mudmap = new function(){
                     return false;
                 }
             });
-            _resetZIndex();
         }
+
+        self.on(["init_map_data","_create_map"])
+    });
         
+    self.on("_create_map",function() {
         $.each( (self.state.layers && self.state.layers.length > 0)?self.state.layers : [_default_layer],function(index,layer){
             var tile_layer = self.create_tile_layer(layer);
             tile_layer.set("_layer_name",layer.name,true);
-            _tile_layers.push(tile_layer);
+            _tile_layers[layer.name] = tile_layer;
         });
         self.map = new ol.Map({
             logo: false,
-            layers: _tile_layers,
+            layers: _.map(_tile_layers,function(layer,name){return layer;}),
             renderer: "canvas",
             target: "map",
             view: new ol.View({
@@ -426,7 +369,7 @@ var mudmap = new function(){
             ])
         });
 
-        self.on(["init_map","init_interact","post_init_map","init_map_view","post_init_map_view"]);
+        self.on(["init_map","post_init_map","init_map_view"]);
     });
 
     //listen to post_init_map event
@@ -437,12 +380,10 @@ var mudmap = new function(){
 
     self.on("change_opacity",function(e){   
         e.layer.opacity = e.opacity;
-        $.each(_tile_layers,function(index,layer){
-            if (e.layer.name == layer.get("_layer_name")) {
-                layer.setOpacity(e.opacity / 100);
-                return false;
-            }
-        });
+        var tile_layer = _tile_layers[e.layer.name];
+        if (tile_layer) {
+            tile_layer.setOpacity(e.opacity / 100);
+        }
     });
 
     //init method , called when document ready
@@ -463,14 +404,11 @@ var mudmap = new function(){
 
     }
 
-    self.on("post_init_map_view",function() {
-       $(document).foundation();
-    });
 }();
 
 
 $(document).ready(function() {
-    //$(document).foundation();
+    $(document).foundation();
     // to grab stuff from urls
     $.urlParam = function(name, url) {
         if (!url) {

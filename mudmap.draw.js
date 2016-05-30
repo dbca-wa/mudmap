@@ -9,9 +9,6 @@
         size: 1
     };
 
-    //inlude all supported interacts
-    self.draw = {};
-
     //currently drawed features
     var _features = new ol.Collection();
     //the overlay to contain all features.
@@ -34,34 +31,6 @@
     self.fitFeatures =  function() {
         if (_features.getLength() > 0) {
             self.map.getView().fit(_featureOverlay.getSource().getExtent(), self.map.getSize());
-        }
-    }
-
-    //current active interact. 
-    //only one interact is active at any time.
-    var _active_interact = null;
-
-    //set all interacts inactive.
-    self.deinteract = function() {
-        self.activeInteract(null);
-    }
-
-    //inactive the current active interact and active the request interact.
-    self.activeInteract = function(interact) {
-        if (_active_interact == interact) {
-            //interact already enabled
-            return;
-        } else if (_active_interact != null && _active_interact != interact) {
-            if (self.draw[_active_interact] instanceof ol.interaction.Select) {
-                self.draw[_active_interact].getFeatures().clear();
-            }
-            self.draw[_active_interact].setActive(false);
-            self.on("interact_" + _active_interact + "_inactive");
-        }
-        _active_interact = interact;
-        if (interact != null) {
-            self.draw[interact].setActive(true);
-            self.on("interact_" + interact + "_active");
         }
     }
 
@@ -146,7 +115,7 @@
     }
 
     //listen to init_interact
-    self.on("init_interact",function() {
+    self.on("init_map",function() {
         // overlay which all interactions use
         _featureOverlay = new ol.layer.Vector({
             source: new ol.source.Vector({
@@ -225,34 +194,34 @@
             lns: "LineString",
             pol: "Polygon"
         }, function(key, value) {
-            self.draw[key] = new ol.interaction.Draw({
+            self.interacts[key] = new ol.interaction.Draw({
                 features: _features,
                 type: value
             });
-            self.draw[key].on("drawend", function(e) {
+            self.interacts[key].on("drawend", function(e) {
                 self.on({"name":"change_label","feature":e.feature});
             });
-            self.map.addInteraction(self.draw[key]);
+            self.map.addInteraction(self.interacts[key]);
         });
 
         //modify feature
-        self.draw.mod = new ol.interaction.Modify({
+        self.interacts.mod = new ol.interaction.Modify({
             features: _features
         });
-        self.map.addInteraction(self.draw.mod);
+        self.map.addInteraction(self.interacts.mod);
 
         //delete feature
-        self.draw.del = new ol.interaction.Select();
-        self.map.addInteraction(self.draw.del);
-        self.draw.del.on("select", function(e) {
+        self.interacts.del = new ol.interaction.Select();
+        self.map.addInteraction(self.interacts.del);
+        self.interacts.del.on("select", function(e) {
             _features.remove(e.selected[0]);
-            self.draw.del.getFeatures().remove(e.selected[0]);
+            self.interacts.del.getFeatures().remove(e.selected[0]);
         });
 
         // In pan mode display area/length of clicked feature
-        self.draw.pan = new ol.interaction.Select();
-        self.map.addInteraction(self.draw.pan);
-        self.draw.pan.on("select", function(e) {
+        self.interacts.pan = new ol.interaction.Select();
+        self.map.addInteraction(self.interacts.pan);
+        self.interacts.pan.on("select", function(e) {
             var new_event = {"name":"feature_measured"};
             if (e.selected[0]) {
                 geom = e.selected[0].getGeometry();
@@ -271,21 +240,21 @@
 
         // Label and colour tools just set properties and let style function 
         // handle redraws
-        self.draw.lbl = new ol.interaction.Select();
-        self.map.addInteraction(self.draw.lbl);
-        self.draw.lbl.on("select", function(e) {
+        self.interacts.lbl = new ol.interaction.Select();
+        self.map.addInteraction(self.interacts.lbl);
+        self.interacts.lbl.on("select", function(e) {
             if (!e.selected[0]) {
                 return;
             }
             self.on({"name":"change_label","feature":e.selected[0]});
         })
-        self.draw.lbl.on("change:active", function(e) {
-            self.draw.lbl.getFeatures().clear();
+        self.interacts.lbl.on("change:active", function(e) {
+            self.interacts.lbl.getFeatures().clear();
         });
 
-        self.draw.col = new ol.interaction.Select();
-        self.map.addInteraction(self.draw.col);
-        self.draw.col.on("select", function(e) {
+        self.interacts.col = new ol.interaction.Select();
+        self.map.addInteraction(self.interacts.col);
+        self.interacts.col.on("select", function(e) {
             if (!e.selected[0]) {
                 if (!e.deselected[0] || e.deselected[0].get("colour") != self.currentStyles.colour) {
                     window.alert("Please click a feature to set its colour.");
@@ -296,9 +265,9 @@
             e.selected[0].style = null;
         });
 
-        self.draw.siz = new ol.interaction.Select();
-        self.map.addInteraction(self.draw.siz);
-        self.draw.siz.on("select", function(e) {
+        self.interacts.siz = new ol.interaction.Select();
+        self.map.addInteraction(self.interacts.siz);
+        self.interacts.siz.on("select", function(e) {
             if (!e.selected[0]) {
                 if (!e.deselected[0] || e.deselected[0].get("size") != self.currentStyles.size) {
                     window.alert("Please click a feature to set its colour.");
@@ -310,12 +279,12 @@
             e.selected[0].style = null;
         });
 
-        self.draw.snap = new ol.interaction.Snap({
+        self.interacts.snap = new ol.interaction.Snap({
             source: _featureOverlay.getSource()
         });
-        self.map.addInteraction(self.draw.snap);
+        self.map.addInteraction(self.interacts.snap);
 
-        $.each(self.draw,function(interact,ctl){
+        $.each(self.interacts,function(interact,ctl){
             ctl.setActive(false);
         });
 

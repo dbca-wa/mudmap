@@ -15,8 +15,8 @@
     <script src="//static.dpaw.wa.gov.au/static/libs/localforage/1.3.2/localforage.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/underscore.js/1.8.3/underscore-min.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/moment.js/2.9.0/moment.min.js"></script>
-    <script src="//static.dpaw.wa.gov.au/static/libs/jquery/2.2.0/jquery.min.js"></script>
-    <script src="//static.dpaw.wa.gov.au/static/libs/foundation/6.1.2/foundation.min.js"></script>
+    <script src="//static.dpaw.wa.gov.au/static/libs/jquery/2.2.0/jquery.js"></script>
+    <script src="//static.dpaw.wa.gov.au/static/libs/foundation/6.1.2/foundation.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/js/turf.min.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/js/numeral.min.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/ol3/3.15.1/ol-debug.js"></script>
@@ -25,7 +25,9 @@
     <script src="//static.dpaw.wa.gov.au/static/libs/datatables/1.10.12/RowReorder-1.1.2/js/dataTables.rowReorder.min.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
     <script src="mudmap.js"></script>
+    <script src="mudmap.zindex.js"></script>
     <script src="mudmap.kmi.js"></script>
+    <script src="mudmap.wfs.js"></script>
     <script src="mudmap.app.js"></script>
     <script src="mudmap.persistence.js"></script>
     <script src="mudmap.scale.js"></script>
@@ -76,13 +78,21 @@
             </div>
             <!--div class="small-12 columns">{{abstract}}</div-->
             <div class="small-12 columns">
-                <div class="slider" data-slider id="slider_{{id}}" data-start="0" data-end="100" data-initial-start="{{opacity}}" data-step="1" data-decimal="0" layer="{{name}}"> 
+                <div class="slider" data-slider id="slider_{{id}}" data-initial-start="{{opacity}}" data-decimal="0" layer="{{name}}"> 
                     <span class="slider-handle"  data-slider-handle role="slider" tabindex="1"></span>
                     <span class="slider-fill" data-slider-fill></span>
                     <input type="hidden" id="opacity_{{id}}">
                 </div>
-            </div>
         </div>
+    </script>
+    <script id="vectorlayer_template" type="text/x-handlebars-template">
+        <div class="row" id="vectorlayer_{{id}}"><button type="button" class="small button secondary" style="font-size: 0.7rem;" layer="{{name}}">
+        {{#if query}}
+            <i class="fi-check" ></i>
+        {{else}}
+            <i  ></i>
+        {{/if}}
+        {{title}}</button></div>
     </script>
     <div class="container">
         <div class="row expanded align-justify controls show-for-medium collapse">
@@ -121,6 +131,10 @@
                     <li><a href="./" class="button">New Map</a></li>
                 </ul>
             </div>
+            <button id="feature" type="button" class="dropdown button small secondary toggle" data-toggle="vectorlayerlist">Feature</button>
+            <div class="dropdown-pane button-group small" id="vectorlayerlist" data-dropdown>
+            </div>
+
             <button id="pan" type="button" class="button small secondary toggle" title="Zoom and pan the map">Pan</button>
             <button id="pnt" type="button" class="button small secondary toggle" title="Draw points with clicks">Point</button>
             <button id="lns" type="button" class="button small secondary toggle" title="Draw a line with clicks, shift and drag for continuous">Line</button>
