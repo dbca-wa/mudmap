@@ -5,7 +5,7 @@
     var _activelayers_table = null;
     var _layer_template = null;
     var _activelayer_template = null;
-    var _vectorlayer_template = null;
+    var _querylayer_template = null;
 
     //listen to change_label feature
     // popup a dialog to input the label
@@ -182,7 +182,7 @@
         }).remove().draw();
 
         if (e.layer.wfs_url) {
-            $("#vectorlayer_" + e.layer.id).remove();
+            $("#querylayer_" + e.layer.id).remove();
         }
     });
 
@@ -197,10 +197,10 @@
                 }
                 if (layer.name == e.layer.name) {
                     if (before_layer) {
-                        $(_vectorlayer_template(layer)).insertAfter($("#vectorlayer_" + before_layer.id));
+                        $(_querylayer_template(layer)).insertAfter($("#querylayer_" + before_layer.id));
                         return false;
                     } else {
-                        $("#vectorlayerlist").prepend( _vectorlayer_template(layer));
+                        $("#querylayerlist").prepend( _querylayer_template(layer));
                         return false;
                     }
                 } 
@@ -231,7 +231,6 @@
             bServerSide:false,
             ordering:false,
             bInfo:false,
-            aaData: self.layers,
             columnDefs:[
                 {
                     targets:0,
@@ -310,36 +309,36 @@
 
     //initialize the feature list
     self.on("init_map_view",function(e,listener_chain) {
-        _vectorlayer_template = Handlebars.compile($("#vectorlayer_template").html());
+        _querylayer_template = Handlebars.compile($("#querylayer_template").html());
         $.each(self.layers,function(index,layer) {
             if (!layer.selected) {
                 return;
             } else if(!layer.wfs_url) {
                 return;
             }
-            $("#vectorlayerlist").append( _vectorlayer_template(layer));
+            $("#querylayerlist").append( _querylayer_template(layer));
             
         });
 
-        $("#vectorlayerlist").on("click","button", function() {
+        $("#querylayerlist").on("click","button", function() {
             var layer = self.getLayer($(this).attr("layer"));
-            self.on({"name":"choose_vectorlayer","layer":layer});
+            self.on({"name":"choose_querylayer","layer":layer});
             $("#feature").click();
         });
     });
 
-    self.on("vectorlayer_choosed",function(e) {
-        $("#vectorlayer_" + e.layer.id + " i").addClass("fi-check");
+    self.on("querylayer_choosed",function(e) {
+        $("#querylayer_" + e.layer.id + " i").addClass("fi-check");
     });
-    self.on("vectorlayer_unchoosed",function(e) {
-        $("#vectorlayer_" + e.layer.id + " i").removeClass("fi-check");
+    self.on("querylayer_unchoosed",function(e) {
+        $("#querylayer_" + e.layer.id + " i").removeClass("fi-check");
     });
     self.on("interact_feature_inactive",function() {
-        $("#vectorlayerlist").toggle(false);
+        $("#querylayerlist").toggle(false);
     });
 
     self.on("interact_feature_active",function() {
-        $("#vectorlayerlist").toggle(true);
+        $("#querylayerlist").toggle(true);
     });
 
 })(mudmap);

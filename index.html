@@ -85,8 +85,8 @@
                 </div>
         </div>
     </script>
-    <script id="vectorlayer_template" type="text/x-handlebars-template">
-        <div class="row" id="vectorlayer_{{id}}"><button type="button" class="small button secondary" style="font-size: 0.7rem;" layer="{{name}}">
+    <script id="querylayer_template" type="text/x-handlebars-template">
+        <div class="row" id="querylayer_{{id}}"><button type="button" class="small button secondary" style="font-size: 0.7rem;" layer="{{name}}">
         {{#if query}}
             <i class="fi-check" ></i>
         {{else}}
@@ -131,8 +131,8 @@
                     <li><a href="./" class="button">New Map</a></li>
                 </ul>
             </div>
-            <button id="feature" type="button" class="dropdown button small secondary toggle" data-toggle="vectorlayerlist">Feature</button>
-            <div class="dropdown-pane button-group small" id="vectorlayerlist" data-dropdown>
+            <button id="feature" type="button" class="dropdown button small secondary toggle" data-toggle="querylayerlist">Feature</button>
+            <div class="dropdown-pane button-group small" id="querylayerlist" data-dropdown>
             </div>
 
             <button id="pan" type="button" class="button small secondary toggle" title="Zoom and pan the map">Pan</button>
