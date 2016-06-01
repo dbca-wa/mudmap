@@ -1,7 +1,7 @@
 (function(mudmap) {
     var self = mudmap;
 
-    var _csw_url ="https://oim-uat.dpaw.wa.gov.au/catalogue/{{app}}?request=GetRecords&service=CSW&version=2.0.2&ElementSetName=full&typeNames=csw:Record&outputFormat=application/xml&resultType=results"
+    var _cswUrl ="https://oim-uat.dpaw.wa.gov.au/catalogue/{{app}}?request=GetRecords&service=CSW&version=2.0.2&ElementSetName=full&typeNames=csw:Record&outputFormat=application/xml&resultType=results"
 
     var _matrixSets = {
         "EPSG:4326" : {
@@ -24,7 +24,7 @@
         });
     });
 
-    var _default_layer = {
+    self.defaultLayer = {
         opacity: 100,
         name: "dpaw:mapbox_outdoors",
         format: "image/jpeg",
@@ -35,7 +35,7 @@
     // Convenience loader to create a WMTS layer from a kmi datasource
     self.create_tile_layer = function(layer) {
         layer = layer || {};
-        _.defaults(layer,_default_layer);
+        _.defaults(layer,self.defaultLayer);
 
         var matrixSet =  _matrixSets[layer.projection][layer.tileSize];
         var tileLayer = new ol.layer.Tile({
@@ -135,10 +135,10 @@
 
     self.on("load_layers",function(e,listener_chain) {
         var url = null;
-        if (self.map_app == null) {
-            url = _csw_url.replace("{{app}}","");
+        if (self.application == null) {
+            url = _cswUrl.replace("{{app}}","");
         } else {
-            url = _csw_url.replace("{{app}}",self.map_app + "/");
+            url = _cswUrl.replace("{{app}}",self.application + "/");
         }
 
         $.ajax({
@@ -147,23 +147,6 @@
             url:url,
             success: function(data,textStatus,jqXHR) {
                 self.layers = xml2Json(data);
-                var found = false;
-                if (self.state.layers) {
-                    $.each(self.state.layers,function(index,activelayer){
-                        found = false;
-                        $.each(self.layers,function(index2,layer){
-                            if (activelayer.name == layer.name) {
-                                found = true;
-                                _.defaults(layer,activelayer);
-                                self.state.layers[index] = layer;
-                                return false;
-                            }
-                        });
-                        if (!found) {
-                            self.on({"name":"layer_not_exist","layer":layer});
-                        }
-                    });
-                }
                 listener_chain.call();
             }
         });

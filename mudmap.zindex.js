@@ -59,22 +59,22 @@
         }
     }
 
-    self.on("init_map_data",function(e) {
+    self.on("set_state",function(e) {
         if (self.state.layers) {
             _resetZIndex();
         }
     });
 
-    self.on("init_layer",function(e) {
+    self.on("pre_add_layer",function(e) {
         var zindex = null;
         if (self.state.layers.length > 0) {
-            zindex = _getZIndex(self.state.layers[self.state.layers.length - 1].zindex,null);
+            zindex = _getZIndex(null,self.state.layers[0].zindex);
         } else {
             zindex = _getZIndex(self.state.layers[null,null]);
         }
         if (zindex == null) {
             _resetZIndex();   
-            zindex = _getZIndex(self.state.layers[self.state.layers.length - 1].zindex,null)
+            zindex = _getZIndex(self.state.layers[0].zindex,null)
         } 
         e.layer.zindex = zindex;
     });
@@ -92,11 +92,22 @@
             self.state.layers[e.newPosition].zindex = oldZindex;
             self.getTileLayer(self.state.layers[e.newPosition].name).setZIndex(oldZindex);
 
-        } else {
+        } else if (e.oldPosition > e.newPosition){
+            //move up
             var zindex = _getZIndex( (e.newPosition == 0)?null:self.state.layers[e.newPosition - 1].zindex,self.state.layers[e.newPosition].zindex );
             if (zindex == null) {
                 _resetZIndex();
                 zindex = _getZIndex( (e.newPosition == 0)?null:self.state.layers[e.newPosition - 1].zindex,self.state.layers[e.newPosition].zindex );
+            }
+
+            self.state.layers[e.oldPosition].zindex = zindex;
+            self.getTileLayer(self.state.layers[e.oldPosition].name).setZIndex(zindex);
+        } else {
+            //move down
+            var zindex = _getZIndex(self.state.layers[e.newPosition].zindex,(e.newPosition == self.state.layers.length - 1)?null:self.state.layers[e.newPosition + 1].zindex);
+            if (zindex == null) {
+                _resetZIndex();
+                zindex = _getZIndex(self.state.layers[e.newPosition].zindex,(e.newPosition == self.state.layers.length - 1)?null:self.state.layers[e.newPosition + 1].zindex);
             }
 
             self.state.layers[e.oldPosition].zindex = zindex;

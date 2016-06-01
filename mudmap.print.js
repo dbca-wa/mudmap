@@ -85,9 +85,9 @@
                 pdf.addImage(compass_img, "PNG", 400, 3, 16,16);
                 pdf.setFontSize(16);
                 if (self.state.lastsave) {
-                    pdf.text(2, 294, "SSS Mudmap - " + self.map_name + " (" + self.user.email + ") modified " + self.state.lastsave);
+                    pdf.text(2, 294, "SSS Mudmap - " + self.mapName + " (" + self.user.email + ") modified " + self.state.lastsave);
                 } else {
-                    pdf.text(2, 294, "SSS Mudmap - " + self.map_name + " (" + self.user.email + ")");
+                    pdf.text(2, 294, "SSS Mudmap - " + self.mapName + " (" + self.user.email + ")");
                 }
                 //scale data
                 pdf.text(230, 294, "Scale " + self.get_scale_text(print_scale) + " GDA94");
@@ -138,9 +138,9 @@
                 formated_scale_value = format_scale(scale_value);
                 pdf.text(x - Math.floor(formated_scale_value.length / 2) * offset_per_letter,295,formated_scale_value + "(" + scale_bar_metadata["scale_unit"] + ")");
                 if (self.state.lastsave) {
-                    pdf.save(self.map_key + "_" + self.state.lastsave + ".pdf");
+                    pdf.save(self.mapKey + "_" + self.state.lastsave + ".pdf");
                 } else {
-                    pdf.save(self.map_key + ".pdf");
+                    pdf.save(self.mapKey + ".pdf");
                 }
             } catch(err) {
                 alert(err);

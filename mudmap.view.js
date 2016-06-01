@@ -1,11 +1,11 @@
 (function(mudmap) {
     var self = mudmap;
 
-    var _layers_table = null;
-    var _activelayers_table = null;
-    var _layer_template = null;
-    var _activelayer_template = null;
-    var _querylayer_template = null;
+    var _layerListTable = null;
+    var _activeLayerListTable = null;
+    var _layerTemplate = null;
+    var _activeLayerTemplate = null;
+    var _attributeLayerTemplate = null;
 
     //listen to change_label feature
     // popup a dialog to input the label
@@ -23,19 +23,19 @@
 
     //listen to interact_lbl_inactive event
     //hiden the label change dialog
-    self.on("interact_lbl_inactive",function() {
+    self.on("lbl_inactive",function() {
         $("#lblform").toggle(false);
     });
 
     //listen to interact_lbl_inactive event
     //reset measure html to empty
-    self.on("interact_pan_inactive",function() {
+    self.on("pan_inactive",function() {
         $("#measure").html("");
     });
 
 
-    //listen to statechanged event
-    self.on("statechanged",function() {
+    //listen to state_changed event
+    self.on("state_changed",function() {
         if (self.state.features.featureSize) {
             $("#numfeatures").text(" (" + self.state.features.featureSize + ")");
         }
@@ -73,8 +73,8 @@
     });
 
     //attach the listener to buttons
-    self.on("init_map_view",function(){
-        $("#mapid").text(self.map_name);
+    self.on("init_view",function(){
+        $("#mapid").text(self.mapName);
         $.each(self.saved_maps, function(index, name) {
             var id = "saved_map_" + name;
             $("#maplist ul").append(
@@ -150,44 +150,54 @@
         $("#download").on("click", self.download);
     });
 
-    var _select_layer = function() {
-        var addLayer = false;
+    var _selectLayer = function() {
+        var layer = self.getLayer($(this).attr("layer"));
         if ($(this).hasClass("fi-x")) {
-            addLayer = true;
-            //$(this).removeClass("fi-x").addClass("fi-check");
-            self.on({"name":"add_layer","layer":self.getLayer($(this).attr("layer"))});
+            self.on([
+                {"name":"pre_add_layer","layer":layer},
+                {"name":"add_layer","layer":layer},
+                {"name":"post_add_layer","layer":layer}
+            ]);
         } else {
-            addLayer = false;
-            //$(this).removeClass("fi-check").addClass("fi-x");
-            self.on({"name":"remove_layer","layer":self.getLayer($(this).attr("layer"))});
+            self.on([
+                {"name":"remove_layer","layer":layer},
+                {"name":"post_remove_layer","layer":layer}
+            ]);
         }
     }
 
-    var _remove_layer = function() {
-        self.on({"name":"remove_layer","layer":self.getLayer($(this).attr("layer"))});
+    var _removeLayer = function() {
+        var layer = self.getLayer($(this).attr("layer"));
+        self.on([
+            {"name":"remove_layer","layer":layer},
+            {"name":"post_remove_layer","layer":layer}
+        ]);
     }
 
-    self.on(["layer_removed","layer_added"],function(e){
-        _layers_table.rows().every(function(rowIdx,tableLoop,rowLoop){
+    //update layerlist table after layer is added or removed
+    self.on(["post_remove_layer","post_add_layer"],function(e){
+        _layerListTable.rows().every(function(rowIdx,tableLoop,rowLoop){
             if (this.data().name == e.layer.name) {
                 this.cell(rowIdx,0).invalidate();
             }
         });
     });
 
-    self.on("layer_removed",function(e){
+    //destroy slider, remove from attributelayerlist, and update activelayerlist table after layer is removed.
+    self.on("post_remove_layer",function(e){
         $("#slider_" + e.layer.id).foundation("destroy");
-        _activelayers_table.row(function(rowIdx,data,node){
+        _activeLayerListTable.row(function(rowIdx,data,node){
             return data.name == e.layer.name;
         }).remove().draw();
 
         if (e.layer.wfs_url) {
-            $("#querylayer_" + e.layer.id).remove();
+            $("#attributelayer_" + e.layer.id).remove();
         }
     });
 
-    self.on("layer_added",function(e){
-        _activelayers_table.rows.add([e.layer]).draw();
+    //update activelayerlist table, add layer to attributelayerlist.
+    self.on("post_add_layer",function(e){
+        _activeLayerListTable.row.add(e.layer).draw();
         new Foundation.Slider($("#slider_" + e.layer.id),{"initialStart":e.layer.opacity});
         if (e.layer.wfs_url) {
             var before_layer = null;
@@ -197,10 +207,10 @@
                 }
                 if (layer.name == e.layer.name) {
                     if (before_layer) {
-                        $(_querylayer_template(layer)).insertAfter($("#querylayer_" + before_layer.id));
+                        $(_attributeLayerTemplate(layer)).insertAfter($("#attributelayer_" + before_layer.id));
                         return false;
                     } else {
-                        $("#querylayerlist").prepend( _querylayer_template(layer));
+                        $("#attributelayerlist").prepend( _attributeLayerTemplate(layer));
                         return false;
                     }
                 } 
@@ -209,18 +219,34 @@
         }
     });
 
-    var _change_opacity = function() {
+    var _changeOpacity = function() {
         var layer = self.getLayer($(this).attr("layer"));
         var opacity = $("#opacity_" + layer.id).val();
         self.on({"name":"change_opacity","layer":layer,"opacity":opacity});
     }
 
+    var _movingLayer = false;
+    self.on("pre_move_layer",function(e) {
+        console.log('================================================');
+        console.log( _.map(self.activeLayerListTable.rows(0).data(),function(layer){return layer.title}));
+        console.log(_.map(self.state.layers,function(layer){return layer.title}));
+        console.log(e.layer.name + " from " + e.oldPosition + " to " + e.newPosition);
+        _movingLayer = true;
+    });
+
+    self.on("post_move_layer",function() {
+        console.log(_.map(self.state.layers,function(layer){return layer.title}));
+        _activeLayerListTable.order([1,"desc"]).draw();
+        _movingLayer = false;
+    });
+
+
     //initialize the layerlist table and activelayerlist table
-    self.on("init_map_view",function(e,listener_chain) {
-        _layer_template = Handlebars.compile($("#layer_template").html());
-        _activelayer_template = Handlebars.compile($("#activelayer_template").html());
+    self.on("post_init",function(e,listener_chain) {
+        _layerTemplate = Handlebars.compile($("#layer_template").html());
+        _activeLayerTemplate = Handlebars.compile($("#activelayer_template").html());
         //init table for layers
-        _layers_table = $("#layerlist").DataTable({
+        _layerListTable = $("#layerlist").DataTable({
             dom:"ft",
             data: self.layers,
             scrollY:"750px",
@@ -236,19 +262,27 @@
                     targets:0,
                     orderable:false,
                     data:"title",
+                    searchable:false,
                     render: function(data,type,full) {
-                        return _layer_template(full);
+                        return _layerTemplate(full);
                     }
+                },
+                {
+                    targets:1,
+                    orderable:false,
+                    data:"title",
+                    searchable:true,
+                    visible:false
                 },
             ],
         });
         //remove search label from filter widget.
         $("#layerlist_filter label").replaceWith($("#layerlist_filter label input"));
         //attach event to select columns
-        $("#layersetting_section").on('click',"table#layerlist td .select",_select_layer);
+        $("#layersetting_section").on('click',"table#layerlist td .select",_selectLayer);
 
         //init table for active layers
-        _activelayers_table = $("#activelayerlist")
+        _activeLayerListTable = $("#activelayerlist")
         .on("init.dt",function(){
             if (self.state.layers) {
                 $.each(self.state.layers,function(index,layer){ 
@@ -265,10 +299,11 @@
             bAutoWidth:false,
             bProcessing:false,
             bServerSide:false,
-            ordering:false,
+            ordering:true,
             bInfo:false,
+            order:[[1,'desc']],
             rowReorder: {
-                selector:'tr .title',
+                selector:'tr .layer_title',
                 update:false,
             },
             columnDefs:[
@@ -277,68 +312,110 @@
                     orderable:false,
                     data:"name",
                     render: function(data,type,full) {
-                        return _activelayer_template(full);
+                        return _activeLayerTemplate(full);
                     }
                 },
+                {
+                    targets:1,
+                    orderable:false,
+                    data:"zindex",
+                    visible:false
+                }
             ],
         });
 
-        _activelayers_table.on("row-reorder",function(e,details,changes){
+        _activeLayerListTable.on("row-reorder",function(e,details,changes){
             if (details == null || details.length == 0) {
                 //no row is moved
                 return;
             }
-            var layer = self.layers[details[0].oldPosition];
-            self.on({"name":"move_layer","layer":layer,"newPosition":details[0].newPosition,"oldPosition":details[0].oldPosition});
+            var detail = null;
+            if (details[0].oldPosition > details[0].newPosition) {
+                //move down
+                detail = details[details.length - 1];
+            } else {
+                //move up
+                detail = details[0];
+            }
+            var layer = self.state.layers[detail.oldPosition];
+            self.on([
+                {"name":"pre_move_layer","layer":layer,"newPosition":detail.newPosition,"oldPosition":detail.oldPosition},
+                {"name":"move_layer","layer":layer,"newPosition":detail.newPosition,"oldPosition":detail.oldPosition},
+                {"name":"post_move_layer","layer":layer,"newPosition":detail.newPosition,"oldPosition":detail.oldPosition},
+            ]);
         });
 
-        _activelayers_table.on("init",function(){
+        _activeLayerListTable.on("init",function(){
             if (self.state.layers) {
                 $.each(self.state.layers,function(index,layer){ 
                     new Foundation.Slider($("#slider_" + e.layer.id),{"initialStart":e.layer.opacity});
                 });
             }
         });
+        self.activeLayerListTable = _activeLayerListTable;
+
         //attach event to select columns
-        $("#layersetting_section").on('click',"table#activelayerlist td .remove",_remove_layer);
+        $("#layersetting_section").on('click',"table#activelayerlist td .remove",_removeLayer);
 
 
-        $("#layersetting_section").on('moved.zf.slider',"table td .slider",_change_opacity);
+        $("#layersetting_section").on('moved.zf.slider',"table td .slider",_changeOpacity);
         
     });
 
-    //initialize the feature list
-    self.on("init_map_view",function(e,listener_chain) {
-        _querylayer_template = Handlebars.compile($("#querylayer_template").html());
+    //initialize the attribute layer list
+    self.on("init_view",function(e,listener_chain) {
+        _attributeLayerTemplate = Handlebars.compile($("#attributelayer_template").html());
         $.each(self.layers,function(index,layer) {
             if (!layer.selected) {
                 return;
             } else if(!layer.wfs_url) {
                 return;
             }
-            $("#querylayerlist").append( _querylayer_template(layer));
+            $("#attributelayerlist").append( _attributeLayerTemplate(layer));
             
         });
 
-        $("#querylayerlist").on("click","button", function() {
+        $("#attributelayerlist").on("click","button", function() {
+            $("#attributelayerlist button").prop("disabled",true);
             var layer = self.getLayer($(this).attr("layer"));
-            self.on({"name":"choose_querylayer","layer":layer});
-            $("#feature").click();
+            self.on([
+                {"name":"choose_attributelayer","layer":layer},
+                "state_changed",
+                {"name":"attributelayer_choosed","layer":layer},
+                "post_choose_attributelayer"
+            ]);
+            $("#attribute").click();
         });
+
+        if(self.state.attributelayer) {
+            var layer = self.state.attributelayer;
+            self.state.attributelayer = null;
+            self.on([
+                {"name":"choose_attributelayer","layer":layer},
+                {"name":"attributelayer_choosed","layer":layer},
+                "post_choose_attributelayer"
+            ]);
+        } else {
+            self.on("post_choose_attributelayer");
+        }
+
     });
 
-    self.on("querylayer_choosed",function(e) {
-        $("#querylayer_" + e.layer.id + " i").addClass("fi-check");
+    self.on("attributelayer_choosed",function(e) {
+        $("#attributelayer_" + e.layer.id + " i").addClass("fi-check");
     });
-    self.on("querylayer_unchoosed",function(e) {
-        $("#querylayer_" + e.layer.id + " i").removeClass("fi-check");
+    self.on("attributelayer_unchoosed",function(e) {
+        $("#attributelayer_" + e.layer.id + " i").removeClass("fi-check");
     });
-    self.on("interact_feature_inactive",function() {
-        $("#querylayerlist").toggle(false);
+    self.on("post_choose_attributelayer",function(e) {
+        $("#attributelayerlist button").prop("disabled",false);
+    });
+    self.on("attribute_inactive",function() {
+        $("#attributelayerlist").toggle(false);
     });
 
-    self.on("interact_feature_active",function() {
-        $("#querylayerlist").toggle(true);
+    self.on("attribute_active",function() {
+        $("#attributelayerlist").toggle(true);
     });
 
 })(mudmap);

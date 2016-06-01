@@ -20,10 +20,10 @@
             type: "application/vnd.geo+json;charset=utf-8"
         });
         if (!('lastsave' in self.state) || self.state.lastsave == null) {
-            //saveAs(jsonblob, "p&w_mudmap_" + self.map_name + ".json");
-            saveAs(jsonblob, self.map_key + ".json");
+            //saveAs(jsonblob, "p&w_mudmap_" + self.mapName + ".json");
+            saveAs(jsonblob, self.mapKey + ".json");
         } else {
-            saveAs(jsonblob, self.map_key + "_" + self.state.lastsave + ".json");
+            saveAs(jsonblob, self.mapKey + "_" + self.state.lastsave + ".json");
         }
     }
 
@@ -54,11 +54,11 @@
         }
     });
 
-    //listen to changestate event.
+    //listen to change_state event.
     //change the map state based on features
     //if under undo_redo_mode, map state is already processed by undo or redo functions, so just do nothing.
-    self.on("changestate",function() {
-        if (_undo_redo_mode) {
+    self.on("change_state",function() {
+        if (_undoRedoMode) {
             return;
         }
         var currentfeatures = _features == null?null:self.geojson.writeFeatures(_features.getArray());
@@ -76,20 +76,20 @@
         }
     });
     
-    //listen to post_statechanged.
+    //listen to post_state_changed.
     //set undo_redo_mode to false
-    self.on("post_statechanged",function() {
-        _undo_redo_mode = false;
+    self.on("post_state_changed",function() {
+        _undoRedoMode = false;
     });
 
-    var _undo_redo_mode = false;
+    var _undoRedoMode = false;
     //undo an action
     self.undo = function() {
-        if (_undo_redo_mode) {
+        if (_undoRedoMode) {
             return ;
         }
         if (self.state.history && self.state.history.length > 0) {
-            _undo_redo_mode = true;
+            _undoRedoMode = true;
             self.state.redo = self.state.redo || [];
             self.state.redo.push(self.state.features);
             self.state.features = self.state.history.pop();
@@ -100,11 +100,11 @@
     }
     //redo an action
     self.redo = function() {
-        if (_undo_redo_mode) {
+        if (_undoRedoMode) {
             return ;
         }
         if (self.state.redo && self.state.redo.length > 0) {
-            _undo_redo_mode = true;
+            _undoRedoMode = true;
             self.state.history = self.state.history || [];
             self.state.history.push(self.state.features);
             self.state.features = self.state.redo.pop();

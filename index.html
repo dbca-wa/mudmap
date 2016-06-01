@@ -27,7 +27,7 @@
     <script src="mudmap.js"></script>
     <script src="mudmap.zindex.js"></script>
     <script src="mudmap.kmi.js"></script>
-    <script src="mudmap.wfs.js"></script>
+    <script src="mudmap.attribute.js"></script>
     <script src="mudmap.app.js"></script>
     <script src="mudmap.persistence.js"></script>
     <script src="mudmap.scale.js"></script>
@@ -59,7 +59,7 @@
   <body>
     <script id="layer_template" type="text/x-handlebars-template">
         <div class="row">
-            <div class="small-8 columns">{{title}}</div>
+            <div class="small-8 columns layer_title">{{title}}</div>
             <div class="small-1 columns">
             {{#if selected}}
                 <i class="select fi-check" layer="{{name}}"></i>
@@ -67,12 +67,12 @@
                 <i class="select fi-x" layer="{{name}}"></i>
             {{/if}}
             </div>
-            <div class="small-12 columns">{{abstract}}</div>
+            <div class="small-12 columns layer_abstract">{{abstract}}</div>
         </div>
     </script>
     <script id="activelayer_template" type="text/x-handlebars-template">
         <div class="row">
-            <div class="small-8 columns title">{{title}}</div>
+            <div class="small-8 columns layer_title">{{title}}</div>
             <div class="small-1 columns">
                 <i class="remove fi-trash" layer="{{name}}"></i>
             </div>
@@ -85,13 +85,9 @@
                 </div>
         </div>
     </script>
-    <script id="querylayer_template" type="text/x-handlebars-template">
-        <div class="row" id="querylayer_{{id}}"><button type="button" class="small button secondary" style="font-size: 0.7rem;" layer="{{name}}">
-        {{#if query}}
-            <i class="fi-check" ></i>
-        {{else}}
-            <i  ></i>
-        {{/if}}
+    <script id="attributelayer_template" type="text/x-handlebars-template">
+        <div class="row" id="attributelayer_{{id}}"><button disabled type="button" class="small button secondary" style="font-size: 0.7rem;" layer="{{name}}">
+        <i></i>
         {{title}}</button></div>
     </script>
     <div class="container">
@@ -131,8 +127,8 @@
                     <li><a href="./" class="button">New Map</a></li>
                 </ul>
             </div>
-            <button id="feature" type="button" class="dropdown button small secondary toggle" data-toggle="querylayerlist">Feature</button>
-            <div class="dropdown-pane button-group small" id="querylayerlist" data-dropdown>
+            <button id="attribute" type="button" class="dropdown button small secondary toggle" data-toggle="attributelayerlist">Attribute</button>
+            <div class="dropdown-pane button-group small" id="attributelayerlist" data-dropdown>
             </div>
 
             <button id="pan" type="button" class="button small secondary toggle" title="Zoom and pan the map">Pan</button>

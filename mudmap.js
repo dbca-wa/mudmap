@@ -6,9 +6,9 @@ var mudmap = new function(){
     self.geojson = new ol.format.GeoJSON();
 
     //The application to which the map is belonging.
-    self.map_app = null;
+    self.application = null;
     //The name of the current map.
-    self.map_name = "default";
+    self.mapName = "default";
 
     //authenticated user 
     self.user = {};
@@ -22,7 +22,7 @@ var mudmap = new function(){
 
     //current active interact. 
     //only one interact is active at any time.
-    var _active_interact = null;
+    var _activeInteract = null;
 
     //set all interacts inactive.
     self.deinteract = function() {
@@ -31,35 +31,28 @@ var mudmap = new function(){
 
     //inactive the current active interact and active the request interact.
     self.activeInteract = function(interact) {
-        if (_active_interact == interact) {
+        if (_activeInteract == interact) {
             //interact already enabled
             return;
-        } else if (_active_interact != null && _active_interact != interact) {
-            if (self.interacts[_active_interact] instanceof ol.interaction.Select) {
-                self.interacts[_active_interact].getFeatures().clear();
+        } else if (_activeInteract != null && _activeInteract != interact) {
+            if (self.interacts[_activeInteract] instanceof ol.interaction.Select) {
+                self.interacts[_activeInteract].getFeatures().clear();
             }
-            self.interacts[_active_interact].setActive(false);
-            self.on("interact_" + _active_interact + "_inactive");
+            self.interacts[_activeInteract].setActive(false);
+            self.on(_activeInteract + "_inactive");
         }
-        _active_interact = interact;
+        _activeInteract = interact;
         if (interact != null) {
             self.interacts[interact].setActive(true);
-            self.on("interact_" + interact + "_active");
+            self.on(interact + "_active");
         }
     }
 
-    var _tile_layers = {};
+    var _tileLayers = {};
 
     self.getTileLayer = function(layer_name) {
-        return _tile_layers[layer_name];
+        return _tileLayers[layer_name];
     }
-
-    var _default_layer = {
-            opacity: 80,
-            name: "dpaw:mapbox_outdoors",
-            id: "dpaw_mapbox_outdoors",
-            format: "image/jpeg"
-    };
 
     //default mudmap state 
     self.default_state = {
@@ -84,19 +77,19 @@ var mudmap = new function(){
     })();
 
     //the map key, used to save map state and download map states.
-    self.map_key = null;
+    self.mapKey = null;
     //the map key prefix, all named maps sharing the same map key prefix are belonging to the same user and same map application.
-    self.map_key_prefix = null;
+    self.mapKey_prefix = null;
     //return the map key with the map name
-    self.get_map_key = function(name) {
-        if (self.map_key_prefix == null) {
-            if (self.map_app == null) {
-                self.map_key_prefix = "mudmap_" + self.user.email.toLowerCase() + "_";
+    self.getMapKey = function(name) {
+        if (self.mapKey_prefix == null) {
+            if (self.application == null) {
+                self.mapKey_prefix = "mudmap_" + self.user.email.toLowerCase() + "_";
             } else {
-                self.map_key_prefix = "mudmap" + self.map_app + "_" + self.user.email.toLowerCase() + "_";
+                self.mapKey_prefix = "mudmap" + self.application + "_" + self.user.email.toLowerCase() + "_";
             }
         }
-        return self.map_key_prefix + name;
+        return self.mapKey_prefix + name;
     }
 
     //A class maintains a listener pointer and provide a "call" method to call the listeners for the events in the order,
@@ -245,34 +238,30 @@ var mudmap = new function(){
     }
 
     self.on("add_layer",function(e) {
-        self.on([{"name":"init_layer","layer":e.layer},{"name":"adding_layer","layer":e.layer}]);
-    });
-
-    self.on("adding_layer",function(e) {
         self.state.layers = self.state.layers || [];
         e.layer.selected = true;
-        self.state.layers.push(e.layer);
+        //self.state.layers.push(e.layer);
+        self.state.layers.splice(0,0,e.layer);
 
         if (self.state.layers[0].name == e.layer.name) {
             //this is the first added layer. remove the default layer
-            var tile_layer = _tile_layers[_default_layer.name];
+            var tile_layer = _tileLayers[self.defaultLayer.name];
             if (tile_layer) {
                 self.map.removeLayer(tile_layer);
-                delete _tile_layers[_default_layer.name];
+                delete _tileLayers[self.defaultLayer.name];
             }
         }
 
         var tile_layer = self.create_tile_layer(e.layer);
-        _tile_layers[e.layer.name]= tile_layer;
+        _tileLayers[e.layer.name]= tile_layer;
         self.map.addLayer(tile_layer);
-        self.on({"name":"layer_added","layer":e.layer});
     });
 
     self.on("remove_layer",function(e) {
-        var tile_layer = _tile_layers[e.layer.name];
+        var tile_layer = _tileLayers[e.layer.name];
         if (tile_layer) {
             self.map.removeLayer(tile_layer);
-            delete _tile_layers[e.layer.name];
+            delete _tileLayers[e.layer.name];
         }
 
         self.state.layers = self.state.layers || [];
@@ -286,12 +275,10 @@ var mudmap = new function(){
 
         if (self.state.layers && self.state.layers.length == 0) {
             //add default layer
-            var tile_layer = self.create_tile_layer(_default_layer);
-            _tile_layers[_default_layer.name] = tile_layer;
+            var tile_layer = self.create_tile_layer(self.defaultLayer);
+            _tileLayers[self.defaultLayer.name] = tile_layer;
             self.map.addLayer(tile_layer);
         }
-
-        self.on({"name":"layer_removed","layer":e.layer});
     });
 
     //upload a file
@@ -302,7 +289,7 @@ var mudmap = new function(){
 
     var _changestate_processing = false;
     // called when map is changed.
-    //this method will trigger events "changestate","statechanged" and "post_statechanged" in order
+    //this method will trigger events "change_state","state_changed" and "post_state_changed" in order
     var _changestate = function() {
         if (_changestate_processing) {
             return;
@@ -312,42 +299,54 @@ var mudmap = new function(){
             self.state.zoom = self.map.getView().getZoom();
             self.state.resolution = self.map.getView().getResolution();
             self.state.center = self.map.getView().getCenter();
-            self.on(["changestate","statechanged","post_statechanged"]);
+            self.on(["change_state","state_changed","post_state_changed"]);
         }, 100);
     };
 
-    self.on("post_statechanged",function() {
+    self.on("post_state_changed",function() {
         _changestate_processing = false;
     })
 
-    //listen to create_map event.
-    //create the map and trigger events "init_map","post_init_map","init_map_view" to init the map
-    self.on("create_map",function() {
+    self.on("init_state",function(){
         if (self.state == null) {
             self.state =  _.defaults({},self.default_state);
         }
-        //remove the default layers from active layers
+        var found = false;
         if (self.state.layers) {
+            $.each(self.state.layers,function(index,activelayer){
+                found = false;
+                $.each(self.layers,function(index2,layer){
+                    if (activelayer.name == layer.name) {
+                        found = true;
+                        _.defaults(layer,activelayer);
+                        self.state.layers[index] = layer;
+                        return false;
+                    }
+                });
+                if (!found) {
+                    self.on({"name":"layer_not_exist","layer":layer});
+                }
+            });
+
+            //remove the default layers from active layers
             $.each(self.state.layers,function(index,layer) {
-                if (layer.name == _default_layer.name) {
+                if (layer.name == self.defaultLayer.name) {
                     self.state.layers.splice(index,1);
                     return false;
                 }
             });
         }
-
-        self.on(["init_map_data","_create_map"])
     });
         
-    self.on("_create_map",function() {
-        $.each( (self.state.layers && self.state.layers.length > 0)?self.state.layers : [_default_layer],function(index,layer){
+    self.on("create_map",function() {
+        $.each( (self.state.layers && self.state.layers.length > 0)?self.state.layers : [self.defaultLayer],function(index,layer){
             var tile_layer = self.create_tile_layer(layer);
             tile_layer.set("_layer_name",layer.name,true);
-            _tile_layers[layer.name] = tile_layer;
+            _tileLayers[layer.name] = tile_layer;
         });
         self.map = new ol.Map({
             logo: false,
-            layers: _.map(_tile_layers,function(layer,name){return layer;}),
+            layers: _.map(_tileLayers,function(layer,name){return layer;}),
             renderer: "canvas",
             target: "map",
             view: new ol.View({
@@ -368,19 +367,17 @@ var mudmap = new function(){
                 }),
             ])
         });
-
-        self.on(["init_map","post_init_map","init_map_view"]);
     });
 
-    //listen to post_init_map event
+    //listen to post_init event
     //register a map listener to listen to "postrender" event
-    self.on("post_init_map",function() {
+    self.on("post_init",function() {
         self.map.on("postrender", _changestate);
     });
 
     self.on("change_opacity",function(e){   
         e.layer.opacity = e.opacity;
-        var tile_layer = _tile_layers[e.layer.name];
+        var tile_layer = _tileLayers[e.layer.name];
         if (tile_layer) {
             tile_layer.setOpacity(e.opacity / 100);
         }
@@ -397,18 +394,22 @@ var mudmap = new function(){
         // Initialise with user info
         $.get("/auth", function(userdata) {
             self.user = JSON.parse(userdata);
-            self.map_key = self.get_map_key(self.map_name);
+            self.mapKey = self.getMapKey(self.mapName);
 
-            self.on(["init_app","init_name","load_layers","create_map","post_init"]);
+            self.on(["init_app","init_name","load_layers","load_state","init_state","set_state","create_map","init_map","init_view","post_init_view","post_init"]);
         });
 
     }
+    self.on("post_init_view",function() {
+        $(document).foundation();
+    });
+
 
 }();
 
 
 $(document).ready(function() {
-    $(document).foundation();
+    //$(document).foundation();
     // to grab stuff from urls
     $.urlParam = function(name, url) {
         if (!url) {
