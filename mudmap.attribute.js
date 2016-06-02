@@ -143,6 +143,23 @@
         }
     });
 
+    self.on("remove_layer",function(e) {
+        if (self.state.attributelayer == e.layer) {
+            var attributelayer = self.state.attributelayer;
+            self.state.attributelayer = null;
+        }
+        //clear the attribute data table
+        if (_attributeTable) {
+            _attributeTable.destroy();
+            _attributeTable = null;
+            _attributeColumns = null;
+            _features.clear();
+        }
+        _attributeTableModal.find("#attribute_table_data").html("");
+        _attributeTableModal.foundation('close');
+
+    });
+
     self.on("choose_attributelayer",function(e,listenerChain) {
         if (self.state.attributelayer == e.layer) {
             //already chosed
@@ -161,9 +178,9 @@
             _attributeTable = null;
             _attributeColumns = null;
             _features.clear();
-            _attributeTableModal.find("#attribute_table_data").html("");
-            _attributeTableModal.foundation('close');
         }
+        _attributeTableModal.find("#attribute_table_data").html("");
+        _attributeTableModal.foundation('close');
         //query feature info
         if (e.layer.name in _featuresInfo) {
             if (_featuresInfo[e.layer.name]) {
