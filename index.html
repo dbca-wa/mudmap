@@ -25,6 +25,7 @@
     <script src="//static.dpaw.wa.gov.au/static/libs/datatables/1.10.12/RowReorder-1.1.2/js/dataTables.rowReorder.min.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
     <script src="mudmap.js"></script>
+    <script src="mudmap.log.js"></script>
     <script src="mudmap.zindex.js"></script>
     <script src="mudmap.kmi.js"></script>
     <script src="mudmap.attribute.js"></script>
@@ -62,9 +63,9 @@
             <div class="small-8 columns layer_title">{{title}}</div>
             <div class="small-1 columns">
             {{#if selected}}
-                <i class="select fi-check" layer="{{name}}"></i>
+                <img src="switch-on.png" layer="{{name}}" class="switch"> 
             {{else}}
-                <i class="select fi-x" layer="{{name}}"></i>
+                <img src="switch-off.png" layer="{{name}}" class="switch">
             {{/if}}
             </div>
             <div class="small-12 columns layer_abstract">{{abstract}}</div>
@@ -74,7 +75,7 @@
         <div class="row">
             <div class="small-8 columns layer_title">{{title}}</div>
             <div class="small-1 columns">
-                <i class="remove fi-trash" layer="{{name}}"></i>
+                <img class="remove" src="switch-off.png" layer="{{name}}"></i>
             </div>
             <!--div class="small-12 columns">{{abstract}}</div-->
             <div class="small-12 columns">
@@ -86,7 +87,7 @@
         </div>
     </script>
     <script id="attributelayer_template" type="text/x-handlebars-template">
-        <div class="row" id="attributelayer_{{id}}"><button disabled type="button" class="small button secondary" style="font-size: 0.7rem;" layer="{{name}}">
+        <div class="row" id="attributelayer_{{id}}"><button type="button" class="small button secondary" style="font-size: 0.7rem;" layer="{{name}}">
         <i></i>
         {{title}}</button></div>
     </script>
@@ -95,11 +96,11 @@
             <button id="layersetting" type="button" class="dropdown button small" data-toggle="layersetting_section"></button>
             <div class="dropdown-pane small" id="layersetting_section" data-dropdown  style="width:400px">
                 <ul class="tabs" data-tabs id="layers-tabs">
-                    <li class="tabs-title is-active"><a href="#panel_layers" aria-selected="true">Layers</a></li>
-                    <li class="tabs-title"><a href="#panel_activelayers">Active Layers</a></li>
+                    <li class="tabs-title"><a id="tab_layers" href="#panel_layers" aria-selected="true">Layers</a></li>
+                    <li class="tabs-title is-active"><a id="tab_activelayers" href="#panel_activelayers">Active Layers</a></li>
                 </ul>
                 <div class="tabs-content" data-tabs-content="layers-tabs">
-                    <div class="tabs-panel is-active" id="panel_layers">
+                    <div class="tabs-panel" id="panel_layers">
                         <table id="layerlist" class="display" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
@@ -108,7 +109,7 @@
                             </thead>
                         </table>
                     </div>
-                    <div class="tabs-panel" id="panel_activelayers">
+                    <div class="tabs-panel is-active" id="panel_activelayers">
                         <table id="activelayerlist" class="display" cellspacing="0" width="100%">
                             <thead>
                                 <tr>

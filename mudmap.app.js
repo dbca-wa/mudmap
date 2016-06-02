@@ -24,9 +24,13 @@
             }
             self.mapKey = self.getMapKey($.param({name: self.mapName}).slice(5));
             // add map name to url and refresh page to reload.
-            window.location.search = "?" + $.param({
+            var params = {
                 name: self.mapName
-            });
+            }
+            if (self.application) {
+                params.app = self.application;
+            }
+            window.location.search = "?" + $.param(params);
             return false;
         } else {
             //name included in url

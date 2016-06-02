@@ -1,7 +1,7 @@
 table.dataTable thead .sorting_asc, table.dataTable thead.sorting_desc {
         background : none;
 }
-table.dataTable td .select {
+table.dataTable td .switch {
         cursor:pointer;
 }
 table.dataTable td .remove {

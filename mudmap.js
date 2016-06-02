@@ -5,6 +5,8 @@ var mudmap = new function(){
 
     self.geojson = new ol.format.GeoJSON();
 
+    self.debug = true;
+
     //The application to which the map is belonging.
     self.application = null;
     //The name of the current map.
@@ -312,8 +314,10 @@ var mudmap = new function(){
             self.state =  _.defaults({},self.default_state);
         }
         var found = false;
+        var activelayer = null;
         if (self.state.layers) {
-            $.each(self.state.layers,function(index,activelayer){
+            for (var index = self.state.layers.length - 1;index >= 0;index--) {
+                activelayer = self.state.layers[index];
                 found = false;
                 $.each(self.layers,function(index2,layer){
                     if (activelayer.name == layer.name) {
@@ -324,9 +328,10 @@ var mudmap = new function(){
                     }
                 });
                 if (!found) {
-                    self.on({"name":"layer_not_exist","layer":layer});
+                    self.state.layers.splice(index,1);
+                    self.on({"name":"layer_not_exist","layer":activelayer});
                 }
-            });
+            }
 
             //remove the default layers from active layers
             $.each(self.state.layers,function(index,layer) {

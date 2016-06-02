@@ -25,7 +25,7 @@
     });
 
     self.defaultLayer = {
-        opacity: 100,
+        opacity: 80,
         name: "dpaw:mapbox_outdoors",
         format: "image/jpeg",
         tileSize:1024,
@@ -70,6 +70,7 @@
             var abstract = $(this.getElementsByTagNameNS('http://purl.org/dc/terms/',"abstract")[0]).text();
             var wfs_url = false;
             var wmts_url = false;
+            var wms_url = false;
             var wmts_parameters = null;
             var preview_url = false;
             function init_url(url) {
@@ -108,6 +109,13 @@
                                 projection:self.state.projection,
                                 format : ("format" in scheme)?scheme["format"]:"image/png"
                             }
+                            wms_url = init_url(scheme["linkage"]);
+                            params = {
+                                service:"wms",
+                                version:scheme["version"],
+                                layers:name
+                            }
+                            wms_url = init_url(wms_url + $.param(params));
                             preview_url = $(this).text();
                         }
                     } 
@@ -124,6 +132,7 @@
                     "abstract": abstract,
                     "wfs_url": wfs_url,
                     "wmts_url":wmts_url,
+                    "wms_url":wms_url,
                     "preview_url":preview_url,
                 },wmts_parameters);
                 layers.push(layer);

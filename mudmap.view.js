@@ -150,9 +150,9 @@
         $("#download").on("click", self.download);
     });
 
-    var _selectLayer = function() {
+    var _switchLayer = function() {
         var layer = self.getLayer($(this).attr("layer"));
-        if ($(this).hasClass("fi-x")) {
+        if ($(this).attr("src") == "switch-off.png") {
             self.on([
                 {"name":"pre_add_layer","layer":layer},
                 {"name":"add_layer","layer":layer},
@@ -190,33 +190,38 @@
             return data.name == e.layer.name;
         }).remove().draw();
 
-        if (e.layer.wfs_url) {
-            $("#attributelayer_" + e.layer.id).remove();
-        }
+        self.debug("remove layer " + e.layer.title + " active layers[ " +  _.map(self.state.layers,function(layer){return layer.zindex + " = " + layer.title}) + "]");
+    });
+
+    self.on(["post_remove_layer","attribute_not_available"],function(e){
+        $("#attributelayer_" + e.layer.id).remove();
     });
 
     //update activelayerlist table, add layer to attributelayerlist.
     self.on("post_add_layer",function(e){
+        $("#tab_activelayers").trigger("click");
         _activeLayerListTable.row.add(e.layer).draw();
         new Foundation.Slider($("#slider_" + e.layer.id),{"initialStart":e.layer.opacity});
-        if (e.layer.wfs_url) {
-            var before_layer = null;
-            $.each(self.layers,function(index,layer) {
-                if (!layer.selected) {
-                    return;
+        $("#tab_layers").trigger("click");
+        var before_layer = null;
+        $.each(self.layers,function(index,layer) {
+            if (!layer.selected) {
+                return;
+            }
+            if (layer.name == e.layer.name) {
+                if (before_layer) {
+                    $(_attributeLayerTemplate(layer)).insertAfter($("#attributelayer_" + before_layer.id));
+                    return false;
+                } else {
+                    $("#attributelayerlist").prepend( _attributeLayerTemplate(layer));
+                    return false;
                 }
-                if (layer.name == e.layer.name) {
-                    if (before_layer) {
-                        $(_attributeLayerTemplate(layer)).insertAfter($("#attributelayer_" + before_layer.id));
-                        return false;
-                    } else {
-                        $("#attributelayerlist").prepend( _attributeLayerTemplate(layer));
-                        return false;
-                    }
-                } 
+            } else {
+                before_layer = layer;
+            }
 
-            });
-        }
+        });
+        self.debug("add layer " + e.layer.title + ", active layers [" + _.map(self.state.layers,function(layer){return layer.zindex + " = " + layer.title}) + "]");
     });
 
     var _changeOpacity = function() {
@@ -225,19 +230,11 @@
         self.on({"name":"change_opacity","layer":layer,"opacity":opacity});
     }
 
-    var _movingLayer = false;
-    self.on("pre_move_layer",function(e) {
-        console.log('================================================');
-        console.log( _.map(self.activeLayerListTable.rows(0).data(),function(layer){return layer.title}));
-        console.log(_.map(self.state.layers,function(layer){return layer.title}));
-        console.log(e.layer.name + " from " + e.oldPosition + " to " + e.newPosition);
-        _movingLayer = true;
-    });
 
-    self.on("post_move_layer",function() {
-        console.log(_.map(self.state.layers,function(layer){return layer.title}));
-        _activeLayerListTable.order([1,"desc"]).draw();
-        _movingLayer = false;
+    self.on("post_move_layer",function(e) {
+        _activeLayerListTable.cells(null,1).invalidate();
+        self.debug("move layer " + e.layer.title  + ": from " + e.oldPosition + " to " + e.newPosition + " (" + e.moveDistance + ")");
+        self.debug("active layers [" + _.map(self.state.layers,function(layer){return layer.zindex + " = " + layer.title}) + "]");
     });
 
 
@@ -246,6 +243,7 @@
         _layerTemplate = Handlebars.compile($("#layer_template").html());
         _activeLayerTemplate = Handlebars.compile($("#activelayer_template").html());
         //init table for layers
+        $("#tab_layers").trigger("click");
         _layerListTable = $("#layerlist").DataTable({
             dom:"ft",
             data: self.layers,
@@ -279,9 +277,10 @@
         //remove search label from filter widget.
         $("#layerlist_filter label").replaceWith($("#layerlist_filter label input"));
         //attach event to select columns
-        $("#layersetting_section").on('click',"table#layerlist td .select",_selectLayer);
+        $("#layersetting_section").on('click',"table#layerlist td .switch",_switchLayer);
 
         //init table for active layers
+        $("#tab_activelayers").trigger("click");
         _activeLayerListTable = $("#activelayerlist")
         .on("init.dt",function(){
             if (self.state.layers) {
@@ -330,28 +329,23 @@
                 return;
             }
             var detail = null;
-            if (details[0].oldPosition > details[0].newPosition) {
-                //move down
-                detail = details[details.length - 1];
-            } else {
+            if (details.length == 2) { 
+                detail = details[0];
+            } else if (details[0].oldPosition - details[0].newPosition + 1 == details.length) {
                 //move up
                 detail = details[0];
+            } else {
+                //move down
+                detail = details[details.length - 1];
             }
             var layer = self.state.layers[detail.oldPosition];
             self.on([
-                {"name":"pre_move_layer","layer":layer,"newPosition":detail.newPosition,"oldPosition":detail.oldPosition},
-                {"name":"move_layer","layer":layer,"newPosition":detail.newPosition,"oldPosition":detail.oldPosition},
-                {"name":"post_move_layer","layer":layer,"newPosition":detail.newPosition,"oldPosition":detail.oldPosition},
+                {"name":"pre_move_layer","layer":layer,"newPosition":detail.newPosition,"oldPosition":detail.oldPosition,"moveDistance" : details.length},
+                {"name":"move_layer","layer":layer,"newPosition":detail.newPosition,"oldPosition":detail.oldPosition,"moveDistance" : details.length},
+                {"name":"post_move_layer","layer":layer,"newPosition":detail.newPosition,"oldPosition":detail.oldPosition,"moveDistance" : details.length},
             ]);
         });
 
-        _activeLayerListTable.on("init",function(){
-            if (self.state.layers) {
-                $.each(self.state.layers,function(index,layer){ 
-                    new Foundation.Slider($("#slider_" + e.layer.id),{"initialStart":e.layer.opacity});
-                });
-            }
-        });
         self.activeLayerListTable = _activeLayerListTable;
 
         //attach event to select columns
@@ -359,6 +353,10 @@
 
 
         $("#layersetting_section").on('moved.zf.slider',"table td .slider",_changeOpacity);
+
+        if (!self.state.layers || self.state.layers.length == 0) {
+            $("#tab_layers").trigger("click");
+        }
         
     });
 
@@ -368,10 +366,12 @@
         $.each(self.layers,function(index,layer) {
             if (!layer.selected) {
                 return;
-            } else if(!layer.wfs_url) {
-                return;
+            //} else if(!layer.wfs_url) {
+            //    return;
             }
-            $("#attributelayerlist").append( _attributeLayerTemplate(layer));
+            var layerButton = $(_attributeLayerTemplate(layer));
+            layerButton.prop("disabled",true);
+            $("#attributelayerlist").append(layerButton);
             
         });
 
