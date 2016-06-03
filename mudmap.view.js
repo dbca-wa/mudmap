@@ -148,6 +148,10 @@
         });
 
         $("#download").on("click", self.download);
+
+        $("#app_name").text(self.application);
+        document.title = self.application;
+
     });
 
     var _switchLayer = function() {

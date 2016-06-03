@@ -3,11 +3,17 @@
 
     // Convenience loader to create a WMTS layer from a kmi datasource
     self.on("init_app",function() {
-        self.application = null;
-        if ($.urlParam("app")) {
-            self.application = $.urlParam("app");
-        } else {
-            self.application = null;
+        self.application = window.location.pathname || "";
+        if (self.application.startsWith("/")) {
+            self.application = self.application.substring(1);
+        }
+        if (self.application.endsWith("/")) {
+            self.application = self.application.substring(0,self.application.length - 1);
+        }
+        if (self.applicaiton == "") {
+            //no application specified, redirect to default application sss.
+            window.location.pathname = "/sss";
+            return false;
         }
     });
 
@@ -26,9 +32,6 @@
             // add map name to url and refresh page to reload.
             var params = {
                 name: self.mapName
-            }
-            if (self.application) {
-                params.app = self.application;
             }
             window.location.search = "?" + $.param(params);
             return false;

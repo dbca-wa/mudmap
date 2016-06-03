@@ -49,6 +49,9 @@
     }
 
     var _resetZIndex = function() {
+        if (!self.state.layers || self.state.layers.length == 0) {
+            return;
+        }
         var zindex = null;
         for (var i = self.state.layers.length - 1;i >= 0; i--) {
             zindex = _getZIndex(null,zindex);
@@ -67,14 +70,14 @@
 
     self.on("pre_add_layer",function(e) {
         var zindex = null;
-        if (self.state.layers.length > 0) {
+        if (self.state.layers && self.state.layers.length > 0) {
             zindex = _getZIndex(null,self.state.layers[0].zindex);
         } else {
-            zindex = _getZIndex(self.state.layers[null,null]);
+            zindex = _getZIndex(null,null);
         }
         if (zindex == null) {
             _resetZIndex();   
-            zindex = _getZIndex(self.state.layers[0].zindex,null)
+            zindex = _getZIndex(null,self.state.layers[0].zindex);
         } 
         e.layer.zindex = zindex;
     });

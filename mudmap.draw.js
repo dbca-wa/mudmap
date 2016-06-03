@@ -5,7 +5,6 @@
     self.currentStyles = {
         label: "",
         rotation: 0,
-        textonly: false,
         size: 1
     };
 
@@ -127,7 +126,7 @@
                     if (!feature.get(key)) { feature.set(key, value) }
                 });
                 var fontsize = 16 * feature.get("size");
-                if (feature.get("textonly")) {
+                if (feature.get("type") == "txt") {
                     feature.style = new ol.style.Style({
                         fill: new ol.style.Fill({
                             color: "rgba(255, 255, 255, 0.2)"
@@ -186,19 +185,22 @@
                 return feature.style;
             }
         });
-        _featureOverlay.setMap(self.map);
+        //_featureOverlay.setMap(self.map);
+        self.map.addLayer(_featureOverlay);
 
         //draw feature
         $.each({
             pnt: "Point",
             lns: "LineString",
-            pol: "Polygon"
+            pol: "Polygon",
+            txt: "Point"
         }, function(key, value) {
             self.interacts[key] = new ol.interaction.Draw({
                 features: _features,
                 type: value
             });
             self.interacts[key].on("drawend", function(e) {
+                e.feature.set("type",key,true);
                 self.on({"name":"change_label","feature":e.feature});
             });
             self.map.addInteraction(self.interacts[key]);
@@ -256,7 +258,7 @@
         self.map.addInteraction(self.interacts.col);
         self.interacts.col.on("select", function(e) {
             if (!e.selected[0]) {
-                if (!e.deselected[0] || e.deselected[0].get("colour") != self.currentStyles.colour) {
+                if (!e.deselected || e.deselected.length == 0) {
                     window.alert("Please click a feature to set its colour.");
                 }
                 return;
@@ -269,10 +271,9 @@
         self.map.addInteraction(self.interacts.siz);
         self.interacts.siz.on("select", function(e) {
             if (!e.selected[0]) {
-                if (!e.deselected[0] || e.deselected[0].get("size") != self.currentStyles.size) {
-                    window.alert("Please click a feature to set its colour.");
+                if (!e.deselected || e.deselected.length == 0) {
+                    window.alert("Please click a feature to set its size.");
                 }
-                window.alert("Please click a feature to set its size.");
                 return;
             }
             e.selected[0].set("size", self.currentStyles.size);
