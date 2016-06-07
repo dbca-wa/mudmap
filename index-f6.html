@@ -7,12 +7,12 @@
     <link rel="stylesheet" href="//static.dpaw.wa.gov.au/static/libs/foundation/6.1.2/foundation-flex.css" type="text/css"/>
     <!--link rel="stylesheet" href="//static.dpaw.wa.gov.au/static/libs/foundicons/3.0.0/foundation-icons.css" type="text/css"/-->
     <link rel="stylesheet" href="//static.dpaw.wa.gov.au/static/libs/font-awesome/4.6.3/css/font-awesome.css" type="text/css"/>
-    <link rel="stylesheet" href="//static.dpaw.wa.gov.au/static/libs/ol3/3.15.1/ol.css" type="text/css"/>
+    <link rel="stylesheet" href="//static.dpaw.wa.gov.au/static/libs/ol3/3.16.0/ol.css" type="text/css"/>
     <script src="//static.dpaw.wa.gov.au/static/libs/localforage/1.3.2/localforage.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/moment.js/2.9.0/moment.min.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/foundation/6.1.2/foundation.min.js"></script>
-    <script src="//static.dpaw.wa.gov.au/static/libs/ol3/3.15.1/ol.js"></script>
+    <script src="//static.dpaw.wa.gov.au/static/libs/ol3/3.16.0/ol-debug.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/jspdf/1.1.135/jspdf.min.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/jszip/2.5.0/jszip.min.js"></script>
     <script src="//static.dpaw.wa.gov.au/static/libs/FileSaver.js/2014-11-29/FileSaver.js"></script>
@@ -29,7 +29,19 @@
         }
 
         .off-canvas-content { height: 100%; }
-        
+       
+        .off-canvas { 
+            height: 100%; 
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+            align-content: stretch;
+        }
+        .off-canvas .tabs-content { height: 100%; flex: 1; }
+
+        /*#menu-tab-layers { height: 100%; flex: 1; }*/
+
         /* old mudmap junk */
         /*.container { width: 100%; height: 100%; display: flex; flex-direction: column; }
         .container .row { width: 100%; }*/
@@ -46,6 +58,30 @@
             font-size: 24px;
         }
 
+        /* hacks to widen the off-canvas area */
+        .off-canvas.position-left {
+            left: -400px;
+            width: 400px;
+        }
+        
+        @media screen and (min-width: 40em) {
+            .position-left.reveal-for-medium {
+                left: 0;
+            }
+            .position-left.reveal-for-medium ~ .off-canvas-content {
+                margin-left: 400px; 
+            }
+        }
+
+        
+        /* fix tool labels */
+        .text-right { 
+            margin-right: 1em;
+            color: #ffffff;
+        }
+
+        /* make tool button text bigger */
+        .button-group.expanded .button-tool { padding: 0.5em; font-size: 18px; }
 
         /* raise our widgets above the slippy map */
         .map-widget { position: absolute; z-index: 1; }
@@ -59,7 +95,19 @@
             border: 0;
         }
 
-        .tabs-title > a {
+        #menu-scale {
+            width: auto;
+            right: 1em;
+            bottom: 2em;
+        }
+
+        /* remove extra padding for tab boxes inside other tab boxes */
+        #layers-list {
+            padding: 1rem 0 0 0;
+        }
+
+        /* custom F6 tab style overrides for the side buttons  */
+        .side-button > a {
             background-color: rgba(37,45,51,.5);
             border-left: 3px solid transparent;
             padding: 1em;
@@ -67,12 +115,17 @@
             color: white;
         }
 
-        .tabs-title > a:hover {
+        .side-button > a:hover {
             background-color: rgba(37,45,51,.9);
         }
-        .tabs-title > a:focus, .tabs-title > a[aria-selected="true"] {
+        .side-button > a:focus, .side-button > a[aria-selected="true"] {
             background-color: rgba(66,79,90,.9);
             border-left: 3px solid rgb(237, 177, 0);
+        }
+
+        /* fix absurdly large margins on button groups */
+        .button-group {
+            margin-bottom: 1px;
         }
     </style>
 
@@ -82,37 +135,122 @@
         <div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
             <div class="off-canvas position-left" id="offCanvasLeft" data-off-canvas>
                 <div class="tabs-content vertical" data-tabs-content="menu-tabs">
-                    <div class="tabs-panel is-active" id="menu-tab-main">
-                        <ul class="vertical dropdown menu" data-dropdown-menu>
-                            <li><a href="left_item_1">Left item 1</a></li>
-                            <li><a href="left_item_2">Left item 2</a></li>
-                            <li><a href="left_item_3">Left item 3</a></li>
-                        </ul>
-                    </div>
+                    
                     <div class="tabs-panel" id="menu-tab-layers">
-                        <ul class="vertical dropdown menu" data-dropdown-menu>
-                            <li><a href="left_item_1">Whut item 1</a></li>
-                            <li><a href="left_item_2">Whut item 2</a></li>
-                            <li><a href="left_item_3">Whut item 3</a></li>
+                        <ul class="tabs" data-tabs id="layers-tabs">
+                            <li class="tabs-title is-active"><a href="#layers-list" aria-selected="true">All Layers</a></li>
+                            <li class="tabs-title"><a href="#layers-active" aria-selected="true">Active Layers</a></li>
                         </ul>
-                   </div>
-                   <div class="tabs-panel" id="menu-tab-tracking">
-                   Tracking goes here.
-                   </div>
-                   <div class="tabs-panel" id="menu-tab-annotations">
-                   Annotations goes here.
-                   </div>
+                        <div class="tabs-content vertical" data-tabs-content="layers-tabs">
+                            <div class="tabs-panel is-active" id="layers-list">
+                                <div class="small-12">
+                                    <input type="text" id="layers-tabs-search" placeholder="Full text search"/>
+                                </div>
+                            </div>
+                            <div class="tabs-panel" id="layers-active">
+                            List of active layers
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tabs-panel" id="menu-tab-tracking">
+                    Tracking goes here.
+                    </div>
+
+                    <div class="tabs-panel" id="menu-tab-annotations">
+                        <h3>Annotations</h3>
+                        <div class="row collapse">
+                            <div class="small-2"><label class="text-right">Tool:</label></div>
+                            <div class="small-10"><div class="expanded button-group">
+                                <a class="button button-tool" title="Pan"><i class="fa fa-hand-paper-o" aria-hidden="true"></i></a>
+                                <a class="button button-tool" title="Select"><i class="fa fa-mouse-pointer" aria-hidden="true"></i></a>
+                                <a class="button button-tool" title="Draw a point"><i class="fa fa-map-marker" aria-hidden="true"></i></a>
+                                <a class="button button-tool" title="Draw a line">&#x2B4D;</a>
+                                <a class="button button-tool" title="Draw a polygon">&#x2B20;</a>
+                            </div></div>
+                        </div>
+                        <div class="row collapse">
+                            <div class="small-2"><label class="text-right">Size:</label></div>
+                            <div class="small-10"><div class="expanded button-group">
+                                <a class="button">S</a>
+                                <a class="button">M</a>
+                                <a class="button">L</a>
+                            </div></div>
+                        </div>
+                        <div class="row collapse">
+                            <div class="small-2"><label class="text-right">Colour:</label></div>
+                            <div class="small-10"><div class="expanded button-group">
+                                <a class="button">R</a>
+                                <a class="button">O</a>
+                                <a class="button">Y</a>
+                                <a class="button">G</a>
+                                <a class="button">B</a>
+                                <a class="button">I</a>
+                                <a class="button">V</a>
+                                <a class="button">Ch</a>
+                                <a class="button">Gr</a>
+                            </div></div>
+                        </div>
+                        <div class="row collapse">
+                            <div class="small-2"><label class="text-right">Ops:</label></div>
+                            <div class="small-10">
+                                <div class="small-12"><div class="expanded button-group">
+                                    <a class="button"><i class="fa fa-cut" aria-hidden="true"></i> Cut</a>
+                                    <a class="button"><i class="fa fa-copy" aria-hidden="true"></i> Copy</a>
+                                    <a class="button"><i class="fa fa-paste" aria-hidden="true"></i> Paste</a>
+                                </div></div>
+                                <div class="small-12"><div class="expanded button-group">
+                                    <a class="button"><i class="fa fa-undo" aria-hidden="true"></i> Undo</a>
+                                    <a class="button"><i class="fa fa-repeat" aria-hidden="true"></i> Redo</a>
+                                </div></div>
+                                <div class="small-12"><div class="expanded button-group">
+                                    <a class="button"><i class="fa fa-upload" aria-hidden="true"></i> Import</a>
+                                </div></div>
+                            </div>
+                        </div>
+                        <div class="row collapse">
+                            <div class="small-2"><label class="text-right">Export:</label></div>
+                            <div class="small-10"><div class="expanded button-group">
+                                <a class="button"><i class="fa fa-download" aria-hidden="true"></i> GeoJSON</a>
+                                <a class="button"><i class="fa fa-print" aria-hidden="true"></i> PDF</a>
+                            </div></div>
+                        </div>
+                    <h3>Selected Feature</h3>            
+                    </div>
+
                 </div>
             </div>
+
             <div class="off-canvas-content" data-off-canvas-content>
                 <ul class="tabs vertical map-widget" id="menu-tabs" data-tabs>
-                    <li class="tabs-title is-active"><a href="#menu-tab-main" title="Main Menu"><i class="fa fa-bars" aria-hidden="true"></i></a></span></li>
-                    <li class="tabs-title"><a href="#menu-tab-layers" title="Map Layers"><i class="fa fa-compass" aria-hidden="true"></i></a></li>
-                    <li class="tabs-title"><a href="#menu-tab-tracking" title="Vehicle Tracking"><i class="fa fa-truck" aria-hidden="true"></i></a></li>
-                    <li class="tabs-title"><a href="#menu-tab-annotations" title="Annotations"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+                    <li class="tabs-title side-button"><a href="#menu-tab-layers" title="Map Layers"><i class="fa fa-bars" aria-hidden="true"></i></a></li>
+                    <li class="tabs-title side-button"><a href="#menu-tab-tracking" title="Vehicle Tracking"><i class="fa fa-truck" aria-hidden="true"></i></a></li>
+                    <li class="tabs-title side-button"><a href="#menu-tab-annotations" title="Annotations"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
                 </ul>
+                <select class="map-widget" id="menu-scale">
+                    <option>1:1,000</option>
+                    <option>1:2,000</option>
+                    <option>1:2,500</option>
+                    <option>1:5,000</option>
+                    <option>1:10,000</option>
+                    <option>1:20,000</option>
+                    <option>1:25,000</option>
+                    <option>1:50,000</option>
+                    <option>1:80,000</option>
+                    <option>1:100,000</option>
+                    <option>1:125,000</option>
+                    <option>1:250,000</option>
+                    <option>1:500,000</option>
+                    <option>1:1,000,000</option>
+                    <option>1:2,000,000</option>
+                    <option>1:3,000,000</option>
+                    <option>1:5,000,000</option>
+                    <option>1:10,000,000</option>
+                    <option>1:25,000,000</option>
+                </select>
                 <div class="map" id="map"></div>
             </div> 
+
         </div>
     </div>
     <script type="text/javascript">
