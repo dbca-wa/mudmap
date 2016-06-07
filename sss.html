@@ -80,6 +80,13 @@
             color: #ffffff;
         }
 
+        .tool-slice {
+            margin-bottom: 4px;
+        }
+        .tool-slice .button.selected {
+            border: 2px dotted #ffffff;
+        };
+
         /* make tool button text bigger */
         .button-group.expanded .button-tool { padding: 0.5em; font-size: 18px; }
 
@@ -159,56 +166,56 @@
 
                     <div class="tabs-panel" id="menu-tab-annotations">
                         <h3>Annotations</h3>
-                        <div class="row collapse">
+                        <div class="tool-slice row collapse">
                             <div class="small-2"><label class="text-right">Tool:</label></div>
-                            <div class="small-10"><div class="expanded button-group">
-                                <a class="button button-tool" title="Pan"><i class="fa fa-hand-paper-o" aria-hidden="true"></i></a>
-                                <a class="button button-tool" title="Select"><i class="fa fa-mouse-pointer" aria-hidden="true"></i></a>
-                                <a class="button button-tool" title="Draw a point"><i class="fa fa-map-marker" aria-hidden="true"></i></a>
-                                <a class="button button-tool" title="Draw a line">&#x2B4D;</a>
-                                <a class="button button-tool" title="Draw a polygon">&#x2B20;</a>
+                            <div class="small-10"><div class="expanded button-group" id="tool-group-mode">
+                                <a id="tool-mode-pan" class="button button-tool selected" title="Pan"><i class="fa fa-hand-paper-o" aria-hidden="true"></i></a>
+                                <a id="tool-mode-select" class="button button-tool" title="Select"><i class="fa fa-mouse-pointer" aria-hidden="true"></i></a>
+                                <a id="tool-mode-point" class="button button-tool" title="Draw a point"><i class="fa fa-map-marker" aria-hidden="true"></i></a>
+                                <a id="tool-mode-line" class="button button-tool" title="Draw a line">|</a>
+                                <a id="tool-mode-polygon" class="button button-tool" title="Draw a polygon">&#x2B20;</a>
                             </div></div>
                         </div>
-                        <div class="row collapse">
+                        <div class="tool-slice row collapse">
                             <div class="small-2"><label class="text-right">Size:</label></div>
-                            <div class="small-10"><div class="expanded button-group">
-                                <a class="button">S</a>
-                                <a class="button">M</a>
-                                <a class="button">L</a>
+                            <div class="small-10"><div class="expanded button-group" id="tool-group-size">
+                                <a id="tool-size-small" class="button selected" style="">Small</a>
+                                <a id="tool-size-medium" class="button" style="">Medium</a>
+                                <a id="tool-size-large" class="button" style="">Large</a>
                             </div></div>
                         </div>
-                        <div class="row collapse">
+                        <div class="tool-slice row collapse">
                             <div class="small-2"><label class="text-right">Colour:</label></div>
-                            <div class="small-10"><div class="expanded button-group">
-                                <a class="button">R</a>
-                                <a class="button">O</a>
-                                <a class="button">Y</a>
-                                <a class="button">G</a>
-                                <a class="button">B</a>
-                                <a class="button">I</a>
-                                <a class="button">V</a>
-                                <a class="button">Ch</a>
-                                <a class="button">Gr</a>
+                            <div class="small-10"><div class="expanded button-group" id="tool-group-colour">
+                                <a id="tool-colour-r" class="button selected" style="background-color: #cc0000;"></a>
+                                <a id="tool-colour-o" class="button" style="background-color: #f57900;"></a>
+                                <a id="tool-colour-y" class="button" style="background-color: #edd400;"></a>
+                                <a id="tool-colour-g" class="button" style="background-color: #73d216;"></a>
+                                <a id="tool-colour-b" class="button" style="background-color: #3465a4;"></a>
+                                <a id="tool-colour-v" class="button" style="background-color: #75507b;"></a>
+                                <a id="tool-colour-br" class="button" style="background-color: #8f5902;"></a>
+                                <a id="tool-colour-gr" class="button" style="background-color: #555753;"></a>
+                                <a id="tool-colour-bl" class="button" style="background-color: #000000;"></a>
                             </div></div>
                         </div>
-                        <div class="row collapse">
+                        <div class="tool-slice row collapse">
                             <div class="small-2"><label class="text-right">Ops:</label></div>
                             <div class="small-10">
                                 <div class="small-12"><div class="expanded button-group">
-                                    <a class="button"><i class="fa fa-cut" aria-hidden="true"></i> Cut</a>
-                                    <a class="button"><i class="fa fa-copy" aria-hidden="true"></i> Copy</a>
-                                    <a class="button"><i class="fa fa-paste" aria-hidden="true"></i> Paste</a>
+                                    <a id="tool-cut" class="button"><i class="fa fa-cut" aria-hidden="true"></i> Cut</a>
+                                    <a id="tool-copy" class="button"><i class="fa fa-copy" aria-hidden="true"></i> Copy</a>
+                                    <a id="tool-paste" class="button"><i class="fa fa-paste" aria-hidden="true"></i> Paste</a>
                                 </div></div>
                                 <div class="small-12"><div class="expanded button-group">
-                                    <a class="button"><i class="fa fa-undo" aria-hidden="true"></i> Undo</a>
-                                    <a class="button"><i class="fa fa-repeat" aria-hidden="true"></i> Redo</a>
+                                    <a id="tool-undo" class="button"><i class="fa fa-undo" aria-hidden="true"></i> Undo</a>
+                                    <a id="tool-redo" class="button"><i class="fa fa-repeat" aria-hidden="true"></i> Redo</a>
                                 </div></div>
                                 <div class="small-12"><div class="expanded button-group">
-                                    <a class="button"><i class="fa fa-upload" aria-hidden="true"></i> Import</a>
+                                    <a id="tool-import" class="button"><i class="fa fa-upload" aria-hidden="true"></i> Import</a>
                                 </div></div>
                             </div>
                         </div>
-                        <div class="row collapse">
+                        <div class="tool-slice row collapse">
                             <div class="small-2"><label class="text-right">Export:</label></div>
                             <div class="small-10"><div class="expanded button-group">
                                 <a class="button"><i class="fa fa-download" aria-hidden="true"></i> GeoJSON</a>
@@ -277,6 +284,7 @@
             ]
         });
     
+        // bind menu side-tabs to reveal the side pane
         $("#menu-tabs").on("click", ".tabs-title", function(ev) {
             if ($("#offCanvasLeft").hasClass("reveal-for-medium")) {
                 var tabid = $(this).find("a").attr("href");
@@ -289,6 +297,49 @@
             map.updateSize();
         });
 
+        var sizes = {
+            "tool-size-small": 16,
+            "tool-size-medium": 32,
+            "tool-size-large": 64
+        }; 
+
+        var colours = {
+            "tool-colour-r": "#cc0000",
+            "tool-colour-o": "#f57900",
+            "tool-colour-y": "#edd400",
+            "tool-colour-g": "#73d216",
+            "tool-colour-b": "#3465a4",
+            "tool-colour-v": "#75507b",
+            "tool-colour-br": "#8f5902",
+            "tool-colour-gr": "#555753",
+            "tool-colour-bl": "#000000"
+        };
+
+        var sss_mode = $("#tool-group-mode .button.selected")[0].id;
+        var sss_size = $("#tool-group-size .button.selected")[0].id;
+        var sss_colour = $("#tool-group-colour .button.selected")[0].id;
+
+        // rig up groups
+
+        $("#tool-group-mode").on("click", ".button", function(ev) {
+            $("#tool-group-mode .button").removeClass("selected");
+            $(this).addClass("selected");
+            sss_mode = this.id;
+        });
+
+        $("#tool-group-size").on("click", ".button", function(ev) {
+            $("#tool-group-size .button").removeClass("selected");
+            $(this).addClass("selected");
+            sss_size = this.id;
+        });
+
+        $("#tool-group-colour").on("click", ".button", function(ev) {
+            $("#tool-group-colour .button").removeClass("selected");
+            $(this).addClass("selected");
+            sss_colour = this.id;
+        });
+
+        
         $(document).foundation();
     </script>
 </body>
