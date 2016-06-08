@@ -52,7 +52,7 @@
         .container .row { width: 100%; }*/
         
         /* slippy map widget */
-        .map { width: 100%; height: 100%; min-height: 0; flex: 1; background: url('bg.png') repeat;  }
+        .map { width: 100%; height: 100%; min-height: 0; flex: 1; background: url('bg.png') repeat; background-position: center;  }
         
         /* abs positioning shifts for OpenLayers widgets */
         .ol-scale-line { top: auto; left: auto; right: 1em; bottom: 1em; }
@@ -135,11 +135,14 @@
         .side-button > a:hover {
             background-color: rgba(37,45,51,.9);
         }
-        .side-button > a:focus, .side-button > a[aria-selected="true"] {
+        .side-button > a:focus {
+            background-color: rgba(37,45,51,.5);
+        }
+        .side-button > a[aria-selected="true"] {
             background-color: rgba(66,79,90,.9);
             border-left: 3px solid rgb(237, 177, 0);
         }
-
+ 
         /* fix absurdly large margins on button groups */
         .button-group {
             margin-bottom: 1px;
@@ -163,6 +166,19 @@
                                 <div class="small-12">
                                     <input type="text" id="layers-tabs-search" placeholder="Full text search"/>
                                 </div>
+                                <table>
+                                <tr>
+                                <td>
+                                    <div class="small-12">
+                                        DPaW Communication Repeater Stations 
+                                        <div class="switch">
+                                            <input class="switch-input" type="checkbox" name="layer_idxxx"/>
+                                            <label class="switch-paddle" for="layer_idxxx"><span class="show-for-sr">DPaW Communication Repeater Stations</span></label>
+                                        </div>
+                                    </div>
+                                </td>
+                                </tr>
+                                </table>
                             </div>
                             <div class="tabs-panel" id="layers-active">
                             List of active layers
@@ -308,13 +324,16 @@
     
         // bind menu side-tabs to reveal the side pane
         $("#menu-tabs").on("click", ".tabs-title", function(ev) {
+            var anchor = $(this).find("a");
             if ($("#offCanvasLeft").hasClass("reveal-for-medium")) {
-                var tabid = $(this).find("a").attr("href");
+                var tabid = anchor.attr("href");
                 if ($(tabid).hasClass("is-active")) {
                     $("#offCanvasLeft").removeClass("reveal-for-medium");
+                    anchor.attr("aria-selected", false);
                 }
             } else {
                 $("#offCanvasLeft").addClass("reveal-for-medium");
+                anchor.attr("aria-selected", true);
             }
             map.updateSize();
         });
