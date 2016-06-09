@@ -1,8 +1,13 @@
 (function(mudmap) {
     var self = mudmap;
 
-    var _cswUrl ="https://oim-uat.dpaw.wa.gov.au/catalogue/{{app}}?request=GetRecords&service=CSW&version=2.0.2&ElementSetName=full&typeNames=csw:Record&outputFormat=application/xml&resultType=results"
-
+    var _getCswUrl = function() {
+        if (self.production) {
+            return "https://oim.dpaw.wa.gov.au/catalogue/{{app}}?request=GetRecords&service=CSW&version=2.0.2&ElementSetName=full&typeNames=csw:Record&outputFormat=application/xml&resultType=results"
+        } else {
+            return "https://oim-uat.dpaw.wa.gov.au/catalogue/{{app}}?request=GetRecords&service=CSW&version=2.0.2&ElementSetName=full&typeNames=csw:Record&outputFormat=application/xml&resultType=results"
+        }
+    }
     var _matrixSets = {
         "EPSG:4326" : {
             "1024":{
@@ -145,9 +150,9 @@
     self.on("load_layers",function(e,listener_chain) {
         var url = null;
         if (self.application == null) {
-            url = _cswUrl.replace("{{app}}","");
+            url = _getCswUrl().replace("{{app}}","");
         } else {
-            url = _cswUrl.replace("{{app}}",self.application + "/");
+            url = _getCswUrl().replace("{{app}}",self.application + "/");
         }
 
         $.ajax({

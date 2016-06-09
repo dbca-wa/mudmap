@@ -26,6 +26,8 @@ var mudmap = new function(){
     //only one interact is active at any time.
     var _activeInteract = null;
 
+    self.production = true;
+
     //set all interacts inactive.
     self.deinteract = function() {
         self.activeInteract(null);
@@ -395,6 +397,10 @@ var mudmap = new function(){
         $("body").append('<div id="px_per_mm" style="width:1mm;display:none"></div>');
         _px_per_mm = parseFloat($('#px_per_mm').width());
         $("#px_per_mm").remove();
+
+        if (window.location.hostname.indexOf("-uat") >= 0 || window.location.pathname.indexOf("-uat") >= 0) {
+            self.production = false;
+        }
 
         // Initialise with user info
         $.get("/auth", function(userdata) {
