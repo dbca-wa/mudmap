@@ -2,7 +2,7 @@
     var self = mudmap;
 
     // Convenience loader to create a WMTS layer from a kmi datasource
-    self.on("init_app",function() {
+    self.on("get_app_name",function() {
         self.application = window.location.pathname || "";
         if (self.application.startsWith("/")) {
             self.application = self.application.substring(1);
@@ -17,8 +17,8 @@
         }
     });
 
-    //listen to "init_name" to process map name.
-    self.on("init_name",function(e) {
+    //listen to "get_map_name" to process map name.
+    self.on("get_map_name",function(e) {
         self.mapName = null;
         // Detect if url to existing mudmap, if not get/create one
         if (!$.urlParam("name")) {

@@ -391,7 +391,7 @@ var mudmap = new function(){
     });
 
     //init method , called when document ready
-    //trigger events "init_app","init_name","create_map","post_init" 
+    //trigger events "get_app_name","get_map_name","create_map","post_init" 
     self.init = function() {
         //get px per mm.
         $("body").append('<div id="px_per_mm" style="width:1mm;display:none"></div>');
@@ -407,7 +407,7 @@ var mudmap = new function(){
             self.user = JSON.parse(userdata);
             self.mapKey = self.getMapKey(self.mapName);
 
-            self.on(["init_app","init_name","load_layers","load_state","init_state","set_state","create_map","init_map","init_view","post_init_view","post_init"]);
+            self.on(["get_app_name","get_map_name","pre_load","load_layers","load_state","init_state","set_state","create_map","init_map","init_view","post_init_view","post_init"]);
         });
 
     }
@@ -415,6 +415,21 @@ var mudmap = new function(){
         $(document).foundation();
     });
 
+
+    //test purpose
+    self.on("pre_load",function() {
+        if (self.debug) {
+            var email = $.urlParam("email") 
+            
+            if (email != null) {
+                email = email.trim()
+                if (email.length > 0) {
+                    self.user["email"] = email
+                }
+            }
+
+        }
+    });
 
 }();
 

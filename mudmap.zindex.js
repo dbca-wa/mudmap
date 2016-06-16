@@ -2,9 +2,9 @@
     var self = mudmap;
 
     //the min z index for tile layer
-    var _zindex_min = 10001;
+    var _zindex_min = -100000000;
     //the max z index for tile layer
-    var _zindex_max = 100000000;
+    var _zindex_max = -100;
     //the initial interval between two adjacent tile layer's z index. 
     //this is used to improve the performance by only modifing the affected layer's z index instead of changing all of the layer's z index
     var _zindex_interval = 4096;
@@ -85,6 +85,10 @@
     self.on("remove_layer",function(e) {
         e.layer.zindex = null;
     });
+
+    self.getOverLayerZIndex = function(layerIndex) {
+        return _zindex_max + (10000 - layerIndex * 10);
+    }
 
     self.on("move_layer",function(e){
         if (Math.abs(e.newPosition - e.oldPosition) == 1) {

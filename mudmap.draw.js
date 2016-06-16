@@ -13,8 +13,14 @@
     //the overlay to contain all features.
     var _featureOverlay = null;
 
+    var _annotationLayerName = null;
+    var _annotationLayerId = null;
+    var _annotationLayer = null;
+    var _annotationOverlay = null;
+    var _annotationFeatures = null;
+
     //export feature to a geojson file
-    self.exportGeojson = function() {
+    self.downloadGeojson = function() {
         var jsonblob = new Blob([self.geojson.writeFeatures(_features.getArray())], {
             type: "application/vnd.geo+json;charset=utf-8"
         });
@@ -24,6 +30,10 @@
         } else {
             saveAs(jsonblob, self.mapKey + "_" + self.state.lastsave + ".json");
         }
+    }
+
+    self.getGeojson = function() {
+        return self.geojson.writeFeatures(_features.getArray());
     }
 
     //fit features in the view.
@@ -113,13 +123,12 @@
         }
     }
 
-    //listen to init_interact
-    self.on("init_map",function() {
-        // overlay which all interactions use
-        _featureOverlay = new ol.layer.Vector({
+    var _newOverlayer = function(features,zindex) {
+        return new ol.layer.Vector({
             source: new ol.source.Vector({
-                features: _features
+                features: features
             }),
+            zindex:self.getOverLayerZIndex(zindex),
             style: function(feature) {
                 if (feature.style) { return feature.style }
                 $.each(self.currentStyles, function(key, value) {
@@ -185,6 +194,12 @@
                 return feature.style;
             }
         });
+    }
+
+    //listen to init_interact
+    self.on("init_map",function() {
+        // overlay which all interactions use
+        _featureOverlay = _newOverlayer(_features,1);
         //_featureOverlay.setMap(self.map);
         self.map.addLayer(_featureOverlay);
 
@@ -201,6 +216,9 @@
             });
             self.interacts[key].on("drawend", function(e) {
                 e.feature.set("type",key,true);
+                e.feature.set("application",self.application,true);
+                e.feature.set("name",self.mapName,true);
+                e.feature.set("user",self.user.email,true);
                 self.on({"name":"change_label","feature":e.feature});
             });
             self.map.addInteraction(self.interacts[key]);
@@ -297,6 +315,94 @@
         }
     });
 
+    var _borgEndpoint = null;
+    self.on("pre_load",function() {
+        if (self.production) {
+            _borgEndpoint = "https://mudmap.dpaw.wa.gov.au/api/mudmap/" + self.application + "/" + self.mapName + "/" + self.user.email + "/"
+        } else {
+            _borgEndpoint = "https://mudmap-uat.dpaw.wa.gov.au/api/mudmap/" + self.application + "/" + self.mapName + "/" + self.user.email + "/"
+        }
+    });
+
+    var _publish_job_id = null;
+    self.publish = function() {
+        var jsondata = self.getGeojson();
+        $.ajax({
+            url:_borgEndpoint,
+            contentType:'application/json',
+            data: jsondata,
+            dataType:'json',
+            error:function(jqXHR,textStatus,errorThrown) {
+                window.alert(textStatus + " : " + errorThrown);
+            },
+            method:'POST',
+            success:function(data) {
+                _publish_job_id = data["jobid"]
+            }
+        });
+
+
+    }
+
+    self.unpublish = function() {
+        $.ajax({
+            url:_borgEndpoint,
+            contentType:'application/json',
+            error:function(jqXHR,textStatus,errorThrown) {
+                window.alert(textStatus + " : " + errorThrown);
+            },
+            method:'DELETE',
+            xhrFields: {
+                withCredentials: true
+            },
+            success:function() {
+                window.alert("Unpublish succeed.")
+            }
+        });
+    }
+
+
+    self.on("pre_load",function(){
+        _annotationLayerName = self.application + "_" + self.mapName;
+        _annotationLayerId= "mudmap:" + _annotationLayerName;
+    });
+
+    self.on("post_init",function() {
+        self.startMonitorSync(_annotationLayerName,120,
+            function(sync_data) {
+                //load layer metadata from csw
+                self.getLayerMetaData(_annotationLayerId,function(layer){
+                    _annotationLayer = layer;
+                    if (_publish_job_id && _publish_job_id == sync_data["publish"]["published_jobid"]) {
+                        window.alert("Publish succeed");
+                    }
+                    //reload layer data from kmi
+                    var filter = "user<>'" + self.user.email + "'";
+                    self.getFeature(_annotationLayer,filter,null,function(data){
+                        if (_annotationFeatures) {
+                            _annotationFeatures.clear();
+                        } else {
+                            _annotationFeatures = new ol.Collection();
+                            _annotationOverlay = _newOverlayer(_annotationFeatures,2);
+                            self.map.addLayer(_annotationOverlay);
+                        }
+                        _annotationFeatures.extend(data);
+                        
+                    })
+                })
+
+            },
+            function(sync_data) {
+                if (_annotationFeatures) {
+                    self.map.removeLayer(_annotationOverlay);
+                    _annotationFeatures.clear();
+                    _annotationFeatures = null;
+                    _annotationOverlayer = null;
+                }
+
+            }
+        )
+    });
 })(mudmap);
 
 

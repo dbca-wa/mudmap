@@ -138,9 +138,11 @@
 
         });
 
-        $("#export-json").on("click", self.exportGeojson);
+        $("#export-json").on("click", self.downloadGeojson);
 
         $("#export-pdf").on("click", self.print);
+        $("#publish").on("click", self.publish);
+        $("#unpublish").on("click", self.unpublish);
 
         $("#upload").on("change", function(){
             var file = $(this).prop("files")[0];

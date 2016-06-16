@@ -1,13 +1,9 @@
 (function(mudmap) {
     var self = mudmap;
 
-    var _getCswUrl = function() {
-        if (self.production) {
-            return "https://oim.dpaw.wa.gov.au/catalogue/{{app}}?request=GetRecords&service=CSW&version=2.0.2&ElementSetName=full&typeNames=csw:Record&outputFormat=application/xml&resultType=results"
-        } else {
-            return "https://oim-uat.dpaw.wa.gov.au/catalogue/{{app}}?request=GetRecords&service=CSW&version=2.0.2&ElementSetName=full&typeNames=csw:Record&outputFormat=application/xml&resultType=results"
-        }
-    }
+    var _getRecordsUrl = null;
+    var _cswEndpoint = null;
+
     var _matrixSets = {
         "EPSG:4326" : {
             "1024":{
@@ -27,6 +23,17 @@
             }
             matrixSet.matrixIds = matrixIds;
         });
+    });
+
+    self.on("pre_load",function() {
+        var  cswUrl = null;
+        if (self.production) {
+            cswUrl = "https://oim.dpaw.wa.gov.au/catalogue/";
+        } else {
+            cswUrl = "https://oim-uat.dpaw.wa.gov.au/catalogue/";
+        }
+        _cswEndpoint = cswUrl + "?service=CSW&version=2.0.2&outputFormat=application/xml";
+        _getRecordsUrl = cswUrl + self.application + "/?service=CSW&version=2.0.2&outputFormat=application/xml&request=GetRecords&ElementSetName=full&typeNames=csw:Record&resultType=results";
     });
 
     self.defaultLayer = {
@@ -65,7 +72,7 @@
         return tileLayer;
     }
 
-    var xml2Json = function(xmlData) {
+    var xml2Json = function(xmlData,filter) {
         var layers = []
         //$(catalog).find("Capability Layer Layer").each(function() {
         $(xmlData.getElementsByTagNameNS('http://www.opengis.net/cat/csw/2.0.2','Record')).each(function() {
@@ -129,17 +136,17 @@
                     //ignore
                 }
             });
-            if (wmts_url) {
-                var layer = _.extend({
-                    "name": name,
-                    "id": id, 
-                    "title": title.replace(/_/g, " "),
-                    "abstract": abstract,
-                    "wfs_url": wfs_url,
-                    "wmts_url":wmts_url,
-                    "wms_url":wms_url,
-                    "preview_url":preview_url,
-                },wmts_parameters);
+            var layer = _.extend({
+                "name": name,
+                "id": id, 
+                "title": title.replace(/_/g, " "),
+                "abstract": abstract,
+                "wfs_url": wfs_url,
+                "wmts_url":wmts_url,
+                "wms_url":wms_url,
+                "preview_url":preview_url,
+            },wmts_parameters);
+            if (!filter  || filter(layer)) {
                 layers.push(layer);
             }
         });
@@ -147,20 +154,45 @@
         return layers;
     }
 
-    self.on("load_layers",function(e,listener_chain) {
-        var url = null;
-        if (self.application == null) {
-            url = _getCswUrl().replace("{{app}}","");
-        } else {
-            url = _getCswUrl().replace("{{app}}",self.application + "/");
-        }
+    var loadMetadata = function(layerId,callback) {
+        $.ajax({
 
+            dataType:'xml',
+            type:'GET',
+            url:_cswEndpoint + "&request=GetRecordById&ElementSetName=full&id=" + layerId,
+            success: function(data,textStatus,jqXHR) {
+                layer = xml2Json(data);
+                if (callback) {
+                    callback(layer);
+                }
+            },
+            
+        });
+    }
+
+    self.getLayerMetaData = function(layerId,callback) {
         $.ajax({
             dataType:'xml',
             type:'GET',
-            url:url,
+            url:_cswEndpoint + "&request=GetRecordById&ElementSetName=full&id=" + layerId,
             success: function(data,textStatus,jqXHR) {
-                self.layers = xml2Json(data);
+                layer = xml2Json(data);
+                if (callback && layer.length > 0) {
+                    callback(layer[0]);
+                }
+            },error: function(jqXHR,textStatus,errorThrown) {
+                setTimeout(self.getLayerMetadata(layerId,callback),120000)
+            }
+        });
+    }
+
+    self.on("load_layers",function(e,listener_chain) {
+        $.ajax({
+            dataType:'xml',
+            type:'GET',
+            url:_getRecordsUrl,
+            success: function(data,textStatus,jqXHR) {
+                self.layers = xml2Json(data,function(layer) {return layer["wmts_url"];});
                 listener_chain.call();
             }
         });
@@ -168,4 +200,44 @@
         return false;
     });
 
+    self.getFeature = function(layer,filter,clickEvent,callback) {
+        var url = null;
+        var params = null;
+        if(layer.wfs_url) {
+            url = layer.wfs_url ;
+            params = {
+                request:"getFeature",
+                outputFormat:"application/json",
+            }
+            if (filter) {
+                params["CQL_FILTER"] = filter;
+            }
+        } else if(layer.wms_url) {
+            var size = self.map.getSize();
+            var extent = self.map.getView().calculateExtent(size);
+
+            url = self.state.attributelayer.wms_url;
+            params = {
+                request:"GetFeatureInfo",
+                srs:self.state.projection,
+                styles:"",
+                bbox:  extent[0] + "," + extent[1]+ "," + extent[2] + "," + extent[3],
+                width: Math.floor(size[0]),
+                height: Math.floor(size[1]),
+                query_layers:self.state.attributelayer.name,
+                x: Math.floor(clickEvent.pixel[0]), 
+                y: Math.floor(clickEvent.pixel[1]),
+                buffer:30,
+                feature_count:200,
+                outputFormat:"application/json",
+            }
+        }
+        url = url + $.param(params);
+        $.get(url,function(data){
+            if (callback) {
+                callback(data);
+            }
+
+        });
+    }
 })(mudmap);

@@ -15,40 +15,17 @@
         if (self.state.attributelayer && _featuresInfo[self.state.attributelayer.name]){
             var url = null;
             var params = null;
+            var filter = null;
             if(self.state.attributelayer.wfs_url) {
-                url = self.state.attributelayer.wfs_url ;
-                params = {
-                    request:"getFeature",
-                    outputFormat:"application/json",
-                }
                 if (["gml:MultiPolygon","gml:Polygon"].indexOf(_featuresInfo[self.state.attributelayer.name].geometry.type) >= 0) {
-                    params.CQL_FILTER = "CONTAINS(wkb_geometry,POINT(" + e.coordinate[1] + " " + e.coordinate[0]  +"))";
+                    filter = "CONTAINS(wkb_geometry,POINT(" + e.coordinate[1] + " " + e.coordinate[0]  +"))";
                 } else {
                     window.alert("Geometry type (" + _featuresInfo[self.state.attributelayer.name].geometry.type + ") not support");
                     return;
                 }
-            } else if(self.state.attributelayer.wms_url) {
-                var size = self.map.getSize();
-                var extent = self.map.getView().calculateExtent(size);
-
-                url = self.state.attributelayer.wms_url;
-                params = {
-                    request:"GetFeatureInfo",
-                    srs:self.state.projection,
-                    styles:"",
-                    bbox:  extent[0] + "," + extent[1]+ "," + extent[2] + "," + extent[3],
-                    width: Math.floor(size[0]),
-                    height: Math.floor(size[1]),
-                    query_layers:self.state.attributelayer.name,
-                    x: Math.floor(e.pixel[0]), 
-                    y: Math.floor(e.pixel[1]),
-                    buffer:30,
-                    feature_count:200,
-                    outputFormat:"application/json",
-                }
             }
-            url = url + $.param(params);
-            $.get(url,function(data){
+
+            self.getFeature(self.state.attributelayer,filter,e,function(data){
                 _features.clear();
                 if (self.state.attributelayer.wfs_url) {
                     //remove all rows
